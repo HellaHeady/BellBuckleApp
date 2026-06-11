@@ -704,14 +704,7 @@
           <line x1="117" y1="22" x2="142" y2="4"  stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
           <line x1="167" y1="22" x2="142" y2="4"  stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
 
-          <!-- Painted roof text — Rock City style, white on dark roof -->
-          <text x="142" y="17" text-anchor="middle"
-            font-family="'Arial Black','Impact',sans-serif"
-            font-size="6.5" font-weight="900" fill="#ffffff"
-            letter-spacing="1" opacity="0.97">SEE BELL BUCKLE</text>
-          <text x="142" y="24" text-anchor="middle"
-            font-family="sans-serif" font-size="4" fill="rgba(255,255,255,0.75)"
-            letter-spacing="2.5" font-weight="600">TENNESSEE</text>
+          <!-- No text on barn — clean illustration only -->
 
           <!-- Gable / hay loft window -->
           <rect x="132" y="13" width="20" height="13" rx="1" fill="#0c0808"/>
@@ -863,7 +856,10 @@
         </svg>
       </div>
 
-      <!-- Barn panel is the brand — no text overlay needed -->
+      <!-- Clean brand label — sits below barn, above train -->
+      <div style="position:absolute;left:0;bottom:34px;width:290px;text-align:center;z-index:8;pointer-events:none;">
+        <span style="display:inline-block;background:rgba(26,16,8,0.62);color:#fff;font-family:sans-serif;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:3px 10px;border-radius:10px;">🐝 Bell Buckle · TN</span>
+      </div>
 
       <!-- Page title — in main topbar area to the right of mountain -->
       <div class="topbar-page-info">
