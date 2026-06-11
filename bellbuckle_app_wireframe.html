@@ -3,1316 +3,1259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bell Buckle Connect — App Wireframe</title>
-<style>
-  :root {
-    --bg: #f2ebe0;
-    --paper: #fdfaf4;
-    --ink: #2a1f10;
-    --ink-light: #6b5840;
-    --wire: #c4ae8f;
-    --wire-light: #e0d4bc;
-    --accent: #a63220;   /* Bell Buckle barn red */
-    --accent2: #3d6b3a;  /* Tennessee green */
-    --accent3: #c8702a;  /* warm copper/pumpkin */
-    --accent4: #3a6e9e;  /* mural sky blue */
-    --badge: #c8372a;
-    --highlight: #e8b830;
-    --quilt-blue: #2d5f8a;
-    --quilt-red: #a63220;
-    --border-radius: 8px;
-    --shadow: 0 2px 10px rgba(42,31,16,0.13);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Georgia', serif; background: var(--bg); color: var(--ink); min-height: 100vh; background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23b8a070' fill-opacity='0.04'%3E%3Crect x='0' y='0' width='20' height='20'/%3E%3Crect x='20' y='20' width='20' height='20'/%3E%3C/g%3E%3C/svg%3E"); }
-
-  /* ── Layout ── */
-  .shell { display: flex; height: 100vh; overflow: hidden; }
-  .sidebar { width: 220px; background: #3a1e0e; flex-shrink: 0; display: flex; flex-direction: column; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 12px); }
-  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  .topbar { background: var(--paper); border-bottom: 2px solid var(--wire-light); padding: 10px 20px 10px 300px; display: flex; align-items: center; justify-content: flex-start; gap: 0; flex-shrink: 0; position: relative; overflow: hidden; min-height: 72px; }
-  @keyframes choo-choo {
-    0%   { transform: translateX(-320px); }
-    100% { transform: translateX(calc(100vw + 320px)); }
-  }
-  @keyframes puff {
-    0%   { opacity: 0.75; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-20px) scale(2.5); }
-  }
-  .train-ride { position: absolute; bottom: 0px; left: 0; animation: choo-choo 24s linear infinite; pointer-events: none; z-index: 5; }
-  /* Full-width nature backdrop — behind everything */
-  .topbar-nature { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
-  /* Bees buzz in front of nature bg but behind the train */
-  @keyframes bee-1 {
-    0%   { transform: translateX(-40px) translateY(0px);   opacity:0; }
-    5%   { opacity:1; }
-    20%  { transform: translateX(20vw)  translateY(-8px); }
-    45%  { transform: translateX(45vw)  translateY(5px);  }
-    70%  { transform: translateX(70vw)  translateY(-6px); }
-    95%  { opacity:1; }
-    100% { transform: translateX(calc(100vw + 40px)) translateY(0px); opacity:0; }
-  }
-  @keyframes bee-2 {
-    0%   { transform: translateX(calc(100vw + 40px)) translateY(0px); opacity:0; }
-    5%   { opacity:1; }
-    25%  { transform: translateX(75vw) translateY(7px);  }
-    55%  { transform: translateX(45vw) translateY(-5px); }
-    78%  { transform: translateX(22vw) translateY(6px);  }
-    95%  { opacity:1; }
-    100% { transform: translateX(-40px) translateY(0px); opacity:0; }
-  }
-  @keyframes bee-3 {
-    0%   { transform: translateX(-40px) translateY(0px);   opacity:0; }
-    8%   { opacity:1; }
-    30%  { transform: translateX(30vw)  translateY(6px);  }
-    60%  { transform: translateX(60vw)  translateY(-5px); }
-    85%  { transform: translateX(85vw)  translateY(4px);  }
-    95%  { opacity:1; }
-    100% { transform: translateX(calc(100vw + 40px)) translateY(0px); opacity:0; }
-  }
-  .bee { position: absolute; z-index: 4; pointer-events: none; }
-  .bee-1 { bottom: 20px; animation: bee-1 17s linear infinite; }
-  .bee-2 { bottom: 32px; animation: bee-2 22s linear infinite 4s; transform: scaleX(-1); }
-  .bee-3 { bottom: 12px; animation: bee-3 13s linear infinite 8s; }
-  /* Mountain covers the train while it's "inside" the tunnel (mountain z-index > train z-index) */
-  .topbar-mountain { position: absolute; left: 0; top: 0; bottom: 0; width: 290px; z-index: 7; pointer-events: none; }
-  .topbar-text { position: absolute; left: 0; top: 0; width: 290px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 8; text-align: center; padding: 0 20px; }
-  .topbar-brand-name { font-size: 15px; font-weight: bold; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.95), 0 0 18px rgba(0,0,0,0.6); letter-spacing: 0.3px; line-height: 1.2; }
-  .topbar-brand-sub { font-size: 9px; color: rgba(255,255,255,0.8); font-family: sans-serif; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 3px; text-shadow: 0 1px 5px rgba(0,0,0,0.85); }
-  .topbar-page-info { flex: 1; padding-left: 18px; min-width: 0; position: relative; z-index: 8; }
-  .topbar-page-info .page-title { font-size: 18px; font-weight: bold; color: var(--ink); line-height: 1.2; }
-  .topbar-page-info .page-breadcrumb { font-size: 10px; color: var(--ink-light); font-family: sans-serif; margin-top: 2px; }
-  .topbar-actions { position: relative; z-index: 8; display: flex; gap: 8px; align-items: center; margin-left: auto; }
-  /* ── Landscape animation — trees sway, grass waves in the breeze ── */
-  @keyframes sway-tree { 0%, 100% { transform: rotate(-2.2deg); } 50% { transform: rotate(2.2deg); } }
-  @keyframes sway-pine { 0%, 100% { transform: rotate(-1.4deg); } 50% { transform: rotate(1.4deg); } }
-  @keyframes grass-wave { 0%, 100% { transform: skewX(-7deg); } 50% { transform: skewX(7deg); } }
-  .t-sway-a { transform-box: fill-box; transform-origin: 50% 100%; animation: sway-tree 3.8s ease-in-out infinite; }
-  .t-sway-b { transform-box: fill-box; transform-origin: 50% 100%; animation: sway-tree 4.6s ease-in-out infinite 1.3s; }
-  .t-sway-c { transform-box: fill-box; transform-origin: 50% 100%; animation: sway-pine 3.2s ease-in-out infinite 0.7s; }
-  .t-sway-d { transform-box: fill-box; transform-origin: 50% 100%; animation: sway-pine 5.1s ease-in-out infinite 2.4s; }
-  .t-sway-e { transform-box: fill-box; transform-origin: 50% 100%; animation: sway-tree 4.0s ease-in-out infinite 0.3s; }
-  .g-wave-a { transform-box: fill-box; transform-origin: 50% 100%; animation: grass-wave 1.9s ease-in-out infinite; }
-  .g-wave-b { transform-box: fill-box; transform-origin: 50% 100%; animation: grass-wave 2.4s ease-in-out infinite 0.7s; }
-  .g-wave-c { transform-box: fill-box; transform-origin: 50% 100%; animation: grass-wave 1.6s ease-in-out infinite 1.3s; }
-  .g-wave-d { transform-box: fill-box; transform-origin: 50% 100%; animation: grass-wave 2.1s ease-in-out infinite 0.4s; }
-
-  /* Warm glow bleeding out of tunnel mouth — positioned for wider arch centered x=268 */
-  .tunnel-exit-glow {
-    position: absolute;
-    left: 242px;
-    top: 0;
-    width: 110px;
-    height: 100%;
-    background: radial-gradient(ellipse at 24% 85%, rgba(232,184,48,0.35) 0%, rgba(200,112,42,0.15) 40%, transparent 72%);
-    z-index: 8;
-    pointer-events: none;
-  }
-  /* Steam puffs drifting up from tunnel arch peak */
-  @keyframes steam-puff {
-    0%   { opacity: 0;    transform: translateY(0px)   scale(0.6); }
-    15%  { opacity: 0.55; }
-    60%  { opacity: 0.28; transform: translateY(-18px) scale(1.4); }
-    100% { opacity: 0;    transform: translateY(-32px) scale(2.2); }
-  }
-  .tunnel-steam { position: absolute; left: 264px; top: 2px; z-index: 9; pointer-events: none; }
-  .tunnel-steam span {
-    display: block; position: absolute; border-radius: 50%;
-    background: rgba(210,190,165,0.5);
-    animation: steam-puff 2.2s ease-out infinite;
-  }
-  .tunnel-steam span:nth-child(1) { width:14px; height:14px; left:0px;  animation-delay: 0s;    }
-  .tunnel-steam span:nth-child(2) { width:10px; height:10px; left:9px;  animation-delay: 0.75s; }
-  .tunnel-steam span:nth-child(3) { width:8px;  height:8px;  left:-4px; animation-delay: 1.4s;  }
-  .canvas { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg); }
-
-  /* ── Sidebar ── */
-  .sidebar-brand { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.12); }
-  .brand-name { color: #fff; font-size: 15px; font-weight: bold; letter-spacing: 0.5px; line-height: 1.3; }
-  .brand-sub { color: rgba(255,255,255,0.45); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; font-family: sans-serif; }
-  .nav-section { padding: 8px 0; }
-  .nav-label { padding: 6px 16px 4px; color: rgba(255,255,255,0.35); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-family: sans-serif; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; cursor: pointer; color: rgba(255,255,255,0.65); font-size: 13px; transition: all 0.15s; border-left: 3px solid transparent; font-family: sans-serif; }
-  .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
-  .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; border-left-color: var(--accent3); }
-  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
-  .nav-badge { margin-left: auto; background: var(--badge); color: #fff; font-size: 9px; padding: 1px 5px; border-radius: 8px; font-family: sans-serif; }
-  .sidebar-footer { margin-top: auto; padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
-  .footer-note { color: rgba(255,255,255,0.3); font-size: 9px; font-family: sans-serif; text-align: center; letter-spacing: 0.5px; }
-
-  /* ── Top bar ── */
-  .page-title { font-size: 17px; font-weight: bold; color: var(--ink); }
-  .page-breadcrumb { font-size: 11px; color: var(--ink-light); font-family: sans-serif; margin-top: 2px; }
-  .btn { padding: 7px 14px; border-radius: 4px; font-size: 12px; cursor: pointer; border: none; font-family: sans-serif; font-weight: 600; letter-spacing: 0.3px; transition: opacity 0.15s; }
-  .btn:hover { opacity: 0.85; }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-secondary { background: var(--wire-light); color: var(--ink); }
-  .btn-green { background: var(--accent2); color: #fff; }
-  .btn-orange { background: var(--accent3); color: #fff; }
-
-  /* ── Wireframe Screens ── */
-  .screen { display: none; }
-  .screen.active { display: block; }
-
-  /* ── Section Labels ── */
-  .wf-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-light); font-family: sans-serif; margin-bottom: 6px; }
-  .section-title { font-size: 20px; color: var(--ink); margin-bottom: 4px; }
-  .section-sub { font-size: 12px; color: var(--ink-light); font-family: sans-serif; margin-bottom: 20px; }
-
-  /* ── Cards & Grids ── */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .card { background: var(--paper); border: 1px solid var(--wire-light); border-radius: var(--border-radius); padding: 16px; box-shadow: var(--shadow); }
-  .card-hero { background: var(--paper); border: 1px solid var(--wire-light); border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow); }
-  .img-placeholder { background: var(--wire-light); display: flex; align-items: center; justify-content: center; color: var(--ink-light); font-size: 11px; font-family: sans-serif; text-align: center; line-height: 1.5; }
-  .img-placeholder.tall { height: 180px; }
-  .img-placeholder.medium { height: 120px; }
-  .img-placeholder.short { height: 80px; }
-  .img-placeholder.sq { height: 100px; }
-  .img-placeholder.hero-bg { height: 260px; font-size: 13px; }
-  .img-placeholder.mural { height: 200px; }
-
-  /* ── Tag & Badge ── */
-  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-family: sans-serif; font-weight: 600; margin-right: 4px; }
-  .tag-green { background: #d4edda; color: #2d6a4f; }
-  .tag-orange { background: #fde8d0; color: #8b4513; }
-  .tag-blue { background: #d0e4f5; color: #1a4f7a; }
-  .tag-red { background: #fdd; color: #c0392b; }
-  .tag-purple { background: #e8d5f5; color: #5b2d8a; }
-  .tag-yellow { background: #fef9c3; color: #7a5c00; }
-
-  /* ── Progress Bar ── */
-  .progress-track { background: var(--wire-light); border-radius: 4px; height: 8px; margin: 8px 0 4px; }
-  .progress-fill { height: 100%; border-radius: 4px; background: var(--accent2); }
-
-  /* ── Dividers ── */
-  .divider { border: none; border-top: 1px dashed var(--wire); margin: 20px 0; }
-  .divider-solid { border: none; border-top: 1px solid var(--wire-light); margin: 12px 0; }
-
-  /* ── Typography helpers ── */
-  .h2 { font-size: 16px; margin-bottom: 8px; color: var(--ink); }
-  .h3 { font-size: 13px; margin-bottom: 6px; color: var(--ink); }
-  .body-sm { font-size: 12px; color: var(--ink-light); font-family: sans-serif; line-height: 1.5; }
-  .meta { font-size: 10px; color: var(--wire); font-family: sans-serif; }
-  .amount { font-size: 18px; color: var(--accent2); font-weight: bold; font-family: sans-serif; }
-  .goal { font-size: 11px; color: var(--ink-light); font-family: sans-serif; }
-  .stat-num { font-size: 26px; font-weight: bold; color: var(--accent); font-family: sans-serif; }
-  .stat-label { font-size: 10px; color: var(--ink-light); font-family: sans-serif; text-transform: uppercase; letter-spacing: 1px; }
-
-  /* ── Hero / Banner ── */
-  .hero-overlay { position: relative; }
-  .hero-text-box { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(20,10,3,0.92)); padding: 24px 24px 20px; color: #fff; }
-  .hero-title { font-size: 34px; text-shadow: 0 2px 8px rgba(0,0,0,0.7); letter-spacing: 1px; font-style: italic; line-height: 1.1; }
-  .hero-sub { font-size: 12px; font-family: sans-serif; opacity: 0.82; margin-top: 6px; letter-spacing: 0.3px; }
-  .hero-rule { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-  .hero-rule-line { flex:1; height:1px; background:rgba(232,184,48,0.5); }
-  .hero-rule-text { color:rgba(232,184,48,0.85); font-size:9px; font-family:sans-serif; letter-spacing:2.5px; text-transform:uppercase; }
-  .hero-track { display:flex; align-items:center; gap:0; margin-top:10px; opacity:0.45; }
-  .hero-track-rail { flex:1; height:2px; background:rgba(255,255,255,0.6); }
-  .hero-track-tie { width:6px; height:10px; background:rgba(255,255,255,0.6); margin: 0 3px; }
-
-  /* ── Home Hero (full mural bg + glass action cards) ── */
-  .home-hero { position:relative; border-radius:10px; overflow:hidden; min-height:540px; display:flex; flex-direction:column; margin-bottom:20px; }
-  .home-hero-mural { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 55%; opacity:0.28; }
-  .home-hero-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(22,10,2,0.55) 0%, rgba(20,10,3,0.18) 30%, rgba(18,9,2,0.68) 68%, rgba(12,5,0,0.97) 100%); pointer-events:none; }
-  .home-hero-content { position:relative; z-index:2; display:flex; flex-direction:column; justify-content:space-between; padding:34px 28px 26px; flex:1; }
-  .home-hero-eyebrow { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(232,184,48,0.9); font-family:sans-serif; font-weight:700; margin-bottom:10px; }
-  .home-hero-title { font-size:42px; color:#fff; line-height:1.05; text-shadow:0 2px 18px rgba(0,0,0,0.85); font-style:italic; margin-bottom:10px; }
-  .home-hero-title .connect { font-size:0.43em; letter-spacing:7px; font-style:normal; font-family:sans-serif; font-weight:300; opacity:0.88; display:block; }
-  .home-hero-sub { font-size:13px; color:rgba(255,255,255,0.78); font-family:sans-serif; line-height:1.55; max-width:480px; margin-bottom:6px; }
-  .home-hero-rule { display:flex; align-items:center; gap:8px; margin:10px 0 0; }
-  .home-hero-rule-line { flex:1; height:1px; background:rgba(232,184,48,0.35); }
-  .home-hero-rule-text { color:rgba(232,184,48,0.7); font-size:9px; font-family:sans-serif; letter-spacing:2px; text-transform:uppercase; }
-  .home-hero-actions { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:22px; }
-  .home-action-card { background:rgba(8,3,0,0.58); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.14); border-radius:8px; padding:13px 6px 10px; text-align:center; cursor:pointer; transition:all 0.18s; }
-  .home-action-card:hover { background:rgba(30,12,2,0.72); border-color:rgba(232,184,48,0.45); transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.35); }
-  .home-action-icon { font-size:22px; margin-bottom:5px; line-height:1; }
-  .home-action-label { font-size:10px; font-family:sans-serif; font-weight:700; color:#fff; line-height:1.3; }
-  .home-action-meta { font-size:9px; font-family:sans-serif; margin-top:3px; color:rgba(255,255,255,0.5); }
-  .home-action-meta.hot { color:rgba(232,184,48,0.85); }
-
-  /* ── Tabs ── */
-  .tab-bar { display: flex; border-bottom: 2px solid var(--wire-light); margin-bottom: 20px; }
-  .tab { padding: 10px 18px; font-size: 12px; cursor: pointer; font-family: sans-serif; font-weight: 600; color: var(--ink-light); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
-  .tab:hover { color: var(--accent); }
-  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-  /* ── Filter Bar ── */
-  .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
-  .filter-chip { padding: 5px 12px; border-radius: 16px; font-size: 11px; font-family: sans-serif; cursor: pointer; border: 1px solid var(--wire-light); background: var(--paper); color: var(--ink-light); }
-  .filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .search-box { flex: 1; padding: 7px 12px; border: 1px solid var(--wire-light); border-radius: 4px; font-size: 12px; font-family: sans-serif; color: var(--ink-light); background: var(--paper); min-width: 160px; }
-
-  /* ── Timeline ── */
-  .timeline { position: relative; padding-left: 28px; }
-  .timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: var(--wire-light); }
-  .timeline-item { position: relative; margin-bottom: 20px; }
-  .timeline-dot { position: absolute; left: -24px; top: 4px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--accent); background: var(--paper); }
-  .timeline-dot.filled { background: var(--accent); }
-  .timeline-year { font-size: 11px; font-family: sans-serif; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; }
-  .timeline-event { font-size: 13px; color: var(--ink); margin: 2px 0; }
-  .timeline-desc { font-size: 11px; color: var(--ink-light); font-family: sans-serif; line-height: 1.5; }
-
-  /* ── Map placeholder ── */
-  .map-box { background: #e8f0e8; border: 1px solid var(--wire-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--ink-light); font-size: 12px; font-family: sans-serif; }
-
-  /* ── Annotation system ── */
-  .annotation { position: relative; display: inline-block; }
-  .ann-badge { position: absolute; top: -8px; right: -8px; background: var(--highlight); color: var(--ink); font-size: 10px; font-family: sans-serif; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.2); z-index: 10; }
-  .ann-list { background: #fffff0; border: 1px dashed var(--highlight); border-radius: 6px; padding: 12px 16px; margin-top: 20px; }
-  .ann-list h4 { font-size: 11px; font-family: sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent3); margin-bottom: 8px; }
-  .ann-list li { font-size: 11px; font-family: sans-serif; color: var(--ink); margin-bottom: 4px; padding-left: 4px; line-height: 1.5; }
-  .ann-num { display: inline-flex; align-items: center; justify-content: center; background: var(--highlight); color: var(--ink); font-weight: 700; width: 16px; height: 16px; border-radius: 50%; font-size: 9px; margin-right: 6px; }
-
-  /* ── Overview Page ── */
-  .overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-  .stat-card { background: var(--paper); border: 1px solid var(--wire-light); border-radius: 6px; padding: 14px 16px; text-align: center; box-shadow: var(--shadow); }
-  .app-section-card { background: var(--paper); border: 1px solid var(--wire-light); border-radius: 8px; padding: 0; overflow: hidden; cursor: pointer; box-shadow: var(--shadow); transition: all 0.15s; }
-  .app-section-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(0,0,0,0.15); transform: translateY(-2px); }
-  .section-card-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--wire-light); }
-  .section-card-icon { font-size: 24px; margin-bottom: 6px; }
-  .section-card-title { font-size: 14px; color: var(--ink); font-weight: bold; }
-  .section-card-desc { font-size: 11px; color: var(--ink-light); font-family: sans-serif; margin-top: 3px; line-height: 1.4; }
-  .section-card-body { padding: 12px 16px; }
-  .feature-pill { display: inline-block; background: var(--wire-light); border-radius: 10px; padding: 2px 8px; font-size: 10px; font-family: sans-serif; color: var(--ink-light); margin: 2px 2px 2px 0; }
-
-  /* ── Mural Gallery ── */
-  .mural-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .mural-card { border-radius: 6px; overflow: hidden; border: 1px solid var(--wire-light); box-shadow: var(--shadow); }
-  .mural-caption { padding: 8px 10px; background: var(--paper); font-size: 11px; color: var(--ink); font-family: sans-serif; }
-  .mural-caption small { display: block; color: var(--ink-light); font-size: 10px; margin-top: 2px; }
-
-  /* ── Form elements ── */
-  .form-group { margin-bottom: 12px; }
-  .form-label { font-size: 11px; font-family: sans-serif; color: var(--ink-light); display: block; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .form-input { width: 100%; padding: 8px 10px; border: 1px solid var(--wire-light); border-radius: 4px; font-size: 12px; font-family: sans-serif; color: var(--ink-light); background: var(--paper); }
-  .form-textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--wire-light); border-radius: 4px; font-size: 12px; font-family: sans-serif; color: var(--ink-light); background: var(--paper); height: 60px; resize: none; }
-
-  /* ── Blueprint watermark ── */
-  .blueprint-note { font-size: 10px; font-family: sans-serif; color: var(--wire); font-style: italic; margin-bottom: 6px; }
-
-  /* ── Real Photo Images ── */
-  .real-img { width:100%; height:100%; object-fit:cover; display:block; }
-  .real-img-frame { overflow:hidden; position:relative; }
-  .img-credit { position:absolute; bottom:0; right:0; background:rgba(0,0,0,0.45); color:rgba(255,255,255,0.7); font-size:8px; font-family:sans-serif; padding:2px 6px; letter-spacing:0.3px; }
-
-  /* ── Scrollbar ── */
-  .canvas::-webkit-scrollbar { width: 6px; }
-  .canvas::-webkit-scrollbar-track { background: transparent; }
-  .canvas::-webkit-scrollbar-thumb { background: var(--wire); border-radius: 3px; }
-
-  /* ── Floating label ── */
-  .float-cta { background: var(--accent3); color: #fff; border-radius: 24px; padding: 10px 20px; font-size: 12px; font-family: sans-serif; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
-
-  /* ── Events Page ── */
-  .events-hero { position: relative; border-radius: 10px; overflow: hidden; margin-bottom: 24px; background: linear-gradient(135deg, #1a0a02 0%, #4a1e06 40%, #8b3a12 100%); min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; padding: 0; }
-  .events-hero-bg { position: absolute; inset: 0; opacity: 0.18; background-image: repeating-linear-gradient(45deg, rgba(232,184,48,0.3) 0px, transparent 2px, transparent 18px, rgba(232,184,48,0.15) 20px); }
-  .events-hero-sparkles { position: absolute; inset: 0; overflow: hidden; }
-  .sparkle { position: absolute; border-radius: 50%; animation: sparkle-pop 3s ease-in-out infinite; }
-  @keyframes sparkle-pop { 0%,100%{opacity:0;transform:scale(0.5);} 50%{opacity:1;transform:scale(1);} }
-  .events-hero-content { position: relative; z-index: 2; padding: 28px 28px 24px; }
-  .events-hero-eyebrow { font-size: 10px; font-family: sans-serif; letter-spacing: 3px; text-transform: uppercase; color: rgba(232,184,48,0.9); margin-bottom: 8px; font-weight: 700; }
-  .events-hero-title { font-size: 32px; color: #fff; line-height: 1.1; text-shadow: 0 2px 12px rgba(0,0,0,0.6); margin-bottom: 6px; }
-  .events-hero-date { font-size: 14px; color: rgba(255,255,255,0.82); font-family: sans-serif; margin-bottom: 14px; }
-  .events-hero-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-  .events-hero-pill { background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.25); color: #fff; font-size: 11px; font-family: sans-serif; padding: 4px 12px; border-radius: 20px; }
-  .events-hero-pill.gold { background: rgba(232,184,48,0.25); border-color: rgba(232,184,48,0.5); color: #fef3c7; }
-  .countdown-row { display: flex; gap: 12px; margin-top: 4px; }
-  .countdown-unit { text-align: center; background: rgba(0,0,0,0.35); border: 1px solid rgba(232,184,48,0.3); border-radius: 6px; padding: 8px 12px; min-width: 52px; }
-  .countdown-num { font-size: 22px; font-weight: bold; color: #e8b830; font-family: sans-serif; line-height: 1; }
-  .countdown-label { font-size: 9px; color: rgba(255,255,255,0.55); font-family: sans-serif; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
-  .event-card { background: var(--paper); border: 1px solid var(--wire-light); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 16px; transition: transform 0.15s, box-shadow 0.15s; cursor: pointer; }
-  .event-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,0.13); }
-  .event-card-banner { height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: relative; overflow: hidden; }
-  .event-card-banner-pattern { position: absolute; inset: 0; }
-  .event-card-emoji { font-size: 44px; position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-  .event-card-badge { position: relative; z-index: 2; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 11px; font-family: sans-serif; font-weight: 700; padding: 5px 12px; border-radius: 20px; letter-spacing: 0.5px; }
-  .event-card-body { padding: 16px 20px; }
-  .event-card-title { font-size: 17px; color: var(--ink); margin-bottom: 3px; font-weight: bold; }
-  .event-card-meta { font-size: 11px; color: var(--ink-light); font-family: sans-serif; margin-bottom: 10px; display: flex; gap: 12px; flex-wrap: wrap; }
-  .event-card-meta span::before { margin-right: 4px; }
-  .event-card-desc { font-size: 12px; color: var(--ink); font-family: sans-serif; line-height: 1.6; margin-bottom: 12px; }
-  .event-highlights { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-  .event-highlight { display: flex; align-items: center; gap: 5px; background: var(--bg); border: 1px solid var(--wire-light); border-radius: 6px; padding: 5px 10px; font-size: 11px; font-family: sans-serif; color: var(--ink); }
-  .event-card-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--wire-light); padding-top: 12px; }
-  .event-attending { font-size: 11px; font-family: sans-serif; color: var(--ink-light); }
-  .event-attending strong { color: var(--accent2); }
-  .event-rsvp-btn { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 7px 18px; font-size: 12px; font-family: sans-serif; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; }
-  .event-rsvp-btn.green { background: var(--accent2); }
-  .event-rsvp-btn.orange { background: var(--accent3); }
-  .event-rsvp-btn.blue { background: var(--accent4); }
-  .event-immersive { border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; font-size: 12px; font-family: sans-serif; line-height: 1.65; }
-  .event-immersive.rc { background: linear-gradient(135deg, #fff8e1, #fef3c7); border-left: 4px solid #e8b830; color: #5c3a00; }
-  .event-immersive.arts { background: linear-gradient(135deg, #f0f7f0, #e8f5e8); border-left: 4px solid #3d6b3a; color: #1a3a18; }
-  .event-immersive.horse { background: linear-gradient(135deg, #f5f0f8, #ede0f5); border-left: 4px solid #7c4da0; color: #3a1a5a; }
-  .event-immersive.christmas { background: linear-gradient(135deg, #fff0f0, #ffe8e8); border-left: 4px solid #a63220; color: #5a1a10; }
-  .section-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0 16px; }
-  .section-divider-line { flex: 1; height: 1px; background: var(--wire-light); }
-  .section-divider-label { font-size: 11px; font-family: sans-serif; font-weight: 700; color: var(--ink-light); text-transform: uppercase; letter-spacing: 1.5px; }
-  /* Real-photo strip */
-  .photo-strip { display: flex; gap: 8px; overflow-x: auto; margin: 12px 0 14px; padding-bottom: 6px; scrollbar-width: thin; scrollbar-color: var(--wire) transparent; }
-  .photo-strip::-webkit-scrollbar { height: 4px; }
-  .photo-strip::-webkit-scrollbar-thumb { background: var(--wire); border-radius: 2px; }
-  .photo-strip-item { flex-shrink: 0; }
-  .photo-strip-item img { height: 110px; width: auto; max-width: 180px; border-radius: 6px; object-fit: cover; display: block; border: 1px solid var(--wire-light); box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
-  .photo-strip-caption { font-size: 9px; color: var(--ink-light); font-family: sans-serif; margin-top: 3px; font-style: italic; text-align: center; max-width: 180px; }
-  .photo-source-note { font-size: 9px; color: var(--wire); font-family: sans-serif; margin-top: 2px; font-style: italic; }
-
-  /* Section row */
-  .row { display: flex; gap: 16px; margin-bottom: 16px; }
-  .col { flex: 1; }
-  .col-2 { flex: 2; }
-  .col-3 { flex: 3; }
-
-  /* ── Highlight box ── */
-  .highlight-box { background: linear-gradient(135deg, #fef9ec, #fff8e1); border: 1px solid var(--highlight); border-radius: 6px; padding: 14px; }
-  .info-box { background: #f0f7ff; border: 1px solid #c5daf5; border-radius: 6px; padding: 12px 14px; }
-
-  /* ── Chapter header ── */
-  .chapter { text-align: center; padding: 20px 0 12px; border-bottom: 2px solid var(--wire-light); margin-bottom: 20px; }
-  .chapter-label { font-size: 10px; font-family: sans-serif; letter-spacing: 2px; text-transform: uppercase; color: var(--accent3); font-weight: 700; }
-  .chapter-title { font-size: 22px; color: var(--ink); margin: 6px 0; }
-  .chapter-sub { font-size: 12px; color: var(--ink-light); font-family: sans-serif; }
-
-</style>
-<!-- Firebase SDK (compat build — works in plain HTML, no bundler needed) -->
+<title>Bell Buckle Connect</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+:root {
+  --bg:       #f2ebe0;
+  --paper:    #fdfaf4;
+  --ink:      #2a1f10;
+  --ink-lt:   #6b5840;
+  --wire:     #c4ae8f;
+  --wire-lt:  #e0d4bc;
+  --red:      #a63220;
+  --red-dk:   #7c2018;
+  --green:    #3d6b3a;
+  --copper:   #c8702a;
+  --blue:     #3a6e9e;
+  --gold:     #e8b830;
+  --sidebar:  #2a1408;
+  --sidebar2: #3a1e0e;
+  --shadow:   0 2px 12px rgba(42,31,16,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height:100vh;overflow:hidden;}
+.serif{font-family:'Playfair Display',Georgia,serif;}
+
+/* ── thin scrollbar ── */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(42,31,16,.18);border-radius:2px;}
+
+/* ════════════════════════════════
+   AUTH OVERLAY
+════════════════════════════════ */
+#auth-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:linear-gradient(145deg,#18100c,#2c1a0e 55%,#18100c);
+  display:flex;align-items:center;justify-content:center;
+}
+.auth-card{
+  background:var(--paper);border-radius:18px;padding:32px 28px;
+  width:100%;max-width:340px;box-shadow:0 28px 60px rgba(0,0,0,.5);
+}
+.auth-logo{text-align:center;margin-bottom:22px;}
+.auth-logo img{width:64px;height:64px;border-radius:12px;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;}
+.auth-logo h1{font-family:'Playfair Display',serif;font-size:26px;color:var(--ink);}
+.auth-logo p{font-size:10px;letter-spacing:.22em;color:var(--red);font-weight:700;text-transform:uppercase;margin-top:2px;}
+.auth-logo small{color:var(--ink-lt);font-size:11px;margin-top:4px;display:block;}
+.auth-input{
+  width:100%;border:1px solid var(--wire);border-radius:10px;
+  padding:12px 14px;font-size:13px;color:var(--ink);background:#fff;
+  margin-bottom:10px;font-family:'Inter',sans-serif;transition:border-color .2s;
+}
+.auth-input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 2px rgba(166,50,32,.12);}
+.auth-btn{
+  width:100%;border:none;border-radius:10px;padding:13px;
+  font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s;
+  font-family:'Inter',sans-serif;
+}
+.auth-btn:hover{opacity:.88;}
+.auth-btn-primary{background:var(--red);color:#fff;margin-bottom:8px;}
+.auth-btn-outline{background:transparent;border:2px solid var(--red);color:var(--red);}
+#auth-error{color:#dc2626;font-size:12px;text-align:center;margin-bottom:8px;display:none;}
+
+/* ════════════════════════════════
+   SHELL
+════════════════════════════════ */
+.shell{display:flex;height:100vh;overflow:hidden;}
+
+/* ── Sidebar ── */
+.sidebar{
+  width:224px;background:var(--sidebar);flex-shrink:0;
+  display:flex;flex-direction:column;overflow:hidden;
+  border-right:1px solid rgba(255,255,255,.05);
+}
+.sb-brand{
+  padding:18px 16px 14px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:10px;
+}
+.sb-brand img{width:38px;height:38px;border-radius:7px;flex-shrink:0;}
+.sb-brand-text{}
+.sb-brand-name{font-family:'Playfair Display',serif;color:#fff;font-size:16px;font-weight:700;line-height:1.1;}
+.sb-brand-sub{color:var(--red);font-size:9px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;margin-top:2px;}
+.sb-user{
+  padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:9px;
+}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-avatar span{color:#fff;font-size:11px;font-weight:700;}
+.sb-user-email{color:rgba(255,255,255,.55);font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-signout{color:rgba(255,255,255,.28);font-size:10px;background:none;border:none;cursor:pointer;padding:0;white-space:nowrap;}
+.sb-signout:hover{color:rgba(255,255,255,.55);}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 8px 0;}
+.sb-section-label{
+  padding:12px 10px 4px;color:rgba(255,255,255,.28);
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;
+}
+.nav-item{
+  display:flex;align-items:center;gap:9px;padding:9px 10px;
+  border-radius:8px;cursor:pointer;color:rgba(255,255,255,.55);
+  font-size:12px;margin-bottom:1px;transition:all .15s;
+  border:none;background:transparent;width:100%;text-align:left;font-family:'Inter',sans-serif;
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.nav-item.active{background:rgba(166,50,32,.22);color:#f87a6a;}
+.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0;}
+.sb-footer{
+  padding:12px 14px;border-top:1px solid rgba(255,255,255,.07);
+}
+.sb-footer p{color:rgba(255,255,255,.2);font-size:9px;line-height:1.6;}
+
+/* ── Main panel ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+
+/* ── Topbar ── */
+.topbar{
+  background:var(--paper);border-bottom:2px solid var(--wire-lt);
+  display:flex;align-items:center;flex-shrink:0;
+  position:relative;overflow:hidden;min-height:68px;
+}
+/* Left illustration panel */
+.topbar-left{
+  width:270px;flex-shrink:0;height:100%;position:relative;
+  background:linear-gradient(to right,#1e0e06,#2c1a0e 60%,transparent);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:6;
+}
+.topbar-brand-name{font-family:'Playfair Display',serif;color:#fff;font-size:15px;font-weight:700;text-shadow:0 1px 8px rgba(0,0,0,.8);letter-spacing:.3px;}
+.topbar-brand-sub{color:rgba(255,255,255,.7);font-size:9px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;margin-top:3px;text-shadow:0 1px 5px rgba(0,0,0,.7);}
+/* Bee City badge */
+.bee-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(232,184,48,.18);border:1px solid rgba(232,184,48,.3);color:#e8b830;border-radius:99px;padding:2px 8px;font-size:9px;font-weight:700;margin-top:5px;}
+
+/* Bees */
+@keyframes bee-1{
+  0%  {transform:translateX(-50px) translateY(0);opacity:0;}
+  5%  {opacity:1;}
+  25% {transform:translateX(25vw) translateY(-7px);}
+  55% {transform:translateX(55vw) translateY(5px);}
+  78% {transform:translateX(78vw) translateY(-4px);}
+  95% {opacity:1;}
+  100%{transform:translateX(calc(100vw+50px)) translateY(0);opacity:0;}
+}
+@keyframes bee-2{
+  0%  {transform:translateX(calc(100vw+50px)) translateY(0);opacity:0;}
+  8%  {opacity:1;}
+  30% {transform:translateX(68vw) translateY(6px);}
+  60% {transform:translateX(38vw) translateY(-5px);}
+  88% {opacity:1;}
+  100%{transform:translateX(-50px) translateY(0);opacity:0;}
+}
+@keyframes bee-3{
+  0%  {transform:translateX(-50px) translateY(0);opacity:0;}
+  10% {opacity:1;}
+  35% {transform:translateX(35vw) translateY(5px);}
+  65% {transform:translateX(65vw) translateY(-6px);}
+  92% {opacity:1;}
+  100%{transform:translateX(calc(100vw+50px)) translateY(0);opacity:0;}
+}
+.bee{position:absolute;z-index:4;pointer-events:none;}
+.bee-1{bottom:22px;animation:bee-1 18s linear infinite;}
+.bee-2{bottom:34px;animation:bee-2 23s linear infinite 5s;}
+.bee-3{bottom:14px;animation:bee-3 14s linear infinite 9s;}
+.bee svg{display:block;}
+
+/* Train */
+@keyframes choo-choo{
+  0%  {transform:translateX(-340px);}
+  100%{transform:translateX(calc(100vw + 340px));}
+}
+.train-ride{position:absolute;bottom:0;left:0;animation:choo-choo 22s linear infinite;pointer-events:none;z-index:5;}
+
+/* Steam */
+@keyframes steam{
+  0%  {opacity:.6;transform:translateY(0) scale(.7);}
+  100%{opacity:0;transform:translateY(-22px) scale(2);}
+}
+.steam{position:absolute;left:278px;top:3px;z-index:9;pointer-events:none;}
+.steam span{display:block;position:absolute;border-radius:50%;background:rgba(200,185,165,.55);animation:steam 2.4s ease-out infinite;}
+.steam span:nth-child(1){width:14px;height:14px;left:0;animation-delay:0s;}
+.steam span:nth-child(2){width:10px;height:10px;left:10px;animation-delay:.8s;}
+.steam span:nth-child(3){width:8px;height:8px;left:-5px;animation-delay:1.6s;}
+
+/* Topbar right side */
+.topbar-right{flex:1;display:flex;align-items:center;justify-content:space-between;padding:0 20px;min-width:0;z-index:7;}
+.page-info{}
+.page-title{font-size:17px;font-weight:700;color:var(--ink);line-height:1.2;}
+.page-crumb{font-size:11px;color:var(--ink-lt);margin-top:2px;}
+.topbar-actions{display:flex;gap:8px;align-items:center;}
+.btn{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:opacity .15s;}
+.btn:hover{opacity:.86;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-outline{background:transparent;border:1px solid var(--wire);color:var(--ink-lt);}
+.btn-outline:hover{border-color:var(--red);color:var(--red);}
+
+/* ── Canvas (screen area) ── */
+.canvas{flex:1;overflow:hidden;position:relative;}
+.screen{display:none;height:100%;overflow-y:auto;}
+.screen.active{display:block;}
+.screen-dark{display:none;height:100%;flex-direction:column;background:#18100c;}
+.screen-dark.active{display:flex;}
+
+/* ── Cards, sections ── */
+.card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;box-shadow:var(--shadow);}
+.section-pad{padding:20px;}
+.page-header{padding:20px 20px 0;}
+.page-header h2{font-family:'Playfair Display',serif;font-size:24px;color:var(--ink);margin-bottom:4px;}
+.page-header p{color:var(--ink-lt);font-size:13px;}
+
+/* Post cards */
+.post-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:16px 18px;margin-bottom:12px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
+.post-meta{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.post-avatar{width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.post-avatar span{color:#fff;font-size:13px;font-weight:700;}
+.post-name{font-size:13px;font-weight:600;color:var(--ink);}
+.post-time{font-size:11px;color:var(--ink-lt);}
+.post-text{font-size:14px;color:var(--ink);line-height:1.6;}
+.post-actions{display:flex;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid var(--wire-lt);}
+.post-action-btn{color:var(--ink-lt);font-size:12px;background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;}
+.post-action-btn:hover{color:var(--red);}
+
+/* Compose box */
+.compose-box{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:14px 16px;margin-bottom:18px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
+.compose-row{display:flex;gap:12px;align-items:flex-start;}
+.compose-textarea{flex:1;border:none;outline:none;font-size:14px;color:var(--ink);resize:none;background:transparent;font-family:'Inter',sans-serif;line-height:1.5;}
+.compose-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--wire-lt);}
+
+/* Chat bubbles */
+.bubble-own{background:var(--red);color:#fff;border-radius:16px 16px 4px 16px;padding:9px 14px;font-size:13px;max-width:280px;word-break:break-word;line-height:1.45;margin-left:auto;}
+.bubble-other{background:#2c1a0e;color:#e4d8cc;border-radius:16px 16px 16px 4px;padding:9px 14px;font-size:13px;max-width:280px;word-break:break-word;line-height:1.45;}
+.msg-wrap{display:flex;flex-direction:column;gap:3px;margin-bottom:10px;}
+.msg-wrap.own{align-items:flex-end;}
+.msg-wrap.other{align-items:flex-start;}
+.msg-meta{font-size:10px;color:rgba(255,255,255,.35);padding:0 4px;}
+
+/* Events */
+.event-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;overflow:hidden;margin-bottom:14px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
+.event-stripe{height:4px;}
+.event-body{padding:16px 18px;}
+.event-date{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.event-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.event-loc{font-size:12px;color:var(--ink-lt);margin-bottom:10px;}
+.event-desc{font-size:13px;color:#44321e;line-height:1.55;}
+
+/* Lost & Found */
+.lf-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 5px rgba(42,31,16,.06);display:flex;gap:14px;align-items:flex-start;}
+.lf-emoji{font-size:32px;flex-shrink:0;}
+.lf-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-bottom:5px;}
+.lf-lost{background:#fef2f2;color:#9b1d1d;}
+.lf-found{background:#f0fdf4;color:#166534;}
+.lf-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.lf-desc{font-size:12px;color:var(--ink-lt);line-height:1.5;}
+.lf-contact{font-size:11px;color:var(--red);margin-top:5px;font-weight:600;}
+
+/* History Timeline */
+.timeline{position:relative;padding:0 0 24px;}
+.timeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--wire);transform:translateX(-50%);}
+.tl-entry{display:flex;gap:0;margin-bottom:8px;cursor:pointer;position:relative;}
+.tl-entry:nth-child(odd){flex-direction:row;}
+.tl-entry:nth-child(even){flex-direction:row-reverse;}
+.tl-card{
+  background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;
+  padding:14px 16px;width:calc(50% - 32px);box-shadow:0 1px 5px rgba(42,31,16,.06);
+  transition:box-shadow .2s,transform .15s;
+}
+.tl-card:hover{box-shadow:0 4px 16px rgba(42,31,16,.14);transform:translateY(-1px);}
+.tl-dot{
+  width:16px;height:16px;border-radius:50%;background:var(--red);
+  border:3px solid var(--bg);box-shadow:0 0 0 2px var(--red);
+  flex-shrink:0;align-self:flex-start;margin:16px 8px 0;z-index:1;
+}
+.tl-year{font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.tl-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.tl-desc{font-size:12px;color:var(--ink-lt);line-height:1.55;}
+.tl-img{width:100%;border-radius:6px;margin-top:8px;max-height:120px;object-fit:cover;border:1px solid var(--wire-lt);}
+.tl-added{font-size:10px;color:var(--wire);margin-top:6px;font-style:italic;}
+/* Add entry panel */
+.history-add{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:18px;margin-bottom:24px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
+.history-add h3{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.form-row{display:flex;gap:10px;margin-bottom:10px;}
+.form-input{border:1px solid var(--wire);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--ink);background:#fff;font-family:'Inter',sans-serif;width:100%;transition:border-color .2s;}
+.form-input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 2px rgba(166,50,32,.1);}
+.form-textarea{border:1px solid var(--wire);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--ink);background:#fff;font-family:'Inter',sans-serif;width:100%;resize:none;transition:border-color .2s;}
+.form-textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 2px rgba(166,50,32,.1);}
+
+/* Fundraising */
+.fund-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:18px;margin-bottom:14px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
+.fund-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.fund-row{display:flex;gap:14px;align-items:flex-start;}
+.fund-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.fund-desc{font-size:12px;color:var(--ink-lt);line-height:1.5;margin-bottom:10px;}
+.fund-bar-bg{height:8px;background:var(--wire-lt);border-radius:99px;overflow:hidden;margin-bottom:6px;}
+.fund-bar{height:100%;background:var(--red);border-radius:99px;}
+.fund-nums{display:flex;justify-content:space-between;font-size:11px;margin-bottom:10px;}
+.fund-nums span:first-child{color:var(--ink-lt);}
+.fund-nums span:last-child{font-weight:600;color:var(--ink);}
+
+/* Marketplace */
+.market-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.market-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;overflow:hidden;box-shadow:0 1px 5px rgba(42,31,16,.06);cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.market-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(42,31,16,.12);}
+.market-img{height:100px;display:flex;align-items:center;justify-content:center;font-size:40px;}
+.market-body{padding:10px 12px;}
+.market-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.market-price{font-size:14px;font-weight:700;color:var(--red);}
+.market-who{font-size:10px;color:var(--ink-lt);margin-top:3px;}
+
+/* Home stats */
+.stats-row{display:flex;gap:10px;margin:16px 0;}
+.stat-pill{flex:1;background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 4px rgba(42,31,16,.06);}
+.stat-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--red);}
+.stat-lbl{font-size:10px;color:var(--ink-lt);margin-top:2px;}
+
+/* Home action cards */
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;}
+.action-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(42,31,16,.06);}
+.action-card:hover{box-shadow:0 4px 14px rgba(42,31,16,.12);transform:translateY(-1px);}
+.action-emoji{font-size:26px;margin-bottom:6px;}
+.action-label{font-size:11px;font-weight:600;color:var(--ink);line-height:1.3;}
+
+/* Hero mural */
+.home-hero{position:relative;height:200px;overflow:hidden;border-radius:10px;margin-bottom:16px;}
+.home-hero img{width:100%;height:100%;object-fit:cover;}
+.home-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,16,8,.88) 0%,transparent 50%);}
+.home-hero-text{position:absolute;bottom:0;left:0;padding:18px 20px;}
+.home-hero-eyebrow{color:rgba(255,255,255,.55);font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;}
+.home-hero-title{font-family:'Playfair Display',serif;color:#fff;font-size:28px;font-weight:700;line-height:1.05;margin-bottom:4px;}
+.home-hero-sub{color:rgba(255,255,255,.7);font-size:12px;}
+
+/* Featured banner */
+.featured-banner{background:var(--red);border-radius:10px;padding:18px 20px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden;}
+.featured-banner::after{content:'';position:absolute;right:-20px;top:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.06);}
+.featured-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:5px;font-weight:700;}
+.featured-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:4px;}
+.featured-sub{font-size:11px;color:rgba(255,255,255,.7);margin-bottom:8px;}
+.featured-desc{font-size:12px;color:rgba(255,255,255,.8);line-height:1.5;}
+
+/* Channel list in chat */
+#channel-list button{
+  width:100%;text-align:left;padding:7px 10px;border-radius:8px;border:none;
+  cursor:pointer;font-size:12px;display:flex;align-items:center;gap:8px;
+  color:rgba(255,255,255,.45);background:transparent;transition:all .15s;
+  font-family:'Inter',sans-serif;margin-bottom:2px;
+}
+#channel-list button:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);}
+#channel-list button.active{background:rgba(166,50,32,.25);color:#f87a6a;}
+.chan-label{font-family:'Courier New',monospace;font-size:12px;}
+
+/* Utility */
+.max-w{max-width:640px;margin-left:auto;margin-right:auto;}
+.p20{padding:20px;}
+.mb12{margin-bottom:12px;}
+.dashed-add{
+  width:100%;border:2px dashed var(--wire);border-radius:10px;padding:14px;
+  color:var(--ink-lt);font-size:13px;background:transparent;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;
+}
+.dashed-add:hover{border-color:var(--red);color:var(--red);}
+</style>
 </head>
 <body>
 
-<div class="shell">
-
-  <!-- ═══════════════════════════════════════════════════════ SIDEBAR -->
-  <div class="sidebar">
-    <div class="sidebar-brand">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-        <img src="https://bellbucklechamber.com/wp-content/uploads/2022/02/quilt-square-300x300.png" style="width:36px; height:36px; border-radius:4px; flex-shrink:0;" alt="Bell Buckle quilt square">
-      </div>
-      <div class="brand-name">Bell Buckle<br>Connect</div>
-      <div class="brand-sub" style="font-style:italic; margin-top:5px; font-size:9px; color:rgba(255,255,255,0.4);">"Close to home, but a world away"</div>
+<!-- ════════════════════════════════
+     AUTH OVERLAY
+════════════════════════════════ -->
+<div id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="https://bellbucklechamber.com/wp-content/uploads/2022/02/quilt-square-300x300.png"
+           alt="Bell Buckle" onerror="this.style.display='none'">
+      <h1>Bell Buckle</h1>
+      <p>Connect</p>
+      <small>Bell Buckle, Tennessee · Est. 1852</small>
     </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Main</div>
-      <div class="nav-item active" onclick="showScreen('home')">
-        <span class="nav-icon">🏡</span> Home
-      </div>
-      <div class="nav-item" onclick="showScreen('overview')">
-        <span class="nav-icon">🗺️</span> App Overview
-      </div>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Sections</div>
-      <div class="nav-item" onclick="showScreen('fundraising')">
-        <span class="nav-icon">💰</span> Raise Funds
-        <span class="nav-badge">3</span>
-      </div>
-      <div class="nav-item" onclick="showScreen('community')">
-        <span class="nav-icon">🤝</span> Community Board
-        <span class="nav-badge">12</span>
-      </div>
-      <div class="nav-item" onclick="showScreen('services')">
-        <span class="nav-icon">🔧</span> Local Services
-      </div>
-      <div class="nav-item" onclick="showScreen('history')">
-        <span class="nav-icon">📜</span> Our History
-      </div>
-      <div class="nav-item" onclick="showScreen('murals')">
-        <span class="nav-icon">🎨</span> Art & Murals
-      </div>
-      <div class="nav-item" onclick="showScreen('beecity')">
-        <span class="nav-icon">🐝</span> Bee City USA
-      </div>
-      <div class="nav-item" onclick="showScreen('events')">
-        <span class="nav-icon">🎪</span> Town Events
-        <span class="nav-badge">4</span>
-      </div>
-      <div class="nav-item" onclick="showScreen('lostfound')">
-        <span class="nav-icon">🔍</span> Lost & Found
-        <span class="nav-badge">5</span>
-      </div>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Community</div>
-      <div class="nav-item" onclick="showScreen('chat')">
-        <span class="nav-icon">💬</span> Town Chat
-        <span class="nav-badge">9</span>
-      </div>
-      <div class="nav-item" onclick="showScreen('post')">
-        <span class="nav-icon">✏️</span> Post Listing
-      </div>
-      <div class="nav-item">
-        <span class="nav-icon">👤</span> My Profile
-      </div>
-    </div>
-
-    <div class="sidebar-footer">
-      <div class="footer-note">Bell Buckle, TN · Est. 1852<br>Wireframe v1.0 · Mark Ethan Designs</div>
-    </div>
+    <div id="auth-error"></div>
+    <input id="auth-email" class="auth-input" type="email" placeholder="Email address"
+           onkeydown="if(event.key==='Enter')doSignIn()">
+    <input id="auth-pw" class="auth-input" type="password" placeholder="Password"
+           style="margin-bottom:14px" onkeydown="if(event.key==='Enter')doSignIn()">
+    <button class="auth-btn auth-btn-primary" onclick="doSignIn()">Sign In</button>
+    <button class="auth-btn auth-btn-outline" onclick="doSignUp()">Create Account</button>
+    <p style="text-align:center;color:var(--ink-lt);font-size:11px;margin-top:14px">Community members only · Bell Buckle, TN</p>
   </div>
+</div>
 
-  <!-- ═══════════════════════════════════════════════════════ MAIN -->
+<!-- ════════════════════════════════
+     MAIN APP
+════════════════════════════════ -->
+<div class="shell" id="app" style="display:none">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <img src="https://bellbucklechamber.com/wp-content/uploads/2022/02/quilt-square-300x300.png"
+           alt="Quilt" onerror="this.style.display='none'">
+      <div class="sb-brand-text">
+        <div class="sb-brand-name">Bell Buckle</div>
+        <div class="sb-brand-sub">Connect</div>
+      </div>
+    </div>
+
+    <div class="sb-user">
+      <div class="sb-avatar"><span id="sb-initial">?</span></div>
+      <div class="sb-user-email" id="sb-email">Loading…</div>
+      <button class="sb-signout" onclick="auth.signOut()">Sign out</button>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-section-label">Community</div>
+      <button class="nav-item active" onclick="nav('home')" data-s="home"><span class="nav-icon">🏠</span> Home</button>
+      <button class="nav-item" onclick="nav('community')" data-s="community"><span class="nav-icon">📋</span> Community Board</button>
+      <button class="nav-item" onclick="nav('events')" data-s="events"><span class="nav-icon">🗓️</span> Events</button>
+      <button class="nav-item" onclick="nav('lostfound')" data-s="lostfound"><span class="nav-icon">🔍</span> Lost &amp; Found</button>
+      <button class="nav-item" onclick="nav('marketplace')" data-s="marketplace"><span class="nav-icon">🛍️</span> Marketplace</button>
+
+      <div class="sb-section-label">Bell Buckle</div>
+      <button class="nav-item" onclick="nav('history')" data-s="history"><span class="nav-icon">📜</span> Our History</button>
+      <button class="nav-item" onclick="nav('giveback')" data-s="giveback"><span class="nav-icon">❤️</span> Give Back</button>
+
+      <div class="sb-section-label">Chat</div>
+      <div id="channel-list"></div>
+    </nav>
+
+    <div class="sb-footer">
+      <p>"Close to home, but a world away"<br>Bell Buckle, TN · Est. 1852<br>Mark Ethan Designs</p>
+    </div>
+  </aside>
+
+  <!-- ── MAIN PANEL ── -->
   <div class="main">
-    <div class="topbar" id="topbar">
-      <!-- Unified scene backdrop — one continuous Tennessee landscape painting -->
-      <div class="topbar-nature">
-        <svg viewBox="0 0 1000 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
-          <defs>
-            <linearGradient id="natSky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stop-color="#b2d4ee" stop-opacity="0.55"/>
-              <stop offset="42%"  stop-color="#c8dda8" stop-opacity="0.22"/>
-              <stop offset="100%" stop-color="#d8c898" stop-opacity="0.08"/>
-            </linearGradient>
-          </defs>
 
-          <!-- Sky — unified, full width, no seam -->
-          <rect x="0" y="0" width="1000" height="64" fill="url(#natSky)"/>
+    <!-- TOPBAR -->
+    <div class="topbar">
 
-          <!-- Distant hazy back ridge -->
-          <path d="M250,64 L250,36 Q340,18 460,28 Q580,38 700,20 Q820,4 950,14 L1000,18 L1000,64 Z" fill="rgba(118,158,110,0.22)"/>
-
-          <!-- Main rolling hills — x=290 starts at y=40 to meet mountain right edge -->
-          <path d="M0,64 L0,42 Q80,34 160,38 Q230,42 270,40 L290,40 Q360,40 430,32 Q500,24 570,32 Q640,40 720,32 Q800,22 880,32 Q940,40 1000,34 L1000,64 Z" fill="rgba(50,96,44,0.44)"/>
-
-          <!-- Foreground treeline / ridge base -->
-          <path d="M280,64 L280,50 Q340,42 405,50 Q465,58 530,48 Q595,38 665,48 Q730,58 800,48 Q855,40 920,48 Q962,54 1000,50 L1000,64 Z" fill="rgba(34,66,28,0.52)"/>
-
-          <!-- ── TREES (right side only — left 290px covered by mountain) ── -->
-
-          <!-- Pine cluster x≈310 -->
-          <g class="t-sway-c">
-            <rect x="308.5" y="54" width="3" height="8" fill="rgba(78,50,24,0.62)"/>
-            <polygon points="310,33 304,50 316,50" fill="rgba(34,66,30,0.74)"/>
-            <polygon points="310,24 303,41 317,41" fill="rgba(42,78,38,0.74)"/>
-            <polygon points="310,18 304,30 316,30" fill="rgba(50,90,46,0.7)"/>
-          </g>
-
-          <!-- Deciduous x≈352 -->
-          <g class="t-sway-a">
-            <rect x="351" y="52" width="2.5" height="10" fill="rgba(78,50,24,0.58)"/>
-            <ellipse cx="352" cy="43" rx="12" ry="11" fill="rgba(46,90,40,0.7)"/>
-            <ellipse cx="347" cy="39" rx="8"  ry="8"  fill="rgba(56,104,50,0.6)"/>
-            <ellipse cx="358" cy="40" rx="8"  ry="8"  fill="rgba(42,82,36,0.6)"/>
-          </g>
-
-          <!-- Pine x≈400 -->
-          <g class="t-sway-d">
-            <rect x="398.5" y="55" width="3" height="7" fill="rgba(78,50,24,0.58)"/>
-            <polygon points="400,35 393,53 407,53" fill="rgba(34,66,30,0.7)"/>
-            <polygon points="400,26 392,44 408,44" fill="rgba(42,78,38,0.7)"/>
-            <polygon points="400,20 393,32 407,32" fill="rgba(50,90,46,0.66)"/>
-          </g>
-
-          <!-- Barn x≈440 -->
-          <rect x="429" y="40" width="24" height="22" fill="rgba(150,56,35,0.34)"/>
-          <polygon points="429,40 441,30 453,40" fill="rgba(120,42,28,0.34)"/>
-          <rect x="438" y="46" width="6" height="16" fill="rgba(98,34,22,0.28)"/>
-
-          <!-- Deciduous x≈480 -->
-          <g class="t-sway-b">
-            <rect x="479" y="52" width="2.5" height="10" fill="rgba(78,50,24,0.58)"/>
-            <ellipse cx="480" cy="43" rx="13" ry="11" fill="rgba(44,88,38,0.7)"/>
-            <ellipse cx="475" cy="39" rx="9"  ry="8"  fill="rgba(54,102,48,0.6)"/>
-            <ellipse cx="486" cy="40" rx="9"  ry="8"  fill="rgba(40,80,34,0.6)"/>
-          </g>
-
-          <!-- Water tower x≈532 -->
-          <rect x="526" y="30" width="12" height="30" rx="1.5" fill="rgba(168,144,112,0.36)"/>
-          <ellipse cx="532" cy="30" rx="6" ry="4" fill="rgba(150,124,92,0.38)"/>
-          <line x1="516" y1="48" x2="526" y2="48" stroke="rgba(132,104,64,0.32)" stroke-width="1.8"/>
-          <line x1="538" y1="48" x2="548" y2="48" stroke="rgba(132,104,64,0.32)" stroke-width="1.8"/>
-
-          <!-- Pine x≈572 -->
-          <g class="t-sway-c">
-            <rect x="570.5" y="55" width="3" height="7" fill="rgba(78,50,24,0.58)"/>
-            <polygon points="572,35 565,53 579,53" fill="rgba(34,66,30,0.7)"/>
-            <polygon points="572,26 564,45 580,45" fill="rgba(42,78,38,0.7)"/>
-            <polygon points="572,20 565,32 579,32" fill="rgba(50,90,46,0.66)"/>
-          </g>
-
-          <!-- Tall deciduous x≈618 -->
-          <g class="t-sway-e">
-            <rect x="617" y="50" width="2.5" height="12" fill="rgba(78,50,24,0.58)"/>
-            <ellipse cx="618" cy="40" rx="11" ry="13" fill="rgba(46,90,40,0.7)"/>
-            <ellipse cx="613" cy="36" rx="8"  ry="9"  fill="rgba(56,104,50,0.6)"/>
-            <ellipse cx="624" cy="37" rx="8"  ry="9"  fill="rgba(42,82,36,0.6)"/>
-          </g>
-
-          <!-- Farmhouse x≈663 -->
-          <rect x="652" y="42" width="22" height="20" fill="rgba(220,200,168,0.3)"/>
-          <polygon points="652,42 663,32 674,42" fill="rgba(170,72,48,0.3)"/>
-
-          <!-- Fence x≈692-732 -->
-          <line x1="690" y1="52" x2="734" y2="52" stroke="rgba(144,114,74,0.34)" stroke-width="1.4"/>
-          <line x1="694" y1="49" x2="694" y2="55" stroke="rgba(144,114,74,0.34)" stroke-width="2"/>
-          <line x1="703" y1="49" x2="703" y2="55" stroke="rgba(144,114,74,0.34)" stroke-width="2"/>
-          <line x1="712" y1="49" x2="712" y2="55" stroke="rgba(144,114,74,0.34)" stroke-width="2"/>
-          <line x1="721" y1="49" x2="721" y2="55" stroke="rgba(144,114,74,0.34)" stroke-width="2"/>
-          <line x1="730" y1="49" x2="730" y2="55" stroke="rgba(144,114,74,0.34)" stroke-width="2"/>
-
-          <!-- Pine pair x≈758,775 -->
-          <g class="t-sway-a">
-            <rect x="756.5" y="55" width="3" height="7" fill="rgba(78,50,24,0.56)"/>
-            <polygon points="758,36 751,53 765,53" fill="rgba(34,66,30,0.67)"/>
-            <polygon points="758,27 750,45 766,45" fill="rgba(42,78,38,0.67)"/>
-          </g>
-          <g class="t-sway-b">
-            <rect x="773.5" y="56" width="3" height="6" fill="rgba(78,50,24,0.54)"/>
-            <polygon points="775,39 768,55 782,55" fill="rgba(34,66,30,0.63)"/>
-            <polygon points="775,30 767,47 783,47" fill="rgba(42,78,38,0.63)"/>
-          </g>
-
-          <!-- Deciduous x≈814 -->
-          <g class="t-sway-d">
-            <rect x="813" y="52" width="2.5" height="10" fill="rgba(78,50,24,0.56)"/>
-            <ellipse cx="814" cy="43" rx="12" ry="10" fill="rgba(46,90,40,0.67)"/>
-            <ellipse cx="809" cy="39" rx="8"  ry="8"  fill="rgba(56,104,50,0.57)"/>
-            <ellipse cx="820" cy="40" rx="8"  ry="8"  fill="rgba(42,82,36,0.57)"/>
-          </g>
-
-          <!-- Pine x≈862 -->
-          <g class="t-sway-c">
-            <rect x="860.5" y="55" width="3" height="7" fill="rgba(78,50,24,0.54)"/>
-            <polygon points="862,36 855,54 869,54" fill="rgba(34,66,30,0.66)"/>
-            <polygon points="862,27 854,45 870,45" fill="rgba(42,78,38,0.66)"/>
-            <polygon points="862,21 855,33 869,33" fill="rgba(50,90,46,0.62)"/>
-          </g>
-
-          <!-- Deciduous x≈912 -->
-          <g class="t-sway-e">
-            <rect x="911" y="53" width="2.5" height="9" fill="rgba(78,50,24,0.54)"/>
-            <ellipse cx="912" cy="44" rx="11" ry="10" fill="rgba(46,90,40,0.66)"/>
-            <ellipse cx="907" cy="40" rx="7"  ry="8"  fill="rgba(56,104,50,0.56)"/>
-            <ellipse cx="917" cy="41" rx="7"  ry="8"  fill="rgba(42,82,36,0.56)"/>
-          </g>
-
-          <!-- Small birds in sky (subtle V shapes) -->
-          <path d="M654,13 Q656,11 658,13" fill="none" stroke="rgba(70,98,136,0.3)" stroke-width="1.2"/>
-          <path d="M663,9 Q665,7 667,9"   fill="none" stroke="rgba(70,98,136,0.26)" stroke-width="1.2"/>
-          <path d="M735,15 Q737,13 739,15" fill="none" stroke="rgba(70,98,136,0.24)" stroke-width="1.2"/>
-          <path d="M826,9 Q828,7 830,9"   fill="none" stroke="rgba(70,98,136,0.22)" stroke-width="1.2"/>
-
-          <!-- ── GRASS tufts — swaying in the breeze ── -->
-          <g class="g-wave-a">
-            <path d="M318,64 Q319,59 317,55" stroke="rgba(60,98,46,0.62)" stroke-width="1.6" fill="none"/>
-            <path d="M321,64 Q323,58 326,54" stroke="rgba(54,92,40,0.56)" stroke-width="1.6" fill="none"/>
-            <path d="M324,64 Q323,60 320,56" stroke="rgba(64,104,50,0.58)" stroke-width="1.6" fill="none"/>
-          </g>
-          <g class="g-wave-b">
-            <path d="M450,64 Q451,59 449,55" stroke="rgba(60,98,46,0.6)"  stroke-width="1.6" fill="none"/>
-            <path d="M453,64 Q455,58 458,54" stroke="rgba(54,92,40,0.54)" stroke-width="1.6" fill="none"/>
-            <path d="M456,64 Q455,60 452,56" stroke="rgba(64,104,50,0.56)" stroke-width="1.6" fill="none"/>
-          </g>
-          <g class="g-wave-c">
-            <path d="M596,64 Q597,59 595,55" stroke="rgba(60,98,46,0.6)"  stroke-width="1.6" fill="none"/>
-            <path d="M599,64 Q601,58 604,54" stroke="rgba(54,92,40,0.54)" stroke-width="1.6" fill="none"/>
-            <path d="M602,64 Q601,60 598,56" stroke="rgba(64,104,50,0.56)" stroke-width="1.6" fill="none"/>
-          </g>
-          <g class="g-wave-d">
-            <path d="M740,64 Q741,59 739,55" stroke="rgba(60,98,46,0.58)" stroke-width="1.6" fill="none"/>
-            <path d="M743,64 Q745,58 748,54" stroke="rgba(54,92,40,0.52)" stroke-width="1.6" fill="none"/>
-            <path d="M746,64 Q745,60 742,56" stroke="rgba(64,104,50,0.54)" stroke-width="1.6" fill="none"/>
-          </g>
-          <g class="g-wave-a">
-            <path d="M880,64 Q881,59 879,55" stroke="rgba(60,98,46,0.57)" stroke-width="1.6" fill="none"/>
-            <path d="M883,64 Q885,58 888,54" stroke="rgba(54,92,40,0.51)" stroke-width="1.6" fill="none"/>
-            <path d="M886,64 Q885,60 882,56" stroke="rgba(64,104,50,0.53)" stroke-width="1.6" fill="none"/>
-          </g>
-          <g class="g-wave-c">
-            <path d="M970,64 Q971,59 969,55" stroke="rgba(60,98,46,0.54)" stroke-width="1.6" fill="none"/>
-            <path d="M973,64 Q975,58 978,54" stroke="rgba(54,92,40,0.48)" stroke-width="1.6" fill="none"/>
-            <path d="M976,64 Q975,60 972,56" stroke="rgba(64,104,50,0.5)"  stroke-width="1.6" fill="none"/>
-          </g>
-
-          <!-- Ground line -->
-          <line x1="0" y1="62" x2="1000" y2="62" stroke="rgba(100,75,45,0.2)" stroke-width="1"/>
-        </svg>
+      <!-- Left dark panel with brand -->
+      <div class="topbar-left">
+        <div class="topbar-brand-name">Bell Buckle</div>
+        <div class="topbar-brand-sub">🚂 Connect</div>
+        <div class="bee-badge">🐝 Bee City USA</div>
       </div>
 
-      <!-- 3 bees buzzing across the bar — Bell Buckle is Bee City USA! -->
+      <!-- Bees (fly across full topbar width) -->
       <div class="bee bee-1">
-        <svg viewBox="0 0 22 14" width="22" height="14" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="13" cy="4.5" rx="5" ry="3"   fill="rgba(215,238,255,0.82)" stroke="rgba(140,195,225,0.45)" stroke-width="0.6"/>
-          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.72)" stroke="rgba(140,195,225,0.35)" stroke-width="0.5"/>
-          <ellipse cx="11.5" cy="9" rx="7"   ry="4.5" fill="#e8b830"/>
-          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
-          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
+        <svg viewBox="0 0 22 14" width="22" height="14">
+          <ellipse cx="13" cy="4.5" rx="5" ry="3" fill="rgba(215,238,255,.82)" stroke="rgba(140,195,225,.45)" stroke-width=".6"/>
+          <ellipse cx="16" cy="8" rx="3.8" ry="2.2" fill="rgba(215,238,255,.72)" stroke="rgba(140,195,225,.35)" stroke-width=".5"/>
+          <ellipse cx="11.5" cy="9" rx="7" ry="4.5" fill="#e8b830"/>
+          <ellipse cx="10" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity=".62"/>
+          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity=".62"/>
           <circle cx="4.5" cy="9" r="3.5" fill="#2a1a08"/>
-          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.6)"/>
-          <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
+          <circle cx="3.5" cy="7.8" r=".9" fill="rgba(255,255,255,.6)"/>
+          <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width=".9"/>
           <circle cx="2.5" cy="2" r="1.1" fill="#e8b830"/>
-          <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
+          <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width=".9"/>
           <circle cx="7.5" cy="2" r="1.1" fill="#e8b830"/>
           <polygon points="18.5,9 21,8 21,10" fill="#2a1a08"/>
         </svg>
       </div>
-      <div class="bee bee-2">
-        <svg viewBox="0 0 22 14" width="22" height="14" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="13" cy="4.5" rx="5" ry="3"   fill="rgba(215,238,255,0.82)" stroke="rgba(140,195,225,0.45)" stroke-width="0.6"/>
-          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.72)" stroke="rgba(140,195,225,0.35)" stroke-width="0.5"/>
-          <ellipse cx="11.5" cy="9" rx="7"   ry="4.5" fill="#e8b830"/>
-          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
-          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
+      <div class="bee bee-2" style="transform:scaleX(-1)">
+        <svg viewBox="0 0 22 14" width="22" height="14">
+          <ellipse cx="13" cy="4.5" rx="5" ry="3" fill="rgba(215,238,255,.82)" stroke="rgba(140,195,225,.45)" stroke-width=".6"/>
+          <ellipse cx="16" cy="8" rx="3.8" ry="2.2" fill="rgba(215,238,255,.72)" stroke="rgba(140,195,225,.35)" stroke-width=".5"/>
+          <ellipse cx="11.5" cy="9" rx="7" ry="4.5" fill="#e8b830"/>
+          <ellipse cx="10" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity=".62"/>
+          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity=".62"/>
           <circle cx="4.5" cy="9" r="3.5" fill="#2a1a08"/>
-          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.6)"/>
-          <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
+          <circle cx="3.5" cy="7.8" r=".9" fill="rgba(255,255,255,.6)"/>
+          <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width=".9"/>
           <circle cx="2.5" cy="2" r="1.1" fill="#e8b830"/>
-          <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
+          <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width=".9"/>
           <circle cx="7.5" cy="2" r="1.1" fill="#e8b830"/>
           <polygon points="18.5,9 21,8 21,10" fill="#2a1a08"/>
         </svg>
       </div>
       <div class="bee bee-3">
-        <svg viewBox="0 0 22 14" width="22" height="14" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="13" cy="4.5" rx="5" ry="3"   fill="rgba(215,238,255,0.82)" stroke="rgba(140,195,225,0.45)" stroke-width="0.6"/>
-          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.72)" stroke="rgba(140,195,225,0.35)" stroke-width="0.5"/>
-          <ellipse cx="11.5" cy="9" rx="7"   ry="4.5" fill="#e8b830"/>
-          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
-          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
+        <svg viewBox="0 0 22 14" width="22" height="14">
+          <ellipse cx="13" cy="4.5" rx="5" ry="3" fill="rgba(215,238,255,.82)" stroke="rgba(140,195,225,.45)" stroke-width=".6"/>
+          <ellipse cx="16" cy="8" rx="3.8" ry="2.2" fill="rgba(215,238,255,.72)" stroke="rgba(140,195,225,.35)" stroke-width=".5"/>
+          <ellipse cx="11.5" cy="9" rx="7" ry="4.5" fill="#e8b830"/>
+          <ellipse cx="10" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity=".62"/>
+          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity=".62"/>
           <circle cx="4.5" cy="9" r="3.5" fill="#2a1a08"/>
-          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.6)"/>
-          <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
+          <circle cx="3.5" cy="7.8" r=".9" fill="rgba(255,255,255,.6)"/>
+          <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width=".9"/>
           <circle cx="2.5" cy="2" r="1.1" fill="#e8b830"/>
-          <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
+          <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width=".9"/>
           <circle cx="7.5" cy="2" r="1.1" fill="#e8b830"/>
           <polygon points="18.5,9 21,8 21,10" fill="#2a1a08"/>
         </svg>
       </div>
 
-      <!-- Tennessee mountain with tunnel — train hides behind mountain, emerges from tunnel -->
-      <div class="topbar-mountain">
-        <svg viewBox="0 0 290 64" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
-          <defs>
-            <linearGradient id="mtnMain" x1="0.2" y1="0" x2="0.5" y2="1">
-              <stop offset="0%"   stop-color="#5c8c52"/>
-              <stop offset="50%"  stop-color="#3d6b3a"/>
-              <stop offset="100%" stop-color="#243820"/>
-            </linearGradient>
-            <linearGradient id="mtnShadow" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stop-color="#1e3018" stop-opacity="0.55"/>
-              <stop offset="100%" stop-color="#0a1208" stop-opacity="0.7"/>
-            </linearGradient>
-            <!-- Clip mountain fills: punch tunnel-ellipse hole so train shows through dark void -->
-            <clipPath id="mtnHole">
-              <path fill-rule="evenodd" d="M-1,-1 L291,-1 L291,65 L-1,65 Z M247,37 a21,26 0 1,0 42,0 a21,26 0 1,0 -42,0"/>
-            </clipPath>
-            <!-- Soft blend at very right edge only — doesn't reach tunnel centre -->
-            <linearGradient id="edgeFade" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stop-color="#fdfaf4" stop-opacity="0"/>
-              <stop offset="89%"  stop-color="#fdfaf4" stop-opacity="0"/>
-              <stop offset="97%"  stop-color="#fdfaf4" stop-opacity="0.26"/>
-              <stop offset="100%" stop-color="#fdfaf4" stop-opacity="0.58"/>
-            </linearGradient>
-            <!-- Headlight / daylight glow through tunnel — warm at bottom where tracks are -->
-            <radialGradient id="tunnelGlow" cx="50%" cy="80%" r="60%">
-              <stop offset="0%"   stop-color="#fff4a0" stop-opacity="0.72"/>
-              <stop offset="22%"  stop-color="#e8b830" stop-opacity="0.42"/>
-              <stop offset="55%"  stop-color="#c07818" stop-opacity="0.16"/>
-              <stop offset="100%" stop-color="#000"    stop-opacity="0"/>
-            </radialGradient>
-            <!-- Warm amber spill onto mountain face from tunnel -->
-            <radialGradient id="tunnelAmbient" cx="70%" cy="90%" r="50%">
-              <stop offset="0%"   stop-color="#e8b830" stop-opacity="0.26"/>
-              <stop offset="100%" stop-color="#e8b830" stop-opacity="0"/>
-            </radialGradient>
-            <!-- Deep inside tunnel: faint daylight from far end -->
-            <radialGradient id="tunnelFarEnd" cx="50%" cy="40%" r="35%">
-              <stop offset="0%"   stop-color="#a8c8e0" stop-opacity="0.22"/>
-              <stop offset="100%" stop-color="#000"    stop-opacity="0"/>
-            </radialGradient>
-            <filter id="mtnSoft">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="0.4"/>
-            </filter>
-          </defs>
-
-          <!-- ══ Mountain fills — clipped so ONLY the tunnel ellipse is transparent ══ -->
-          <!-- Train is hidden everywhere except the tunnel void hole -->
-          <g clip-path="url(#mtnHole)">
-
-          <!-- BACK ridge (distance, lighter) -->
-          <path d="M0,64 L0,42 Q22,28 48,34 Q74,40 98,26 Q122,12 148,18 Q172,24 196,16 Q218,8 240,20 Q260,30 280,36 L290,38 L290,64 Z"
-                fill="#4a7844" opacity="0.45"/>
-
-          <!-- MAIN mountain range -->
-          <path d="M0,64 L0,38 Q14,16 36,22 Q58,28 80,12 Q104,-2 130,4 Q156,10 178,2 Q198,-4 220,8 Q240,18 256,26 Q268,32 278,38 L290,40 L290,64 Z"
-                fill="url(#mtnMain)"/>
-
-          <!-- Sunlit face highlight (left slopes catch light) -->
-          <path d="M0,38 Q14,16 36,22 Q58,28 80,12 Q104,-2 130,4 L130,64 L0,64 Z"
-                fill="rgba(255,255,255,0.09)"/>
-
-          <!-- Dark shadow side (right slopes) -->
-          <path d="M178,2 Q198,-4 220,8 Q240,18 256,26 Q268,32 278,38 L290,40 L290,64 L178,64 Z"
-                fill="url(#mtnShadow)"/>
-
-          <!-- Treeline texture along lower ridge -->
-          <path d="M0,50 Q18,44 32,48 Q46,52 62,47 Q78,42 94,47 Q110,52 126,47 Q142,42 158,47 Q174,52 192,48 Q210,44 228,48 Q244,52 262,48 Q274,46 290,48 L290,64 L0,64 Z"
-                fill="rgba(25,48,22,0.38)"/>
-
-          <!-- Snow/rock cap on tallest peak (around x=178, y=2) -->
-          <path d="M168,14 Q178,2 188,14 Q183,12 178,11 Q173,12 168,14 Z"
-                fill="rgba(255,255,255,0.3)"/>
-          <!-- Secondary snow cap (x=80, y=12) -->
-          <path d="M73,20 Q80,12 87,20 Q83,18 80,17 Q77,18 73,20 Z"
-                fill="rgba(255,255,255,0.22)"/>
-
-          <!-- Ridgeline highlight stroke -->
-          <path d="M0,38 Q14,16 36,22 Q58,28 80,12 Q104,-2 130,4 Q156,10 178,2 Q198,-4 220,8 Q240,18 256,26 Q268,32 278,38 L290,40"
-                fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-
-          <!-- Tiny pine trees on mountainside -->
-          <polygon points="50,48 47,54 53,54"  fill="rgba(20,42,18,0.6)"/>
-          <polygon points="50,44 46,50 54,50"  fill="rgba(25,50,22,0.6)"/>
-          <polygon points="62,46 59,53 65,53"  fill="rgba(20,42,18,0.55)"/>
-          <polygon points="62,42 58,48 66,48"  fill="rgba(25,50,22,0.55)"/>
-          <polygon points="200,44 197,51 203,51" fill="rgba(20,42,18,0.5)"/>
-          <polygon points="200,40 196,46 204,46" fill="rgba(25,50,22,0.5)"/>
-          <polygon points="215,46 212,53 218,53" fill="rgba(20,42,18,0.45)"/>
-          <polygon points="215,42 211,48 219,48" fill="rgba(25,50,22,0.45)"/>
-
-          <!-- Warm paper wash — softens saturated mountain fills to match airy landscape palette -->
-          <rect x="0" y="0" width="290" height="64" fill="rgba(242,235,224,0.46)"/>
-
-          </g><!-- end mountain fills mask group -->
-
-          <!-- ═══════════════════════════════════════════════════════════════════ -->
-          <!-- TUNNEL PORTAL — full stone arch, centered x=268, spans x=248–290  -->
-          <!-- Looks like the reference photos: arch carved INTO mountain, depth   -->
-          <!-- perspective inside, tracks receding, warm headlight from inside     -->
-          <!-- ═══════════════════════════════════════════════════════════════════ -->
-
-          <!-- Rocky portal face — dark stone block embedded in mountain face -->
-          <path d="M246,64 L246,36 Q268,5 290,36 L290,64 Z" fill="#0e0a06"/>
-
-          <!-- ── INTERIOR: looking INTO the tunnel — semi-transparent so train glows through ── -->
-          <!-- Base tunnel void: 80% dark so locomotive is faintly visible inside -->
-          <ellipse cx="268" cy="37" rx="21" ry="26" fill="rgba(4,2,1,0.80)"/>
-          <!-- Faint daylight from far end (other side of mountain, blue sky) -->
-          <ellipse cx="268" cy="37" rx="21" ry="26" fill="url(#tunnelFarEnd)"/>
-          <!-- Warm headlight beam coming toward viewer -->
-          <ellipse cx="268" cy="37" rx="21" ry="26" fill="url(#tunnelGlow)"/>
-
-          <!-- Interior ceiling arch — darker, showing curvature into depth -->
-          <path d="M250,40 Q268,14 286,40" fill="rgba(0,0,0,0.4)" stroke="none"/>
-          <!-- Interior side walls — perspective lines converging to vanishing point -->
-          <path d="M250,64 L254,48 Q258,38 262,33" stroke="rgba(30,18,8,0.7)" stroke-width="1.5" fill="none"/>
-          <path d="M286,64 L282,48 Q278,38 274,33" stroke="rgba(30,18,8,0.7)" stroke-width="1.5" fill="none"/>
-
-          <!-- ── TRACKS with perspective — wide at mouth, converge inward ── -->
-          <!-- Left rail -->
-          <path d="M261,64 Q259,54 257,44" stroke="rgba(100,74,42,0.75)" stroke-width="2.2" fill="none"/>
-          <!-- Right rail -->
-          <path d="M275,64 Q276,54 279,44" stroke="rgba(100,74,42,0.75)" stroke-width="2.2" fill="none"/>
-          <!-- Cross ties — closest (widest, most detail) -->
-          <rect x="261" y="62" width="14" height="2.5" rx="0.5" fill="rgba(68,46,22,0.75)"/>
-          <!-- Tie 2 -->
-          <rect x="260" y="57" width="15" height="2" rx="0.5" fill="rgba(68,46,22,0.65)"/>
-          <!-- Tie 3 -->
-          <rect x="259" y="52" width="16" height="1.8" rx="0.5" fill="rgba(68,46,22,0.52)"/>
-          <!-- Tie 4 — perspective narrows -->
-          <rect x="258" y="47" width="17" height="1.5" rx="0.5" fill="rgba(68,46,22,0.38)"/>
-          <!-- Tie 5 — fading into depth -->
-          <rect x="257" y="43" width="18" height="1" rx="0.5" fill="rgba(68,46,22,0.22)"/>
-
-          <!-- ── STONE ARCH — multi-layer for depth and realism ── -->
-          <!-- Outer rough edge (thick, dark) -->
-          <path d="M246,64 L246,38 Q268,5 290,38 L290,64" fill="none" stroke="#1e1008" stroke-width="8" stroke-linejoin="round"/>
-          <!-- Main arch face (mid-tone stone) -->
-          <path d="M246,64 L246,38 Q268,5 290,38 L290,64" fill="none" stroke="#4e3218" stroke-width="5" stroke-linejoin="round"/>
-          <!-- Inner arch bevel (lighter, catches light) -->
-          <path d="M249,64 L249,40 Q268,9 287,40 L287,64" fill="none" stroke="#7a5230" stroke-width="2.5" stroke-linejoin="round"/>
-          <!-- Arch inner highlight — rim light -->
-          <path d="M251,41 Q268,12 285,41" fill="none" stroke="rgba(168,122,68,0.5)" stroke-width="1.2"/>
-
-          <!-- Keystone at arch crown -->
-          <path d="M262,8 Q268,2 274,8 L271,6 Q268,4.5 265,6 Z" fill="rgba(100,72,38,0.8)"/>
-          <path d="M264,9 Q268,4 272,9" fill="none" stroke="rgba(140,100,55,0.55)" stroke-width="0.8"/>
-
-          <!-- Voussoir blocks (stone segments in arch) — left side -->
-          <path d="M246,55 Q248,44 252,32" fill="none" stroke="rgba(35,20,8,0.45)" stroke-width="1"/>
-          <path d="M248,49 Q252,38 257,26" fill="none" stroke="rgba(35,20,8,0.38)" stroke-width="0.8"/>
-          <path d="M250,43 Q255,32 261,20" fill="none" stroke="rgba(35,20,8,0.32)" stroke-width="0.7"/>
-          <!-- Voussoir blocks — right side -->
-          <path d="M290,55 Q288,44 284,32" fill="none" stroke="rgba(35,20,8,0.45)" stroke-width="1"/>
-          <path d="M288,49 Q284,38 279,26" fill="none" stroke="rgba(35,20,8,0.38)" stroke-width="0.8"/>
-          <path d="M286,43 Q281,32 275,20" fill="none" stroke="rgba(35,20,8,0.32)" stroke-width="0.7"/>
-
-          <!-- Left side shadow (arch left face in shadow) -->
-          <path d="M246,64 L246,38 Q255,22 263,14 Q268,5 268,5" fill="rgba(0,0,0,0.22)" stroke="none"/>
-
-          <!-- Warm amber glow spilling OUT onto mountain face from tunnel -->
-          <ellipse cx="272" cy="52" rx="28" ry="16" fill="url(#tunnelAmbient)"/>
-
-          <!-- Ground track continues right out of tunnel mouth -->
-          <line x1="261" y1="63" x2="290" y2="63" stroke="rgba(105,78,44,0.6)" stroke-width="2"/>
-          <line x1="275" y1="63" x2="290" y2="63" stroke="rgba(105,78,44,0.6)" stroke-width="2"/>
-
-          <!-- Soft right-edge blend — only affects the outer mountain edge, not the tunnel -->
-          <rect x="0" y="0" width="290" height="64" fill="url(#edgeFade)"/>
-        </svg>
-      </div>
-
-      <!-- Warm amber glow at tunnel exit — bleeds just past mountain boundary -->
-      <div class="tunnel-exit-glow"></div>
-      <!-- Steam drifting up from the tunnel mouth -->
-      <div class="tunnel-steam">
-        <span></span><span></span><span></span>
-      </div>
-
-      <!-- Mountain brand — always shows app name, not current page -->
-      <div class="topbar-text">
-        <div class="topbar-brand-name">Bell Buckle</div>
-        <div class="topbar-brand-sub">🚂 Connect</div>
-      </div>
-
-      <!-- Page title — in main topbar area to the right of mountain -->
-      <div class="topbar-page-info">
-        <div class="page-title" id="page-title">🏠 Home</div>
-        <div class="page-breadcrumb" id="page-breadcrumb">Bell Buckle Connect › Home</div>
-      </div>
-
-      <div class="topbar-actions">
-        <span id="topbar-user" style="font-size:11px;font-family:sans-serif;color:rgba(255,255,255,0.75);margin-right:6px;"></span>
-        <div class="btn btn-secondary" onclick="showScreen('post')">+ Post</div>
-        <div class="btn btn-primary" onclick="showScreen('fundraising')">Donate</div>
-        <div id="topbar-signout" style="display:none;" class="btn" onclick="auth.signOut()" style="font-size:11px;cursor:pointer;background:transparent;border:1px solid rgba(255,255,255,0.35);color:#fff;padding:4px 9px;border-radius:5px;">Sign out</div>
-      </div>
-      <!-- Animated train running along the bottom of the header bar -->
+      <!-- Train -->
       <div class="train-ride">
-        <svg viewBox="0 0 300 32" xmlns="http://www.w3.org/2000/svg" style="height:32px; display:block;">
-          <!-- === LOCOMOTIVE === -->
-
-          <!-- === CABOOSE (last car, left/rear of train) === -->
-          <!-- Cupola -->
-          <rect x="84"  y="4"  width="14" height="9"  rx="1.5" fill="#a63220"/>
-          <rect x="82"  y="3"  width="18" height="3"  rx="1"   fill="#3a1e0e"/>
-          <!-- Roof -->
-          <rect x="80"  y="11" width="40" height="4"  rx="1.5" fill="#3a1e0e"/>
-          <!-- Body -->
-          <rect x="82"  y="14" width="36" height="11" rx="2"   fill="#a63220"/>
-          <rect x="82"  y="19" width="36" height="1"           fill="#7e2518" opacity="0.5"/>
-          <!-- Cupola windows -->
-          <rect x="86"  y="5.5" width="4" height="4" rx="0.8" fill="#f2dbb0" opacity="0.9"/>
-          <rect x="93"  y="5.5" width="4" height="4" rx="0.8" fill="#f2dbb0" opacity="0.9"/>
-          <!-- Side windows -->
-          <rect x="85"  y="15" width="7" height="6" rx="1" fill="#f2dbb0" opacity="0.9"/>
-          <rect x="109" y="15" width="7" height="6" rx="1" fill="#f2dbb0" opacity="0.9"/>
-          <!-- Door -->
-          <rect x="96"  y="14" width="9" height="11" rx="1" fill="#8b2a14"/>
-          <line x1="100.5" y1="14" x2="100.5" y2="25" stroke="#7a2210" stroke-width="0.8"/>
-          <circle cx="104" cy="20" r="1.1" fill="#e8b830"/>
-          <!-- Rear coupler (far left) -->
-          <rect x="77"  y="19" width="5"  height="3" rx="1" fill="#5a3e22"/>
-          <rect x="75"  y="17.5" width="3" height="6" rx="1" fill="#4a3015"/>
-          <!-- Caboose wheels -->
-          <circle cx="89"  cy="25" r="4.5" fill="#2a1f10"/>
-          <circle cx="89"  cy="25" r="3"   fill="#3d2a18"/>
-          <circle cx="89"  cy="25" r="1.2" fill="#e8b830"/>
-          <circle cx="111" cy="25" r="4.5" fill="#2a1f10"/>
-          <circle cx="111" cy="25" r="3"   fill="#3d2a18"/>
-          <circle cx="111" cy="25" r="1.2" fill="#e8b830"/>
-          <!-- Forward coupler to tender -->
-          <rect x="118" y="19" width="6" height="3" rx="1" fill="#5a3e22"/>
-
-          <!-- === TENDER (coal car) === -->
-          <rect x="124" y="13" width="22" height="12" rx="2" fill="#2a1a08"/>
-          <rect x="124" y="13" width="22" height="3"  rx="1" fill="#3a2510" opacity="0.6"/>
-          <!-- Tender wheels -->
-          <circle cx="130" cy="25" r="4"   fill="#2a1f10"/>
-          <circle cx="130" cy="25" r="2.5" fill="#3d2a18"/>
-          <circle cx="140" cy="25" r="4"   fill="#2a1f10"/>
-          <circle cx="140" cy="25" r="2.5" fill="#3d2a18"/>
-          <!-- Forward coupler -->
-          <rect x="146" y="19" width="6" height="3" rx="1" fill="#5a3e22"/>
-
-          <!-- === LOCOMOTIVE (faces RIGHT — front is on the RIGHT) === -->
-          <!-- Cab (back/left of engine) -->
-          <rect x="152" y="5"  width="18" height="20" rx="2" fill="#4a2a12"/>
-          <rect x="150" y="4"  width="21" height="3"  rx="1" fill="#2a1a08"/>
-          <!-- Cab window -->
-          <rect x="155" y="7"  width="8"  height="8"  rx="1" fill="#f2dbb0" opacity="0.9"/>
-          <!-- Boiler -->
-          <rect x="152" y="10" width="50" height="14" rx="3" fill="#3a1e0e"/>
-          <rect x="152" y="10" width="50" height="3.5" rx="2" fill="#5a3020" opacity="0.5"/>
-          <!-- Smokestack (on boiler, facing right direction) -->
-          <rect x="182" y="2"  width="6"  height="10" rx="1" fill="#2a1a08"/>
-          <rect x="179" y="2"  width="12" height="3"  rx="1" fill="#2a1a08"/>
-          <!-- Smoke puffs above stack -->
-          <circle cx="185" cy="1.5" r="3"   fill="rgba(160,140,110,0.5)" style="animation:puff 1.4s ease-out infinite;"/>
-          <circle cx="182" cy="0.5" r="2"   fill="rgba(160,140,110,0.4)" style="animation:puff 1.4s ease-out 0.48s infinite;"/>
-          <circle cx="188" cy="0"   r="1.5" fill="rgba(160,140,110,0.35)"style="animation:puff 1.4s ease-out 0.96s infinite;"/>
-          <!-- Headlight (front right of engine) -->
-          <circle cx="200" cy="16" r="3"   fill="#e8b830" opacity="0.95"/>
-          <circle cx="200" cy="16" r="1.5" fill="#fff"    opacity="0.8"/>
-          <!-- Cowcatcher (front right — angled wedge) -->
-          <polygon points="202,24 202,14 209,24" fill="#5a3e22"/>
-          <!-- Drive wheels -->
-          <circle cx="164" cy="25" r="6"   fill="#2a1f10"/>
-          <circle cx="164" cy="25" r="4"   fill="#3d2a18"/>
-          <circle cx="164" cy="25" r="1.5" fill="#e8b830"/>
-          <circle cx="178" cy="25" r="6"   fill="#2a1f10"/>
-          <circle cx="178" cy="25" r="4"   fill="#3d2a18"/>
-          <circle cx="178" cy="25" r="1.5" fill="#e8b830"/>
-          <!-- Small pilot/front wheel -->
-          <circle cx="193" cy="25" r="4"   fill="#2a1f10"/>
-          <circle cx="193" cy="25" r="2.5" fill="#3d2a18"/>
-          <circle cx="193" cy="25" r="1"   fill="#e8b830"/>
-          <!-- Connecting rod -->
-          <line x1="164" y1="25" x2="193" y2="25" stroke="#6b5030" stroke-width="1.5" opacity="0.7"/>
-
-          <!-- Ground rail line -->
-          <line x1="0" y1="30" x2="300" y2="30" stroke="rgba(139,111,78,0.3)" stroke-width="1.5"/>
+        <svg viewBox="0 0 300 28" height="28" style="display:block">
+          <!-- Caboose -->
+          <rect x="82" y="3" width="18" height="9" rx="1.5" fill="#a63220"/>
+          <rect x="80" y="10" width="40" height="4" rx="1.5" fill="#3a1e0e"/>
+          <rect x="78" y="14" width="44" height="10" rx="2" fill="#7c2018"/>
+          <rect x="80" y="15" width="40" height="8" rx="1.5" fill="#a63220"/>
+          <rect x="84" y="16" width="8" height="5" rx="1" fill="rgba(255,220,100,.45)"/>
+          <rect x="96" y="16" width="8" height="5" rx="1" fill="rgba(255,220,100,.45)"/>
+          <rect x="108" y="16" width="8" height="5" rx="1" fill="rgba(255,220,100,.45)"/>
+          <circle cx="86" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
+          <circle cx="86" cy="25" r="1.5" fill="#3a1e0e"/>
+          <circle cx="114" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
+          <circle cx="114" cy="25" r="1.5" fill="#3a1e0e"/>
+          <!-- Freight car -->
+          <rect x="125" y="12" width="60" height="12" rx="1.5" fill="#4a7844"/>
+          <rect x="127" y="14" width="56" height="8" rx="1" fill="#3d6b3a"/>
+          <rect x="130" y="15" width="10" height="6" rx=".5" fill="rgba(0,0,0,.25)"/>
+          <rect x="145" y="15" width="10" height="6" rx=".5" fill="rgba(0,0,0,.25)"/>
+          <rect x="160" y="15" width="10" height="6" rx=".5" fill="rgba(0,0,0,.25)"/>
+          <circle cx="132" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
+          <circle cx="132" cy="25" r="1.5" fill="#3a1e0e"/>
+          <circle cx="178" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
+          <circle cx="178" cy="25" r="1.5" fill="#3a1e0e"/>
+          <!-- Locomotive -->
+          <rect x="192" y="8" width="20" height="6" rx="1" fill="#3a1e0e"/>
+          <rect x="189" y="10" width="90" height="4" rx="1" fill="#1a0e06"/>
+          <rect x="186" y="14" width="96" height="10" rx="2" fill="#2c1a0e"/>
+          <rect x="188" y="15" width="92" height="8" rx="1.5" fill="#3a1e0e"/>
+          <rect x="250" y="10" width="35" height="14" rx="2" fill="#3a1e0e"/>
+          <rect x="252" y="12" width="31" height="10" rx="1.5" fill="#4a2a18"/>
+          <rect x="254" y="13" width="11" height="7" rx="1" fill="rgba(255,220,100,.5)"/>
+          <rect x="268" y="13" width="11" height="7" rx="1" fill="rgba(255,220,100,.5)"/>
+          <circle cx="280" cy="10" r="5" fill="#2c1a0e" stroke="#6a4020" stroke-width="1"/>
+          <circle cx="280" cy="10" r="3" fill="#1a0e06"/>
+          <rect x="282" y="5" width="5" height="6" rx="1" fill="#1a0e06"/>
+          <circle cx="196" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
+          <circle cx="196" cy="25" r="1.5" fill="#3a1e0e"/>
+          <circle cx="240" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
+          <circle cx="240" cy="25" r="1.5" fill="#3a1e0e"/>
+          <circle cx="270" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
+          <circle cx="270" cy="25" r="1.5" fill="#3a1e0e"/>
         </svg>
       </div>
-    </div>
 
+      <!-- Steam from engine -->
+      <div class="steam"><span></span><span></span><span></span></div>
+
+      <!-- Right: page info + actions -->
+      <div class="topbar-right">
+        <div class="page-info">
+          <div class="page-title" id="page-title">🏠 Home</div>
+          <div class="page-crumb" id="page-crumb">Bell Buckle Connect</div>
+        </div>
+        <div class="topbar-actions">
+          <span id="topbar-user" style="font-size:11px;color:var(--ink-lt)"></span>
+          <button class="btn btn-outline" onclick="nav('post')">+ Post</button>
+          <button class="btn btn-red" onclick="nav('giveback')">Donate ❤️</button>
+        </div>
+      </div>
+    </div><!-- /topbar -->
+
+    <!-- SCREENS -->
     <div class="canvas">
 
-      <!-- ══════════════════════ SCREEN: HOME ══════════════════════ -->
+      <!-- ══════ HOME ══════ -->
       <div class="screen active" id="screen-home">
-        <div class="blueprint-note">📐 Wireframe · Home / Landing Page</div>
+        <div class="p20 max-w">
 
-        <!-- Home Hero — full mural background + glass action cards overlay -->
-        <div class="home-hero annotation" style="margin-bottom:20px;">
-          <div class="ann-badge">1</div>
-          <!-- Mural image faint in background -->
-          <img class="home-hero-mural" src="https://images.squarespace-cdn.com/content/v1/67a9f3c59516b66979f7c0b7/5eea85cf-6a15-4d77-85df-1756495f1112/MURAL+copy.jpg" alt="Historic Bell Buckle TN Mural">
-          <!-- Dark gradient overlay for readability -->
-          <div class="home-hero-overlay"></div>
-          <!-- Image credit — bottom right -->
-          <div class="img-credit" style="z-index:3;">© Bell Buckle Arts Council · bellbucklearts.com</div>
-          <!-- Main content -->
-          <div class="home-hero-content">
-            <!-- Top row: title LEFT + featured panel RIGHT -->
-            <div style="display:flex; gap:20px; align-items:stretch;">
-
-              <!-- Left: title block -->
-              <div style="flex:1; min-width:0;">
-                <div class="home-hero-eyebrow">Est. 1852 · Bell Buckle, Tennessee</div>
-                <div class="home-hero-title">
-                  Bell Buckle
-                  <span class="connect">Connect</span>
-                </div>
-                <div class="home-hero-sub">One place for our community — help your neighbors, share our story, celebrate our town.</div>
-                <div class="home-hero-rule">
-                  <div class="home-hero-rule-line"></div>
-                  <div class="home-hero-rule-text">🚂 "Close to home, but a world away"</div>
-                  <div class="home-hero-rule-line"></div>
-                </div>
-              </div>
-
-              <!-- Right: glass featured panel -->
-              <div style="width:300px; flex-shrink:0; background:rgba(8,3,0,0.62); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.13); border-radius:10px; padding:18px 16px; display:flex; flex-direction:column;">
-
-                <!-- Upcoming event -->
-                <div style="font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(232,184,48,0.85); font-family:sans-serif; font-weight:700; margin-bottom:10px;">🎪 Next Festival</div>
-                <div style="font-size:15px; color:#fff; font-weight:bold; font-style:italic; line-height:1.2; margin-bottom:3px;">RC Cola &amp; Moon Pie Festival</div>
-                <div style="font-size:11px; color:rgba(255,255,255,0.55); font-family:sans-serif; margin-bottom:12px;">June 20, 2026 · Downtown Bell Buckle</div>
-                <div style="display:flex; gap:6px; margin-bottom:4px;">
-                  <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(232,184,48,0.3); border-radius:5px; padding:6px 8px; text-align:center; flex:1;">
-                    <div style="font-size:20px; font-weight:bold; color:#e8b830; font-family:sans-serif; line-height:1;" id="h-cd-days">--</div>
-                    <div style="font-size:8px; color:rgba(255,255,255,0.45); font-family:sans-serif; text-transform:uppercase; letter-spacing:1px; margin-top:2px;">Days</div>
-                  </div>
-                  <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(232,184,48,0.3); border-radius:5px; padding:6px 8px; text-align:center; flex:1;">
-                    <div style="font-size:20px; font-weight:bold; color:#e8b830; font-family:sans-serif; line-height:1;" id="h-cd-hrs">--</div>
-                    <div style="font-size:8px; color:rgba(255,255,255,0.45); font-family:sans-serif; text-transform:uppercase; letter-spacing:1px; margin-top:2px;">Hrs</div>
-                  </div>
-                  <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(232,184,48,0.3); border-radius:5px; padding:6px 8px; text-align:center; flex:1;">
-                    <div style="font-size:20px; font-weight:bold; color:#e8b830; font-family:sans-serif; line-height:1;" id="h-cd-min">--</div>
-                    <div style="font-size:8px; color:rgba(255,255,255,0.45); font-family:sans-serif; text-transform:uppercase; letter-spacing:1px; margin-top:2px;">Min</div>
-                  </div>
-                  <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(232,184,48,0.3); border-radius:5px; padding:6px 8px; text-align:center; flex:1;">
-                    <div style="font-size:20px; font-weight:bold; color:#e8b830; font-family:sans-serif; line-height:1;" id="h-cd-sec">--</div>
-                    <div style="font-size:8px; color:rgba(255,255,255,0.45); font-family:sans-serif; text-transform:uppercase; letter-spacing:1px; margin-top:2px;">Sec</div>
-                  </div>
-                </div>
-                <button onclick="showScreen('events')" style="width:100%; background:rgba(232,184,48,0.18); border:1px solid rgba(232,184,48,0.4); color:#e8b830; font-family:sans-serif; font-size:11px; font-weight:700; padding:7px; border-radius:5px; cursor:pointer; margin-top:8px; letter-spacing:0.5px;">View All Events →</button>
-
-                <div style="border-top:1px solid rgba(255,255,255,0.1); margin:14px 0 12px;"></div>
-
-                <!-- Community snapshot stats -->
-                <div style="font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(232,184,48,0.85); font-family:sans-serif; font-weight:700; margin-bottom:10px;">🏘️ Community Pulse</div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                  <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:8px 10px;">
-                    <div style="font-size:18px; font-weight:bold; color:#fff; font-family:sans-serif; line-height:1;">847</div>
-                    <div style="font-size:9px; color:rgba(255,255,255,0.45); font-family:sans-serif; margin-top:2px;">Members</div>
-                  </div>
-                  <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:8px 10px;">
-                    <div style="font-size:18px; font-weight:bold; color:#5dc87a; font-family:sans-serif; line-height:1;">16</div>
-                    <div style="font-size:9px; color:rgba(255,255,255,0.45); font-family:sans-serif; margin-top:2px;">Posts Today</div>
-                  </div>
-                  <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:8px 10px;">
-                    <div style="font-size:18px; font-weight:bold; color:#e8b830; font-family:sans-serif; line-height:1;">$4.2k</div>
-                    <div style="font-size:9px; color:rgba(255,255,255,0.45); font-family:sans-serif; margin-top:2px;">Raised</div>
-                  </div>
-                  <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:8px 10px;">
-                    <div style="font-size:18px; font-weight:bold; color:#7eb8e8; font-family:sans-serif; line-height:1;">28</div>
-                    <div style="font-size:9px; color:rgba(255,255,255,0.45); font-family:sans-serif; margin-top:2px;">Businesses</div>
-                  </div>
-                </div>
-
-                <div style="border-top:1px solid rgba(255,255,255,0.1); margin:14px 0 12px;"></div>
-
-                <!-- Latest from town — fills remaining height -->
-                <div style="flex:1; min-height:0;">
-                  <div style="font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(232,184,48,0.85); font-family:sans-serif; font-weight:700; margin-bottom:10px;">📣 Latest in Town</div>
-                  <!-- Post 1 -->
-                  <div style="display:flex; gap:8px; align-items:flex-start; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.07);">
-                    <div style="width:28px; height:28px; border-radius:50%; background:rgba(61,107,58,0.7); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px;">🌿</div>
-                    <div>
-                      <div style="font-size:10px; color:#fff; font-family:sans-serif; line-height:1.35; margin-bottom:2px;">Anyone know a good bee removal service near Wartrace Rd?</div>
-                      <div style="font-size:9px; color:rgba(255,255,255,0.35); font-family:sans-serif;">Linda M. · 12 min ago</div>
-                    </div>
-                  </div>
-                  <!-- Post 2 -->
-                  <div style="display:flex; gap:8px; align-items:flex-start; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.07);">
-                    <div style="width:28px; height:28px; border-radius:50%; background:rgba(166,50,32,0.65); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px;">🎸</div>
-                    <div>
-                      <div style="font-size:10px; color:#fff; font-family:sans-serif; line-height:1.35; margin-bottom:2px;">Live music on the porch tonight at Bell Buckle Café — 6pm, free!</div>
-                      <div style="font-size:9px; color:rgba(255,255,255,0.35); font-family:sans-serif;">BB Café · 1 hr ago</div>
-                    </div>
-                  </div>
-                  <!-- Post 3 -->
-                  <div style="display:flex; gap:8px; align-items:flex-start;">
-                    <div style="width:28px; height:28px; border-radius:50%; background:rgba(58,110,158,0.65); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px;">🐕</div>
-                    <div>
-                      <div style="font-size:10px; color:#fff; font-family:sans-serif; line-height:1.35; margin-bottom:2px;">Found a tan lab on Hwy 82 — wearing a blue collar, no tag. DM me!</div>
-                      <div style="font-size:9px; color:rgba(255,255,255,0.35); font-family:sans-serif;">Ray T. · 2 hrs ago</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Glass action cards — 7 across the bottom of the hero -->
-            <div class="home-hero-actions">
-              <div class="home-action-card" onclick="showScreen('fundraising')">
-                <div class="home-action-icon">💰</div>
-                <div class="home-action-label">Raise<br>Funds</div>
-                <div class="home-action-meta">3 active</div>
-              </div>
-              <div class="home-action-card" onclick="showScreen('community')">
-                <div class="home-action-icon">🤝</div>
-                <div class="home-action-label">Community<br>Board</div>
-                <div class="home-action-meta">16 posts</div>
-              </div>
-              <div class="home-action-card" onclick="showScreen('chat')">
-                <div class="home-action-icon">💬</div>
-                <div class="home-action-label">Town<br>Chat</div>
-                <div class="home-action-meta hot">9 unread</div>
-              </div>
-              <div class="home-action-card" onclick="showScreen('lostfound')">
-                <div class="home-action-icon">🔍</div>
-                <div class="home-action-label">Lost &amp;<br>Found</div>
-                <div class="home-action-meta">5 active</div>
-              </div>
-              <div class="home-action-card" onclick="showScreen('services')">
-                <div class="home-action-icon">🔧</div>
-                <div class="home-action-label">Local<br>Services</div>
-                <div class="home-action-meta">28 nearby</div>
-              </div>
-              <div class="home-action-card" onclick="showScreen('events')">
-                <div class="home-action-icon">🎪</div>
-                <div class="home-action-label">Town<br>Events</div>
-                <div class="home-action-meta hot">Next: June 20</div>
-              </div>
-              <div class="home-action-card" onclick="showScreen('history')">
-                <div class="home-action-icon">📜</div>
-                <div class="home-action-label">Our<br>History</div>
-                <div class="home-action-meta">Est. 1852</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <!-- Featured Campaign -->
-          <div class="col-2 annotation">
-            <div class="ann-badge">2</div>
-            <div class="wf-label">Featured Campaign</div>
-            <div class="card">
-              <div class="row" style="align-items:center; margin-bottom:0;">
-                <div style="flex:1;">
-                  <div class="tag tag-orange" style="margin-bottom:6px;">🏗️ Infrastructure</div>
-                  <div class="h2">Main Street Sidewalk Repair</div>
-                  <div class="body-sm" style="margin-bottom:10px;">Help us restore and repair the historic downtown sidewalks that have served Bell Buckle since the railroad days.</div>
-                  <div class="amount">$4,280 <span style="font-size:13px; color:var(--ink-light);">raised</span></div>
-                  <div class="progress-track"><div class="progress-fill" style="width:54%;"></div></div>
-                  <div class="goal">$4,280 of $8,000 goal · 54% · 23 donors</div>
-                </div>
-                <div style="width:110px; margin-left:14px;">
-                  <div class="img-placeholder sq" style="border-radius:6px; font-size:10px;">📷<br>Project<br>Photo</div>
-                </div>
-              </div>
-              <hr class="divider-solid" style="margin:12px 0 10px;">
-              <div style="display:flex; gap:8px;">
-                <div class="btn btn-green" style="flex:1; text-align:center;">Donate Now</div>
-                <div class="btn btn-secondary">Share</div>
-              </div>
+          <!-- Hero mural -->
+          <div class="home-hero">
+            <img src="https://images.squarespace-cdn.com/content/v1/67a9f3c59516b66979f7c0b7/5eea85cf-6a15-4d77-85df-1756495f1112/MURAL+copy.jpg"
+                 alt="Bell Buckle Mural" onerror="this.style.background='#3a1e0e'">
+            <div class="home-hero-grad"></div>
+            <div class="home-hero-text">
+              <div class="home-hero-eyebrow">Est. 1852 · Bedford County, Tennessee</div>
+              <div class="home-hero-title">Bell Buckle</div>
+              <div class="home-hero-sub">Your community, connected.</div>
             </div>
           </div>
 
-          <!-- Community Snapshot -->
-          <div class="col annotation">
-            <div class="ann-badge">3</div>
-            <div class="wf-label">Recent Community Posts</div>
-            <div class="card" style="padding:12px;">
-              <div style="border-bottom:1px solid var(--wire-light); padding-bottom:10px; margin-bottom:10px;">
-                <div class="tag tag-green" style="margin-bottom:4px;">Free Item</div>
-                <div style="font-size:12px; font-weight:bold;">Dining table + 4 chairs</div>
-                <div class="meta">Posted by Martha H. · 2 hrs ago</div>
-              </div>
-              <div style="border-bottom:1px solid var(--wire-light); padding-bottom:10px; margin-bottom:10px;">
-                <div class="tag tag-blue" style="margin-bottom:4px;">Help Needed</div>
-                <div style="font-size:12px; font-weight:bold;">Lawn mowing - elderly neighbor</div>
-                <div class="meta">Posted by James W. · 5 hrs ago</div>
-              </div>
-              <div style="border-bottom:1px solid var(--wire-light); padding-bottom:10px; margin-bottom:10px;">
-                <div class="tag tag-purple" style="margin-bottom:4px;">Odd Job</div>
-                <div style="font-size:12px; font-weight:bold;">Fence post repair · $40</div>
-                <div class="meta">Posted by Bob L. · Yesterday</div>
-              </div>
-              <div style="border-bottom:1px solid var(--wire-light); padding-bottom:10px; margin-bottom:10px;">
-                <div class="tag tag-red" style="margin-bottom:4px;">Urgent Need</div>
-                <div style="font-size:12px; font-weight:bold;">Family needs groceries this week</div>
-                <div class="meta">Anonymous · 1 day ago</div>
-              </div>
-              <div class="btn btn-secondary" style="width:100%; text-align:center; margin-top:6px;" onclick="showScreen('community')">View All Posts →</div>
-            </div>
+          <!-- Stats row -->
+          <div class="stats-row">
+            <div class="stat-pill"><div class="stat-num">847</div><div class="stat-lbl">Neighbors</div></div>
+            <div class="stat-pill"><div class="stat-num" id="stat-posts">—</div><div class="stat-lbl">Posts Today</div></div>
+            <div class="stat-pill"><div class="stat-num">6</div><div class="stat-lbl">Events This Month</div></div>
+            <div class="stat-pill"><div class="stat-num">8</div><div class="stat-lbl">Chat Channels</div></div>
           </div>
-        </div>
 
-        <!-- Events Strip -->
-        <div style="margin-bottom:16px;">
-          <div class="wf-label">🗓️ Upcoming Bell Buckle Events</div>
-          <div style="display:flex; gap:10px; overflow:hidden;">
-            <div class="card" style="flex:1; border-top:3px solid var(--accent3); padding:12px;">
-              <div class="meta" style="margin-bottom:3px;">June 20, 2026</div>
-              <div style="font-size:12px; font-weight:bold; font-family:sans-serif;">🥤 RC Cola & Moon Pie Festival</div>
-              <div class="meta">Celebrating 30 years of wacky fun!</div>
-            </div>
-            <div class="card" style="flex:1; border-top:3px solid var(--accent2); padding:12px;">
-              <div class="meta" style="margin-bottom:3px;">Every Friday · June–Aug</div>
-              <div style="font-size:12px; font-weight:bold; font-family:sans-serif;">🌽 Bell Buckle Farmers Market</div>
-              <div class="meta">4–7 PM · Local veggies, eggs & goods</div>
-            </div>
-            <div class="card" style="flex:1; border-top:3px solid var(--accent4); padding:12px;">
-              <div class="meta" style="margin-bottom:3px;">Oct 17–18, 2026</div>
-              <div style="font-size:12px; font-weight:bold; font-family:sans-serif;">🎨 Webb School Art & Craft Show</div>
-              <div class="meta">800+ booths throughout town!</div>
-            </div>
-            <div class="card" style="flex:1; border-top:3px solid #7b5ea7; padding:12px;">
-              <div class="meta" style="margin-bottom:3px;">Dec 4–5, 2026</div>
-              <div style="font-size:12px; font-weight:bold; font-family:sans-serif;">🧵 A Quilted Christmas</div>
-              <div class="meta">200+ handcrafted quilts on display</div>
-            </div>
+          <!-- Quick actions -->
+          <div class="action-grid">
+            <div class="action-card" onclick="nav('community')"><div class="action-emoji">📋</div><div class="action-label">Community Board</div></div>
+            <div class="action-card" onclick="nav('events')"><div class="action-emoji">🗓️</div><div class="action-label">Events</div></div>
+            <div class="action-card" onclick="switchChan('general')"><div class="action-emoji">💬</div><div class="action-label">Chat</div></div>
+            <div class="action-card" onclick="nav('lostfound')"><div class="action-emoji">🔍</div><div class="action-label">Lost &amp; Found</div></div>
+            <div class="action-card" onclick="nav('history')"><div class="action-emoji">📜</div><div class="action-label">Our History</div></div>
+            <div class="action-card" onclick="nav('marketplace')"><div class="action-emoji">🛍️</div><div class="action-label">Marketplace</div></div>
           </div>
-        </div>
 
-        <!-- Mural Preview Strip -->
-        <div class="annotation" style="margin-bottom:16px;">
-          <div class="ann-badge">5</div>
-          <div class="wf-label">Art & Murals Spotlight</div>
-          <div style="display:flex; gap:12px; align-items:stretch;">
-            <!-- Real mural photo -->
-            <div class="real-img-frame" style="flex:2; height:120px; border-radius:6px; border:1px solid var(--wire-light); cursor:pointer; position:relative;" onclick="showScreen('murals')">
-              <img src="https://images.squarespace-cdn.com/content/v1/67a9f3c59516b66979f7c0b7/5eea85cf-6a15-4d77-85df-1756495f1112/MURAL+copy.jpg" class="real-img" alt="Bell Buckle Mural">
-              <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));padding:6px 8px;color:#fff;font-size:10px;font-family:sans-serif;">🎨 Downtown Mural</div>
-            </div>
-            <!-- Art signs photo -->
-            <div class="real-img-frame" style="flex:1; height:120px; border-radius:6px; border:1px solid var(--wire-light); cursor:pointer; position:relative;" onclick="showScreen('murals')">
-              <img src="https://images.squarespace-cdn.com/content/v1/67a9f3c59516b66979f7c0b7/ec409532-8ef7-4b4c-a4d7-4518c47c8de8/FB_IMG_1665708080036.jpg" class="real-img" alt="Art Directions Bell Buckle">
-              <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));padding:6px 8px;color:#fff;font-size:10px;font-family:sans-serif;">📍 Art Walk Signs</div>
-            </div>
-            <!-- Real quilt square image + CSS checkerboard combo -->
-            <div style="flex:1; height:120px; border-radius:6px; border:1px solid var(--wire-light); overflow:hidden; cursor:pointer; position:relative;" onclick="showScreen('murals')">
-              <img src="https://bellbucklechamber.com/wp-content/uploads/2022/02/quilt-square-300x300.png" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Bell Buckle Quilt Square">
-              <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));padding:6px 8px;color:#fff;font-size:10px;font-family:sans-serif;">🧵 The Quilt</div>
-            </div>
-            <div class="card" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; cursor:pointer;" onclick="showScreen('murals')">
-              <div style="font-size:20px;">🖼️</div>
-              <div style="font-size:11px; font-family:sans-serif; color:var(--accent); font-weight:700; margin-top:6px;">View Full Gallery</div>
-            </div>
+          <!-- Featured event -->
+          <div class="featured-banner">
+            <div class="featured-label">🎉 Featured Event</div>
+            <div class="featured-title">RC Cola &amp; Moon Pie Festival</div>
+            <div class="featured-sub">June 20, 2026 · Downtown Bell Buckle · Free Admission</div>
+            <div class="featured-desc">The South's quirkiest festival returns — live music, Moon Pie contests, local vendors, and small-town magic.</div>
           </div>
-        </div>
 
-        <!-- Annotation Key -->
-        <div class="ann-list">
-          <h4>Page Annotations</h4>
-          <ul style="list-style:none;">
-            <li><span class="ann-num">1</span> Full-width rotating hero — showcase local murals, seasonal event photos, historic buildings. Auto-advance or swipe.</li>
-            <li><span class="ann-num">2</span> Quick-access icon grid — primary navigation shortcuts to all 4 main sections. Persistent, always visible.</li>
-            <li><span class="ann-num">3</span> Featured campaign module — pulled from highest-priority open fundraiser. Includes progress bar + donate CTA.</li>
-            <li><span class="ann-num">4</span> Live community board preview — most recent 4 posts, real-time updates. Tags color-coded by category.</li>
-            <li><span class="ann-num">5</span> Mural preview strip — visual anchor for the art identity of Bell Buckle. Tappable to full gallery.</li>
-          </ul>
+          <!-- Recent board posts -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <h3 class="serif" style="font-size:16px;color:var(--ink)">Recent from the Board</h3>
+            <button class="btn btn-outline" style="padding:5px 12px;font-size:11px" onclick="nav('community')">See all →</button>
+          </div>
+          <div id="home-posts"><div style="color:var(--ink-lt);font-size:13px">Loading posts…</div></div>
         </div>
       </div>
 
-      <!-- ══════════════════════ SCREEN: OVERVIEW ══════════════════════ -->
-      <div class="screen" id="screen-overview">
-        <div class="blueprint-note">📐 Wireframe · App Overview & Site Map</div>
+      <!-- ══════ COMMUNITY BOARD ══════ -->
+      <div class="screen" id="screen-community">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>Community Board</h2>
+            <p>Neighbor news, questions &amp; updates</p>
+          </div>
 
-        <div class="chapter">
-          <div class="chapter-label">Blueprint</div>
-          <div class="chapter-title">Bell Buckle Connect</div>
-          <div class="chapter-sub">Full app structure · Click any section card to preview its wireframe</div>
+          <!-- Compose -->
+          <div class="compose-box">
+            <div class="compose-row">
+              <div class="post-avatar" id="compose-avatar"><span id="compose-initial">?</span></div>
+              <textarea class="compose-textarea" id="community-text" placeholder="Share something with the neighborhood…" rows="3"></textarea>
+            </div>
+            <div class="compose-footer">
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-outline" style="padding:5px 10px;font-size:11px">📷 Photo</button>
+                <button class="btn btn-outline" style="padding:5px 10px;font-size:11px">🏷️ Tag</button>
+              </div>
+              <button class="btn btn-red" onclick="submitPost()">Post to Community</button>
+            </div>
+          </div>
+
+          <div id="community-feed"><div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px 0">Loading posts…</div></div>
         </div>
+      </div>
 
-        <!-- Stats row -->
-        <div class="overview-grid" style="margin-bottom:20px;">
-          <div class="stat-card">
-            <div class="stat-num">6</div>
-            <div class="stat-label">Core Sections</div>
+      <!-- ══════ CHAT ══════ -->
+      <div class="screen-dark" id="screen-chat">
+        <!-- Channel header -->
+        <div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <span id="chat-ch-name" style="color:#fff;font-weight:600;font-size:14px"># general</span>
+          <span style="color:rgba(255,255,255,.25)">·</span>
+          <span id="chat-ch-desc" style="color:rgba(255,255,255,.4);font-size:12px">Community chat</span>
+        </div>
+        <!-- Sidebar channels panel (mini) in dark panel -->
+        <div style="flex:1;display:flex;overflow:hidden">
+          <div style="width:150px;border-right:1px solid rgba(255,255,255,.07);padding:10px 8px;flex-shrink:0;overflow-y:auto">
+            <div style="color:rgba(255,255,255,.25);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:4px 6px 8px;font-weight:600">Channels</div>
+            <div id="channel-list-chat"></div>
           </div>
-          <div class="stat-card">
-            <div class="stat-num">4</div>
-            <div class="stat-label">Fund Categories</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num">5</div>
-            <div class="stat-label">Board Post Types</div>
+          <!-- Messages -->
+          <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+            <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column"></div>
+            <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);background:#18100c;flex-shrink:0;display:flex;gap:8px">
+              <input id="chat-input" type="text" placeholder="Message #general…"
+                     style="flex:1;background:#2c1a0e;color:#e4d8cc;border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:9px 14px;font-size:13px;outline:none;font-family:'Inter',sans-serif"
+                     onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+                     onkeydown="if(event.key==='Enter')sendMsg()">
+              <button onclick="sendMsg()" style="background:var(--red);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="grid-3" style="margin-bottom:20px;">
-          <div class="app-section-card" onclick="showScreen('home')">
-            <div class="section-card-header">
-              <div class="section-card-icon">🏡</div>
-              <div class="section-card-title">Home / Landing</div>
-              <div class="section-card-desc">Hero banner with rotating murals, quick-access grid, featured campaign, live community preview</div>
-            </div>
-            <div class="section-card-body">
-              <span class="feature-pill">Hero Banner</span>
-              <span class="feature-pill">Quick Nav</span>
-              <span class="feature-pill">Featured Campaign</span>
-              <span class="feature-pill">Live Posts</span>
-              <span class="feature-pill">Art Strip</span>
+      <!-- ══════ EVENTS ══════ -->
+      <div class="screen" id="screen-events">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>Upcoming Events</h2>
+            <p>What's happening in Bell Buckle</p>
+          </div>
+
+          <div class="event-card">
+            <div class="event-stripe" style="background:var(--red)"></div>
+            <div class="event-body">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div class="event-date" style="color:var(--red)">June 20, 2026 · Free Admission</div>
+                  <div class="event-title">🎉 RC Cola &amp; Moon Pie Festival</div>
+                  <div class="event-loc">Downtown Bell Buckle</div>
+                </div>
+                <span style="background:#fef2f2;color:var(--red);font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;flex-shrink:0">Featured</span>
+              </div>
+              <div class="event-desc">The South's quirkiest and most beloved festival. Live music, Moon Pie eating contests, local vendors, and more on the streets of historic downtown Bell Buckle.</div>
             </div>
           </div>
 
-          <div class="app-section-card" onclick="showScreen('fundraising')">
-            <div class="section-card-header">
-              <div class="section-card-icon">💰</div>
-              <div class="section-card-title">Raise Funds</div>
-              <div class="section-card-desc">GoFundMe-style campaigns for town infrastructure AND individual/family needs</div>
-            </div>
-            <div class="section-card-body">
-              <span class="feature-pill">Infrastructure Tab</span>
-              <span class="feature-pill">Individual Needs</span>
-              <span class="feature-pill">Progress Bars</span>
-              <span class="feature-pill">Donor Wall</span>
-              <span class="feature-pill">Start Campaign</span>
+          <div class="event-card">
+            <div class="event-stripe" style="background:#d97706"></div>
+            <div class="event-body">
+              <div class="event-date" style="color:#d97706">Every Saturday · 7am – 12pm</div>
+              <div class="event-title">🌽 Farmers Market</div>
+              <div class="event-loc">Old Bell Buckle Rd · Weather permitting</div>
+              <div class="event-desc">Fresh produce, local honey, handmade crafts, and the best cinnamon rolls in Bedford County.</div>
             </div>
           </div>
 
-          <div class="app-section-card" onclick="showScreen('community')">
-            <div class="section-card-header">
-              <div class="section-card-icon">🤝</div>
-              <div class="section-card-title">Community Board</div>
-              <
+          <div class="event-card">
+            <div class="event-stripe" style="background:#2563eb"></div>
+            <div class="event-body">
+              <div class="event-date" style="color:#2563eb">2nd Tuesday Monthly</div>
+              <div class="event-title">🏛️ Town Hall Meeting</div>
+              <div class="event-loc">Bell Buckle Community Center</div>
+              <div class="event-desc">Community discussions, local government updates, and your chance to speak up about what matters in Bell Buckle.</div>
+            </div>
+          </div>
+
+          <div class="event-card">
+            <div class="event-stripe" style="background:var(--green)"></div>
+            <div class="event-body">
+              <div class="event-date" style="color:var(--green)">June – August · Fridays 6pm · Free</div>
+              <div class="event-title">🎵 Summer Music Series</div>
+              <div class="event-loc">Bell Buckle Café Porch</div>
+              <div class="event-desc">Local artists, cold drinks, and warm Tennessee evenings on the historic café porch. Bring a lawn chair.</div>
+            </div>
+          </div>
+
+          <div class="event-card">
+            <div class="event-stripe" style="background:#9333ea"></div>
+            <div class="event-body">
+              <div class="event-date" style="color:#9333ea">September 13–14, 2026</div>
+              <div class="event-title">🎨 Tennessee Crafts Fair</div>
+              <div class="event-loc">Downtown Bell Buckle</div>
+              <div class="event-desc">Juried craft show featuring artisans from across Tennessee — pottery, woodwork, textiles, jewelry, and more.</div>
+            </div>
+          </div>
+
+          <div class="event-card">
+            <div class="event-stripe" style="background:#0891b2"></div>
+            <div class="event-body">
+              <div class="event-date" style="color:#0891b2">October 4, 2026</div>
+              <div class="event-title">🍂 Bell Buckle Fall Festival</div>
+              <div class="event-loc">Downtown Bell Buckle</div>
+              <div class="event-desc">Hayrides, pumpkin painting, live bluegrass, and the annual chili cook-off. Family fun for all ages.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ LOST & FOUND ══════ -->
+      <div class="screen" id="screen-lostfound">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>Lost &amp; Found</h2>
+            <p>Help reunite Bell Buckle with its missing pets, items &amp; neighbors</p>
+          </div>
+
+          <!-- Post a listing -->
+          <div class="compose-box" style="margin-bottom:18px">
+            <h3 style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px">Post a listing</h3>
+            <div style="display:flex;gap:8px;margin-bottom:10px">
+              <select id="lf-type" class="form-input" style="flex:1">
+                <option value="lost">🔴 Lost</option>
+                <option value="found">🟢 Found</option>
+              </select>
+              <input id="lf-title" class="form-input" style="flex:2" placeholder="e.g. Golden Retriever, Blue wallet…">
+            </div>
+            <textarea id="lf-desc" class="form-textarea" rows="2" placeholder="Description, location last seen, contact info…" style="margin-bottom:10px"></textarea>
+            <div style="text-align:right">
+              <button class="btn btn-red" onclick="submitLF()">Post Listing</button>
+            </div>
+          </div>
+
+          <div id="lf-feed"><div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px 0">Loading listings…</div></div>
+        </div>
+      </div>
+
+      <!-- ══════ OUR HISTORY ══════ -->
+      <div class="screen" id="screen-history">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 6px">
+            <h2>📜 Our History</h2>
+            <p>The Bell Buckle Community Vault — preserving our story, one entry at a time</p>
+          </div>
+          <p style="color:var(--ink-lt);font-size:12px;font-style:italic;padding:0 0 16px">Community members can add history, photos, and memories. Every entry is saved forever.</p>
+
+          <!-- Add entry form -->
+          <div class="history-add">
+            <h3>✍️ Add to the Vault</h3>
+            <div class="form-row">
+              <input id="h-year" class="form-input" placeholder="Year (e.g. 1924)" style="flex:0 0 130px">
+              <input id="h-title" class="form-input" placeholder="Title / Event name" style="flex:1">
+            </div>
+            <textarea id="h-desc" class="form-textarea" rows="3" placeholder="Tell the story… what happened? Who was there? Why does it matter?" style="margin-bottom:10px"></textarea>
+            <input id="h-img" class="form-input" placeholder="Photo URL (optional — paste a link to an image)" style="margin-bottom:10px">
+            <div style="text-align:right">
+              <button class="btn btn-red" onclick="submitHistory()">Add to History Vault</button>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div id="history-timeline" class="timeline">
+            <div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px 0">Loading the vault…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ GIVE BACK ══════ -->
+      <div class="screen" id="screen-giveback">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>Give Back</h2>
+            <p>Support what makes Bell Buckle special</p>
+          </div>
+
+          <div class="fund-card">
+            <div class="fund-row">
+              <div class="fund-icon" style="background:#fef3c7">🏛️</div>
+              <div style="flex:1">
+                <div class="fund-title">Historic Sidewalk Restoration</div>
+                <div class="fund-desc">Help restore downtown sidewalks that have served Bell Buckle since the railroad days.</div>
+                <div class="fund-nums"><span>$3,240 raised</span><span>of $5,000 goal</span></div>
+                <div class="fund-bar-bg"><div class="fund-bar" style="width:64.8%"></div></div>
+                <button class="btn btn-red" style="font-size:12px;padding:7px 16px">Donate Now</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="fund-card">
+            <div class="fund-row">
+              <div class="fund-icon" style="background:#dcfce7">🌳</div>
+              <div style="flex:1">
+                <div class="fund-title">Town Square Beautification</div>
+                <div class="fund-desc">Native plantings, benches, and warm lighting for the heart of downtown Bell Buckle.</div>
+                <div class="fund-nums"><span>$1,180 raised</span><span>of $3,000 goal</span></div>
+                <div class="fund-bar-bg"><div class="fund-bar" style="width:39.3%;background:var(--green)"></div></div>
+                <button class="btn btn-red" style="font-size:12px;padding:7px 16px">Donate Now</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="fund-card">
+            <div class="fund-row">
+              <div class="fund-icon" style="background:#dbeafe">📚</div>
+              <div style="flex:1">
+                <div class="fund-title">Bell Buckle Library Fund</div>
+                <div class="fund-desc">Expanding our lending library with local history books, children's titles, and reading programs.</div>
+                <div class="fund-nums"><span>$620 raised</span><span>of $2,000 goal</span></div>
+                <div class="fund-bar-bg"><div class="fund-bar" style="width:31%;background:var(--blue)"></div></div>
+                <button class="btn btn-red" style="font-size:12px;padding:7px 16px">Donate Now</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="fund-card">
+            <div class="fund-row">
+              <div class="fund-icon" style="background:#fce7f3">🐝</div>
+              <div style="flex:1">
+                <div class="fund-title">Bee City Pollinator Garden</div>
+                <div class="fund-desc">A dedicated native pollinator garden celebrating Bell Buckle's Bee City USA designation.</div>
+                <div class="fund-nums"><span>$440 raised</span><span>of $1,500 goal</span></div>
+                <div class="fund-bar-bg"><div class="fund-bar" style="width:29.3%;background:var(--gold)"></div></div>
+                <button class="btn btn-red" style="font-size:12px;padding:7px 16px">Donate Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ MARKETPLACE ══════ -->
+      <div class="screen" id="screen-marketplace">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>Marketplace</h2>
+            <p>Buy, sell &amp; trade with your neighbors</p>
+          </div>
+
+          <div class="market-grid">
+            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#f5ead2,#ede0c4)">🪑</div><div class="market-body"><div class="market-title">Vintage Rocking Chair</div><div class="market-price">$85</div><div class="market-who">Sarah M. · 2 days ago</div></div></div>
+            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)">🥫</div><div class="market-body"><div class="market-title">Home-Canned Tomatoes</div><div class="market-price">$5 / jar</div><div class="market-who">Jim T. · 3 days ago</div></div></div>
+            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">🚜</div><div class="market-body"><div class="market-title">Lawn Mowing Service</div><div class="market-price">$40 / visit</div><div class="market-who">Tyler K. · yesterday</div></div></div>
+            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8)">📚</div><div class="market-body"><div class="market-title">Local History Books</div><div class="market-price">$20 lot</div><div class="market-who">Martha L. · 5 days ago</div></div></div>
+            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#fef9c3,#fef08a)">🍯</div><div class="market-body"><div class="market-title">Raw Tennessee Honey</div><div class="market-price">$12 / lb</div><div class="market-who">Bee Happy Farm · 1 day ago</div></div></div>
+            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)">🪴</div><div class="market-body"><div class="market-title">Heirloom Tomato Plants</div><div class="market-price">$3 each</div><div class="market-who">Carol B. · 4 days ago</div></div></div>
+          </div>
+          <button class="dashed-add" style="margin-top:14px">+ Post a listing</button>
+        </div>
+      </div>
+
+      <!-- ══════ NEW POST ══════ -->
+      <div class="screen" id="screen-post">
+        <div class="p20 max-w" style="max-width:520px">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>New Post</h2>
+          </div>
+          <div class="card" style="padding:20px">
+            <label style="font-size:12px;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:6px">Post to</label>
+            <select class="form-input" style="margin-bottom:14px">
+              <option>Community Board</option>
+              <option>Lost &amp; Found</option>
+              <option>Marketplace</option>
+              <option>Events</option>
+              <option>Announcements</option>
+            </select>
+            <label style="font-size:12px;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:6px">Message</label>
+            <textarea id="post-text-area" class="form-textarea" rows="5" placeholder="What's on your mind? Share news, ask for help, or start a conversation with your neighbors…" style="margin-bottom:14px"></textarea>
+            <div style="display:flex;gap:10px">
+              <button class="btn btn-red" style="flex:1;padding:12px" onclick="submitNewPost()">Share with Community</button>
+              <button class="btn btn-outline" style="padding:12px 16px" onclick="nav('home')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /canvas -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════ -->
+<script>
+// ─── Firebase ────────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyDa9RPP82t2GPsJZ06vyAc7rgloo5dYO6c",
+  authDomain: "bell-buckle-app.firebaseapp.com",
+  projectId: "bell-buckle-app",
+  storageBucket: "bell-buckle-app.firebasestorage.app",
+  messagingSenderId: "655036299539",
+  appId: "1:655036299539:web:c42ee25b3550ff4bc242e6"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let currentUser    = null;
+let currentChannel = 'general';
+let chatUnsub      = null;
+
+const CHANNELS = [
+  { id:'general',       emoji:'#️⃣', label:'general',       desc:'Community chat' },
+  { id:'announcements', emoji:'📢', label:'announcements', desc:'Official notices' },
+  { id:'lost-found',    emoji:'🔍', label:'lost-found',    desc:'Lost & found' },
+  { id:'buy-sell',      emoji:'🛍️', label:'buy-sell',      desc:'Trade with neighbors' },
+  { id:'events',        emoji:'🗓️', label:'events',        desc:'What\'s happening' },
+  { id:'help-needed',   emoji:'🙋', label:'help-needed',   desc:'Ask for help' },
+  { id:'local-biz',     emoji:'🏪', label:'local-biz',     desc:'Local business' },
+  { id:'weather',       emoji:'⛅', label:'weather',       desc:'Weather & alerts' },
+];
+
+const SCREEN_META = {
+  home:        { t:'🏠 Home',             c:'Bell Buckle Connect' },
+  community:   { t:'📋 Community Board',   c:'Bell Buckle Connect › Community' },
+  events:      { t:'🗓️ Events',            c:'Bell Buckle Connect › Events' },
+  lostfound:   { t:'🔍 Lost & Found',      c:'Bell Buckle Connect › Lost & Found' },
+  marketplace: { t:'🛍️ Marketplace',       c:'Bell Buckle Connect › Marketplace' },
+  history:     { t:'📜 Our History',       c:'Bell Buckle Connect › History Vault' },
+  giveback:    { t:'❤️ Give Back',         c:'Bell Buckle Connect › Give Back' },
+  post:        { t:'✏️ New Post',           c:'Bell Buckle Connect › Post' },
+  chat:        { t:'💬 Chat',              c:'Bell Buckle Connect › Chat' },
+};
+
+// ─── Auth ────────────────────────────────────────────────────────────────────
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+  if (user) {
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    const name = user.displayName || user.email?.split('@')[0] || 'Neighbor';
+    const ini  = name[0].toUpperCase();
+    document.getElementById('sb-initial').textContent  = ini;
+    document.getElementById('sb-email').textContent    = user.email || name;
+    document.getElementById('compose-initial').textContent = ini;
+    document.getElementById('topbar-user').textContent = name;
+    // Load data
+    listenHomePosts();
+    listenCommunityPosts();
+    listenLostFound();
+    listenHistory();
+    buildChannelLists();
+    switchChan('general');
+  } else {
+    document.getElementById('auth-overlay').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+});
+
+function doSignIn() {
+  const e = document.getElementById('auth-email').value.trim();
+  const p = document.getElementById('auth-pw').value;
+  const err = document.getElementById('auth-error');
+  err.style.display = 'none';
+  auth.signInWithEmailAndPassword(e, p).catch(ex => {
+    err.textContent = ex.message; err.style.display = 'block';
+  });
+}
+function doSignUp() {
+  const e = document.getElementById('auth-email').value.trim();
+  const p = document.getElementById('auth-pw').value;
+  const err = document.getElementById('auth-error');
+  err.style.display = 'none';
+  auth.createUserWithEmailAndPassword(e, p).catch(ex => {
+    err.textContent = ex.message; err.style.display = 'block';
+  });
+}
+
+// ─── Screen nav ───────────────────────────────────────────────────────────────
+function nav(id) {
+  // Hide all screens (both .screen and .screen-dark)
+  document.querySelectorAll('.screen, .screen-dark').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + id);
+  if (el) el.classList.add('active');
+
+  const meta = SCREEN_META[id] || { t: id, c: 'Bell Buckle Connect' };
+  document.getElementById('page-title').textContent = meta.t;
+  document.getElementById('page-crumb').textContent = meta.c;
+
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.nav-item[data-s="${id}"]`);
+  if (btn) btn.classList.add('active');
+
+  if (id === 'chat') setTimeout(scrollChat, 80);
+}
+
+// ─── Chat channels ────────────────────────────────────────────────────────────
+function buildChannelLists() {
+  ['channel-list','channel-list-chat'].forEach(lid => {
+    const el = document.getElementById(lid);
+    if (!el) return;
+    el.innerHTML = CHANNELS.map(ch => `
+      <button data-ch="${ch.id}" onclick="switchChan('${ch.id}')" class="${ch.id===currentChannel?'active':''}">
+        <span>${ch.emoji}</span>
+        <span class="chan-label">${ch.label}</span>
+      </button>`).join('');
+  });
+}
+
+function switchChan(id) {
+  currentChannel = id;
+  const ch = CHANNELS.find(c => c.id === id) || { label: id, desc: '' };
+  document.getElementById('chat-ch-name').textContent = '# ' + ch.label;
+  document.getElementById('chat-ch-desc').textContent = ch.desc;
+  document.getElementById('chat-input').placeholder = `Message #${ch.label}…`;
+
+  document.querySelectorAll('#channel-list button, #channel-list-chat button').forEach(b => {
+    b.classList.toggle('active', b.dataset.ch === id);
+  });
+  nav('chat');
+  listenChat(id);
+}
+
+// ─── Chat Firebase ─────────────────────────────────────────────────────────────
+function listenChat(channelId) {
+  if (chatUnsub) chatUnsub();
+  const box = document.getElementById('chat-messages');
+  box.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:12px;text-align:center;padding:20px">Loading…</div>';
+  chatUnsub = db.collection('channels').doc(channelId).collection('messages')
+    .orderBy('ts').limitToLast(60)
+    .onSnapshot(snap => {
+      if (snap.empty) {
+        box.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:12px;text-align:center;padding:32px">No messages yet — say hello 👋</div>';
+        return;
+      }
+      box.innerHTML = '';
+      snap.forEach(doc => {
+        const d   = doc.data();
+        const own = d.uid === currentUser?.uid;
+        const nm  = d.displayName || d.email?.split('@')[0] || 'Neighbor';
+        const t   = d.ts?.toDate ? d.ts.toDate().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '';
+        const w   = document.createElement('div');
+        w.className = 'msg-wrap ' + (own ? 'own' : 'other');
+        w.innerHTML = `<div class="msg-meta">${own?'You':esc(nm)} · ${t}</div>
+          <div class="${own?'bubble-own':'bubble-other'}">${esc(d.text||'')}</div>`;
+        box.appendChild(w);
+      });
+      scrollChat();
+    }, err => { box.innerHTML = `<div style="color:#f87171;font-size:12px">${err.message}</div>`; });
+}
+
+function sendMsg() {
+  const inp = document.getElementById('chat-input');
+  const txt = inp.value.trim();
+  if (!txt || !currentUser) return;
+  inp.value = '';
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('channels').doc(currentChannel).collection('messages').add({
+    text: txt, uid: currentUser.uid, email: currentUser.email,
+    displayName: nm, ts: firebase.firestore.FieldValue.serverTimestamp()
+  });
+}
+
+function scrollChat() {
+  const box = document.getElementById('chat-messages');
+  if (box) box.scrollTop = box.scrollHeight;
+}
+
+// ─── Community posts ──────────────────────────────────────────────────────────
+function listenHomePosts() {
+  db.collection('community_posts').orderBy('ts','desc').limit(3)
+    .onSnapshot(snap => {
+      const el = document.getElementById('home-posts');
+      // Update stat
+      const statEl = document.getElementById('stat-posts');
+      if (statEl) statEl.textContent = snap.size;
+      if (snap.empty) { el.innerHTML='<div style="color:var(--ink-lt);font-size:13px">No posts yet — be the first!</div>'; return; }
+      el.innerHTML = '';
+      snap.forEach(doc => { el.innerHTML += postHTML(doc.data(), true); });
+    });
+}
+
+function listenCommunityPosts() {
+  db.collection('community_posts').orderBy('ts','desc').limit(40)
+    .onSnapshot(snap => {
+      const feed = document.getElementById('community-feed');
+      if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">No posts yet. Share something with your neighbors!</div>'; return; }
+      feed.innerHTML = '';
+      snap.forEach(doc => { feed.innerHTML += postHTML(doc.data(), false); });
+    });
+}
+
+function postHTML(d, compact) {
+  const nm = d.displayName || d.email?.split('@')[0] || 'Neighbor';
+  const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+  return `<div class="post-card${compact?' mb12':''}">
+    <div class="post-meta">
+      <div class="post-avatar"><span>${esc(nm[0].toUpperCase())}</span></div>
+      <div><div class="post-name">${esc(nm)}</div><div class="post-time">${dt}</div></div>
+    </div>
+    <div class="post-text">${esc(d.text||'')}</div>
+    ${!compact?`<div class="post-actions"><button class="post-action-btn">👍 Like</button><button class="post-action-btn">💬 Reply</button></div>`:''}
+  </div>`;
+}
+
+function submitPost() {
+  const txt = document.getElementById('community-text').value.trim();
+  if (!txt || !currentUser) return;
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('community_posts').add({ text:txt, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
+    .then(()=>{ document.getElementById('community-text').value=''; });
+}
+
+function submitNewPost() {
+  const txt = document.getElementById('post-text-area').value.trim();
+  if (!txt || !currentUser) return;
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('community_posts').add({ text:txt, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
+    .then(()=>{ document.getElementById('post-text-area').value=''; nav('community'); });
+}
+
+// ─── Lost & Found ─────────────────────────────────────────────────────────────
+function listenLostFound() {
+  db.collection('lost_found').orderBy('ts','desc').limit(40)
+    .onSnapshot(snap => {
+      const feed = document.getElementById('lf-feed');
+      if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">No listings yet.</div>'; return; }
+      feed.innerHTML = '';
+      snap.forEach(doc => {
+        const d  = doc.data();
+        const nm = d.displayName || d.email?.split('@')[0] || 'Neighbor';
+        const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+        const isLost = d.type === 'lost';
+        feed.innerHTML += `<div class="lf-card">
+          <div class="lf-emoji">${isLost?'😢':'🎉'}</div>
+          <div>
+            <div><span class="lf-badge ${isLost?'lf-lost':'lf-found'}">${isLost?'Lost':'Found'}</span></div>
+            <div class="lf-title">${esc(d.title||'')}</div>
+            <div class="lf-desc">${esc(d.desc||'')}</div>
+            <div class="lf-contact">Posted by ${esc(nm)} · ${dt}</div>
+          </div>
+        </div>`;
+      });
+    });
+}
+
+function submitLF() {
+  const type  = document.getElementById('lf-type').value;
+  const title = document.getElementById('lf-title').value.trim();
+  const desc  = document.getElementById('lf-desc').value.trim();
+  if (!title || !currentUser) return;
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('lost_found').add({ type, title, desc, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
+    .then(()=>{ document.getElementById('lf-title').value=''; document.getElementById('lf-desc').value=''; });
+}
+
+// ─── History Vault ────────────────────────────────────────────────────────────
+const SEED_HISTORY = [
+  { year:'1852', title:'Bell Buckle Founded', desc:'The town of Bell Buckle was established when the Nashville, Chattanooga & St. Louis Railroad laid tracks through Bedford County. Legend says the name came from a bell and buckle carved on a tree near the creek — tokens left by early settlers.', img:'', seed:true },
+  { year:'1870', title:'Post Office Opens', desc:'Bell Buckle\'s first official post office opened, cementing the community\'s place on the Tennessee map and connecting residents to the wider world via the railroad mail route.', img:'', seed:true },
+  { year:'1886', title:'Webb School Founded', desc:'William Robert "Sawney" Webb founded the Webb School of Bell Buckle, which would go on to become one of the most respected preparatory schools in the Southeast. Dozens of its alumni became U.S. senators and governors.', img:'', seed:true },
+  { year:'1900s', title:'Downtown Thrives', desc:'The early 1900s saw Bell Buckle\'s downtown district boom with general stores, a hotel, a mill, and the railroad depot at its heart. The town became a hub for commerce and culture in Bedford County.', img:'', seed:true },
+  { year:'1952', title:'Centennial Celebration', desc:'Bell Buckle celebrated its 100th anniversary with a grand downtown festival, reuniting families who had spread across the South but kept the town in their hearts.', img:'', seed:true },
+  { year:'1986', title:'First RC Cola & Moon Pie Festival', desc:'The beloved RC Cola & Moon Pie Festival was launched downtown, celebrating two quintessentially Southern treats. What started as a small local event grew into one of Tennessee\'s most unique and beloved annual traditions.', img:'', seed:true },
+  { year:'2000s', title:'"Coolest Small Town" Recognition', desc:'Bell Buckle gained national attention when it was featured in travel publications as one of America\'s coolest small towns — recognized for its art scene, antique shops, café culture, and preserved Victorian character.', img:'', seed:true },
+  { year:'2024', title:'Bell Buckle Connect Launched', desc:'Community members came together to build Bell Buckle Connect — a digital town square to keep neighbors informed, preserve local history, and strengthen the bonds that make Bell Buckle special.', img:'', seed:true },
+];
+
+function listenHistory() {
+  db.collection('history_vault').orderBy('year','asc')
+    .onSnapshot(snap => {
+      const tl = document.getElementById('history-timeline');
+      // Combine seed + community entries
+      const community = [];
+      snap.forEach(doc => community.push({ ...doc.data(), id: doc.id }));
+
+      // Merge: show seed entries, plus any community entries not already covered
+      const combined = [...SEED_HISTORY];
+      community.forEach(e => { if (!e.seed) combined.push(e); });
+      combined.sort((a,b) => parseInt(a.year)||0 > parseInt(b.year)||0 ? 1 : -1);
+
+      if (combined.length === 0) { tl.innerHTML='<div style="color:var(--ink-lt);text-align:center;padding:32px">Loading the vault…</div>'; return; }
+
+      tl.innerHTML = combined.map((e, i) => `
+        <div class="tl-entry" onclick="expandEntry(this)">
+          <div class="tl-card">
+            <div class="tl-year">${esc(e.year||'')}</div>
+            <div class="tl-title">${esc(e.title||'')}</div>
+            <div class="tl-desc">${esc(e.desc||'')}</div>
+            ${e.img ? `<img class="tl-img" src="${esc(e.img)}" alt="${esc(e.title)}" onerror="this.style.display='none'">` : ''}
+            ${e.seed ? '' : `<div class="tl-added">Added by ${esc(e.displayName||'a neighbor')}</div>`}
+          </div>
+          <div class="tl-dot"></div>
+        </div>
+      `).join('');
+    });
+}
+
+function expandEntry(el) {
+  // Toggle highlight
+  el.querySelector('.tl-card').style.boxShadow = '0 6px 24px rgba(166,50,32,.22)';
+  el.querySelector('.tl-card').style.borderColor = 'var(--red)';
+  setTimeout(() => {
+    el.querySelector('.tl-card').style.boxShadow = '';
+    el.querySelector('.tl-card').style.borderColor = '';
+  }, 1200);
+}
+
+function submitHistory() {
+  const year  = document.getElementById('h-year').value.trim();
+  const title = document.getElementById('h-title').value.trim();
+  const desc  = document.getElementById('h-desc').value.trim();
+  const img   = document.getElementById('h-img').value.trim();
+  if (!year || !title || !desc || !currentUser) {
+    alert('Please fill in the year, title, and description.');
+    return;
+  }
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('history_vault').add({
+    year, title, desc, img, seed: false,
+    uid: currentUser.uid, email: currentUser.email, displayName: nm,
+    ts: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    document.getElementById('h-year').value  = '';
+    document.getElementById('h-title').value = '';
+    document.getElementById('h-desc').value  = '';
+    document.getElementById('h-img').value   = '';
+  });
+}
+
+// ─── Utility ──────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
