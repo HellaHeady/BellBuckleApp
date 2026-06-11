@@ -72,9 +72,9 @@
   }
   .bee { position: absolute; z-index: 4; pointer-events: none; }
   .bee-1 { bottom: 20px; animation: bee-1 17s linear infinite; }
-  .bee-2 { bottom: 32px; animation: bee-2 22s linear infinite 4s; transform: scaleX(-1); }
+  .bee-2 { bottom: 32px; animation: bee-2 22s linear infinite 4s; }
   .bee-3 { bottom: 12px; animation: bee-3 13s linear infinite 8s; }
-  /* Mountain covers the train while it's "inside" the tunnel (mountain z-index > train z-index) */
+  /* Barn panel — left 290px of topbar */
   .topbar-mountain { position: absolute; left: 0; top: 0; bottom: 0; width: 290px; z-index: 7; pointer-events: none; }
   .topbar-text { position: absolute; left: 0; top: 0; width: 290px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 8; text-align: center; padding: 0 20px; }
   .topbar-brand-name { font-size: 15px; font-weight: bold; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.95), 0 0 18px rgba(0,0,0,0.6); letter-spacing: 0.3px; line-height: 1.2; }
@@ -97,33 +97,9 @@
   .g-wave-c { transform-box: fill-box; transform-origin: 50% 100%; animation: grass-wave 1.6s ease-in-out infinite 1.3s; }
   .g-wave-d { transform-box: fill-box; transform-origin: 50% 100%; animation: grass-wave 2.1s ease-in-out infinite 0.4s; }
 
-  /* Warm glow bleeding out of tunnel mouth — positioned for wider arch centered x=268 */
-  .tunnel-exit-glow {
-    position: absolute;
-    left: 242px;
-    top: 0;
-    width: 110px;
-    height: 100%;
-    background: radial-gradient(ellipse at 24% 85%, rgba(232,184,48,0.35) 0%, rgba(200,112,42,0.15) 40%, transparent 72%);
-    z-index: 8;
-    pointer-events: none;
-  }
-  /* Steam puffs drifting up from tunnel arch peak */
-  @keyframes steam-puff {
-    0%   { opacity: 0;    transform: translateY(0px)   scale(0.6); }
-    15%  { opacity: 0.55; }
-    60%  { opacity: 0.28; transform: translateY(-18px) scale(1.4); }
-    100% { opacity: 0;    transform: translateY(-32px) scale(2.2); }
-  }
-  .tunnel-steam { position: absolute; left: 264px; top: 2px; z-index: 9; pointer-events: none; }
-  .tunnel-steam span {
-    display: block; position: absolute; border-radius: 50%;
-    background: rgba(210,190,165,0.5);
-    animation: steam-puff 2.2s ease-out infinite;
-  }
-  .tunnel-steam span:nth-child(1) { width:14px; height:14px; left:0px;  animation-delay: 0s;    }
-  .tunnel-steam span:nth-child(2) { width:10px; height:10px; left:9px;  animation-delay: 0.75s; }
-  .tunnel-steam span:nth-child(3) { width:8px;  height:8px;  left:-4px; animation-delay: 1.4s;  }
+  /* Wildflower sway on barn scene */
+  @keyframes flower-sway { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+  .f-sway { transform-box: fill-box; transform-origin: 50% 100%; animation: flower-sway 2.8s ease-in-out infinite; }
   .canvas { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg); }
 
   /* ── Sidebar ── */
@@ -634,240 +610,279 @@
         </svg>
       </div>
 
-      <!-- 3 bees buzzing across the bar — Bell Buckle is Bee City USA! -->
-      <div class="bee bee-1">
+      <!-- 3 bees — Bell Buckle is Bee City USA! Wrapper handles position, inner div handles facing direction -->
+      <div class="bee bee-1"><div style="transform:scaleX(-1)"><!-- bee-1 flies L→R so flip to face right -->
         <svg viewBox="0 0 22 14" width="22" height="14" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="13" cy="4.5" rx="5" ry="3"   fill="rgba(215,238,255,0.82)" stroke="rgba(140,195,225,0.45)" stroke-width="0.6"/>
-          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.72)" stroke="rgba(140,195,225,0.35)" stroke-width="0.5"/>
+          <ellipse cx="13" cy="4.5" rx="5" ry="3"    fill="rgba(215,238,255,0.85)" stroke="rgba(140,195,225,0.5)" stroke-width="0.6"/>
+          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.75)" stroke="rgba(140,195,225,0.4)" stroke-width="0.5"/>
           <ellipse cx="11.5" cy="9" rx="7"   ry="4.5" fill="#e8b830"/>
-          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
-          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
+          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.65"/>
+          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.65"/>
           <circle cx="4.5" cy="9" r="3.5" fill="#2a1a08"/>
-          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.65)"/>
           <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
           <circle cx="2.5" cy="2" r="1.1" fill="#e8b830"/>
           <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
           <circle cx="7.5" cy="2" r="1.1" fill="#e8b830"/>
           <polygon points="18.5,9 21,8 21,10" fill="#2a1a08"/>
         </svg>
-      </div>
-      <div class="bee bee-2">
+      </div></div>
+      <div class="bee bee-2"><div><!-- bee-2 flies R→L so no flip — head already on left -->
         <svg viewBox="0 0 22 14" width="22" height="14" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="13" cy="4.5" rx="5" ry="3"   fill="rgba(215,238,255,0.82)" stroke="rgba(140,195,225,0.45)" stroke-width="0.6"/>
-          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.72)" stroke="rgba(140,195,225,0.35)" stroke-width="0.5"/>
+          <ellipse cx="13" cy="4.5" rx="5" ry="3"    fill="rgba(215,238,255,0.85)" stroke="rgba(140,195,225,0.5)" stroke-width="0.6"/>
+          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.75)" stroke="rgba(140,195,225,0.4)" stroke-width="0.5"/>
           <ellipse cx="11.5" cy="9" rx="7"   ry="4.5" fill="#e8b830"/>
-          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
-          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
+          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.65"/>
+          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.65"/>
           <circle cx="4.5" cy="9" r="3.5" fill="#2a1a08"/>
-          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.65)"/>
           <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
           <circle cx="2.5" cy="2" r="1.1" fill="#e8b830"/>
           <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
           <circle cx="7.5" cy="2" r="1.1" fill="#e8b830"/>
           <polygon points="18.5,9 21,8 21,10" fill="#2a1a08"/>
         </svg>
-      </div>
-      <div class="bee bee-3">
+      </div></div>
+      <div class="bee bee-3"><div style="transform:scaleX(-1)"><!-- bee-3 flies L→R so flip to face right -->
         <svg viewBox="0 0 22 14" width="22" height="14" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="13" cy="4.5" rx="5" ry="3"   fill="rgba(215,238,255,0.82)" stroke="rgba(140,195,225,0.45)" stroke-width="0.6"/>
-          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.72)" stroke="rgba(140,195,225,0.35)" stroke-width="0.5"/>
+          <ellipse cx="13" cy="4.5" rx="5" ry="3"    fill="rgba(215,238,255,0.85)" stroke="rgba(140,195,225,0.5)" stroke-width="0.6"/>
+          <ellipse cx="16" cy="8"   rx="3.8" ry="2.2" fill="rgba(215,238,255,0.75)" stroke="rgba(140,195,225,0.4)" stroke-width="0.5"/>
           <ellipse cx="11.5" cy="9" rx="7"   ry="4.5" fill="#e8b830"/>
-          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
-          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.62"/>
+          <ellipse cx="10"   cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.65"/>
+          <ellipse cx="13.5" cy="9" rx="1.8" ry="4.5" fill="#2a1a08" opacity="0.65"/>
           <circle cx="4.5" cy="9" r="3.5" fill="#2a1a08"/>
-          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="3.5" cy="7.8" r="0.9" fill="rgba(255,255,255,0.65)"/>
           <line x1="5" y1="6" x2="2.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
           <circle cx="2.5" cy="2" r="1.1" fill="#e8b830"/>
           <line x1="6.5" y1="5.8" x2="7.5" y2="2" stroke="#2a1a08" stroke-width="0.9"/>
           <circle cx="7.5" cy="2" r="1.1" fill="#e8b830"/>
           <polygon points="18.5,9 21,8 21,10" fill="#2a1a08"/>
         </svg>
-      </div>
+      </div></div>
 
-      <!-- Tennessee mountain with tunnel — train hides behind mountain, emerges from tunnel -->
+      <!-- See Rock City–style barn — Bell Buckle feel with wildflowers -->
       <div class="topbar-mountain">
         <svg viewBox="0 0 290 64" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
           <defs>
-            <linearGradient id="mtnMain" x1="0.2" y1="0" x2="0.5" y2="1">
-              <stop offset="0%"   stop-color="#5c8c52"/>
-              <stop offset="50%"  stop-color="#3d6b3a"/>
-              <stop offset="100%" stop-color="#243820"/>
+            <linearGradient id="barnSky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"  stop-color="#aecfe8"/>
+              <stop offset="55%" stop-color="#cde4c0" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#e8d8a8" stop-opacity="0.18"/>
             </linearGradient>
-            <linearGradient id="mtnShadow" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stop-color="#1e3018" stop-opacity="0.55"/>
-              <stop offset="100%" stop-color="#0a1208" stop-opacity="0.7"/>
+            <linearGradient id="barnEdge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="82%" stop-color="#f2ebe0" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#f2ebe0" stop-opacity="0.52"/>
             </linearGradient>
-            <!-- Clip mountain fills: punch tunnel-ellipse hole so train shows through dark void -->
-            <clipPath id="mtnHole">
-              <path fill-rule="evenodd" d="M-1,-1 L291,-1 L291,65 L-1,65 Z M247,37 a21,26 0 1,0 42,0 a21,26 0 1,0 -42,0"/>
-            </clipPath>
-            <!-- Soft blend at very right edge only — doesn't reach tunnel centre -->
-            <linearGradient id="edgeFade" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stop-color="#fdfaf4" stop-opacity="0"/>
-              <stop offset="89%"  stop-color="#fdfaf4" stop-opacity="0"/>
-              <stop offset="97%"  stop-color="#fdfaf4" stop-opacity="0.26"/>
-              <stop offset="100%" stop-color="#fdfaf4" stop-opacity="0.58"/>
-            </linearGradient>
-            <!-- Headlight / daylight glow through tunnel — warm at bottom where tracks are -->
-            <radialGradient id="tunnelGlow" cx="50%" cy="80%" r="60%">
-              <stop offset="0%"   stop-color="#fff4a0" stop-opacity="0.72"/>
-              <stop offset="22%"  stop-color="#e8b830" stop-opacity="0.42"/>
-              <stop offset="55%"  stop-color="#c07818" stop-opacity="0.16"/>
-              <stop offset="100%" stop-color="#000"    stop-opacity="0"/>
-            </radialGradient>
-            <!-- Warm amber spill onto mountain face from tunnel -->
-            <radialGradient id="tunnelAmbient" cx="70%" cy="90%" r="50%">
-              <stop offset="0%"   stop-color="#e8b830" stop-opacity="0.26"/>
-              <stop offset="100%" stop-color="#e8b830" stop-opacity="0"/>
-            </radialGradient>
-            <!-- Deep inside tunnel: faint daylight from far end -->
-            <radialGradient id="tunnelFarEnd" cx="50%" cy="40%" r="35%">
-              <stop offset="0%"   stop-color="#a8c8e0" stop-opacity="0.22"/>
-              <stop offset="100%" stop-color="#000"    stop-opacity="0"/>
-            </radialGradient>
-            <filter id="mtnSoft">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="0.4"/>
-            </filter>
           </defs>
 
-          <!-- ══ Mountain fills — clipped so ONLY the tunnel ellipse is transparent ══ -->
-          <!-- Train is hidden everywhere except the tunnel void hole -->
-          <g clip-path="url(#mtnHole)">
+          <!-- Sky -->
+          <rect x="0" y="0" width="290" height="64" fill="url(#barnSky)"/>
 
-          <!-- BACK ridge (distance, lighter) -->
-          <path d="M0,64 L0,42 Q22,28 48,34 Q74,40 98,26 Q122,12 148,18 Q172,24 196,16 Q218,8 240,20 Q260,30 280,36 L290,38 L290,64 Z"
-                fill="#4a7844" opacity="0.45"/>
+          <!-- Distant soft hills -->
+          <path d="M0,64 L0,42 Q45,26 100,34 Q155,42 210,30 Q255,20 290,28 L290,64 Z" fill="rgba(88,138,68,0.25)"/>
+          <!-- Mid hills -->
+          <path d="M0,64 L0,50 Q50,42 105,48 Q160,54 215,46 Q255,40 290,46 L290,64 Z" fill="rgba(58,108,44,0.4)"/>
+          <!-- Ground strip -->
+          <rect x="0" y="56" width="290" height="8" fill="rgba(48,90,36,0.52)"/>
 
-          <!-- MAIN mountain range -->
-          <path d="M0,64 L0,38 Q14,16 36,22 Q58,28 80,12 Q104,-2 130,4 Q156,10 178,2 Q198,-4 220,8 Q240,18 256,26 Q268,32 278,38 L290,40 L290,64 Z"
-                fill="url(#mtnMain)"/>
+          <!-- ═══ BARN (See Rock City style) ═══ -->
+          <!-- Stone foundation -->
+          <rect x="108" y="50" width="78" height="8" rx="1" fill="#7a6048"/>
+          <!-- Stone block details -->
+          <rect x="110" y="51" width="16" height="3" rx="0.5" fill="#8a7058" opacity="0.55"/>
+          <rect x="128" y="52" width="20" height="3" rx="0.5" fill="#7a6248" opacity="0.5"/>
+          <rect x="150" y="51" width="18" height="3" rx="0.5" fill="#8a7058" opacity="0.55"/>
+          <rect x="170" y="52" width="14" height="3" rx="0.5" fill="#7a6248" opacity="0.45"/>
 
-          <!-- Sunlit face highlight (left slopes catch light) -->
-          <path d="M0,38 Q14,16 36,22 Q58,28 80,12 Q104,-2 130,4 L130,64 L0,64 Z"
-                fill="rgba(255,255,255,0.09)"/>
+          <!-- Barn body — front face (lit side) -->
+          <rect x="110" y="26" width="64" height="26" fill="#c03828"/>
+          <!-- Side lean-to / right face in shadow -->
+          <rect x="174" y="30" width="12" height="22" fill="#8a2218"/>
+          <!-- Horizontal board lines -->
+          <line x1="110" y1="31" x2="174" y2="31" stroke="rgba(0,0,0,0.1)" stroke-width="0.9"/>
+          <line x1="110" y1="37" x2="174" y2="37" stroke="rgba(0,0,0,0.1)" stroke-width="0.9"/>
+          <line x1="110" y1="43" x2="174" y2="43" stroke="rgba(0,0,0,0.1)" stroke-width="0.9"/>
+          <line x1="110" y1="49" x2="174" y2="49" stroke="rgba(0,0,0,0.08)" stroke-width="0.7"/>
+          <!-- Vertical board joins -->
+          <line x1="142" y1="26" x2="142" y2="52" stroke="rgba(0,0,0,0.07)" stroke-width="0.7"/>
+          <line x1="126" y1="26" x2="126" y2="52" stroke="rgba(0,0,0,0.05)" stroke-width="0.5"/>
+          <line x1="158" y1="26" x2="158" y2="52" stroke="rgba(0,0,0,0.05)" stroke-width="0.5"/>
 
-          <!-- Dark shadow side (right slopes) -->
-          <path d="M178,2 Q198,-4 220,8 Q240,18 256,26 Q268,32 278,38 L290,40 L290,64 L178,64 Z"
-                fill="url(#mtnShadow)"/>
+          <!-- ROOF — classic dark, peaked — Rock City barn style -->
+          <polygon points="106,28 142,4 178,28" fill="#18100a"/>
+          <!-- Side shed roof -->
+          <polygon points="174,28 178,26 186,30 186,32 174,32" fill="#120c06"/>
+          <!-- Ridge lines -->
+          <line x1="106" y1="28" x2="142" y2="4"  stroke="#2e1e0c" stroke-width="1.2"/>
+          <line x1="142" y1="4"  x2="178" y2="28" stroke="#2e1e0c" stroke-width="1.2"/>
+          <!-- Subtle roof board texture -->
+          <line x1="117" y1="22" x2="142" y2="4"  stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+          <line x1="167" y1="22" x2="142" y2="4"  stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
 
-          <!-- Treeline texture along lower ridge -->
-          <path d="M0,50 Q18,44 32,48 Q46,52 62,47 Q78,42 94,47 Q110,52 126,47 Q142,42 158,47 Q174,52 192,48 Q210,44 228,48 Q244,52 262,48 Q274,46 290,48 L290,64 L0,64 Z"
-                fill="rgba(25,48,22,0.38)"/>
+          <!-- "BELL BUCKLE" text on roof — Rock City style -->
+          <text x="142" y="20" text-anchor="middle"
+            font-family="'Arial Black','Impact',sans-serif"
+            font-size="7" font-weight="900" fill="#ffffff"
+            letter-spacing="0.5" opacity="0.96">BELL BUCKLE</text>
+          <text x="142" y="26.5" text-anchor="middle"
+            font-family="'Arial Black',sans-serif"
+            font-size="4.2" font-weight="700" fill="rgba(255,255,255,0.72)"
+            letter-spacing="2">CONNECT</text>
 
-          <!-- Snow/rock cap on tallest peak (around x=178, y=2) -->
-          <path d="M168,14 Q178,2 188,14 Q183,12 178,11 Q173,12 168,14 Z"
-                fill="rgba(255,255,255,0.3)"/>
-          <!-- Secondary snow cap (x=80, y=12) -->
-          <path d="M73,20 Q80,12 87,20 Q83,18 80,17 Q77,18 73,20 Z"
-                fill="rgba(255,255,255,0.22)"/>
+          <!-- Gable / hay loft window -->
+          <rect x="132" y="13" width="20" height="13" rx="1" fill="#0c0808"/>
+          <line x1="132" y1="19.5" x2="152" y2="19.5" stroke="#1a1008" stroke-width="0.9"/>
+          <line x1="142" y1="13"   x2="142" y2="26"   stroke="#1a1008" stroke-width="0.9"/>
+          <!-- Loft door sill -->
+          <rect x="130" y="12" width="24" height="2" rx="0.5" fill="#5a3820"/>
 
-          <!-- Ridgeline highlight stroke -->
-          <path d="M0,38 Q14,16 36,22 Q58,28 80,12 Q104,-2 130,4 Q156,10 178,2 Q198,-4 220,8 Q240,18 256,26 Q268,32 278,38 L290,40"
-                fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+          <!-- Left window -->
+          <rect x="113" y="33" width="11" height="9" rx="0.8" fill="#0c0808"/>
+          <line x1="113" y1="37.5" x2="124" y2="37.5" stroke="#181008" stroke-width="0.8"/>
+          <line x1="118.5" y1="33" x2="118.5" y2="42" stroke="#181008" stroke-width="0.8"/>
+          <rect x="113.5" y="33.5" width="4" height="3.5" fill="rgba(180,215,245,0.22)"/>
 
-          <!-- Tiny pine trees on mountainside -->
-          <polygon points="50,48 47,54 53,54"  fill="rgba(20,42,18,0.6)"/>
-          <polygon points="50,44 46,50 54,50"  fill="rgba(25,50,22,0.6)"/>
-          <polygon points="62,46 59,53 65,53"  fill="rgba(20,42,18,0.55)"/>
-          <polygon points="62,42 58,48 66,48"  fill="rgba(25,50,22,0.55)"/>
-          <polygon points="200,44 197,51 203,51" fill="rgba(20,42,18,0.5)"/>
-          <polygon points="200,40 196,46 204,46" fill="rgba(25,50,22,0.5)"/>
-          <polygon points="215,46 212,53 218,53" fill="rgba(20,42,18,0.45)"/>
-          <polygon points="215,42 211,48 219,48" fill="rgba(25,50,22,0.45)"/>
+          <!-- Right window -->
+          <rect x="154" y="33" width="11" height="9" rx="0.8" fill="#0c0808"/>
+          <line x1="154" y1="37.5" x2="165" y2="37.5" stroke="#181008" stroke-width="0.8"/>
+          <line x1="159.5" y1="33" x2="159.5" y2="42" stroke="#181008" stroke-width="0.8"/>
+          <rect x="154.5" y="33.5" width="4" height="3.5" fill="rgba(180,215,245,0.18)"/>
 
-          <!-- Warm paper wash — softens saturated mountain fills to match airy landscape palette -->
-          <rect x="0" y="0" width="290" height="64" fill="rgba(242,235,224,0.46)"/>
+          <!-- Big double barn doors with X bracing — classic Rock City barn -->
+          <rect x="127" y="41" width="15" height="13" rx="0.5" fill="#3c1a0a"/>
+          <rect x="143" y="41" width="15" height="13" rx="0.5" fill="#301406"/>
+          <line x1="142" y1="41" x2="142" y2="54" stroke="#1a0804" stroke-width="1.2"/>
+          <!-- X-brace left door -->
+          <line x1="127" y1="41" x2="142" y2="54" stroke="#1a0804" stroke-width="0.7" opacity="0.7"/>
+          <line x1="142" y1="41" x2="127" y2="54" stroke="#1a0804" stroke-width="0.7" opacity="0.7"/>
+          <!-- X-brace right door -->
+          <line x1="143" y1="41" x2="158" y2="54" stroke="#1a0804" stroke-width="0.7" opacity="0.6"/>
+          <line x1="158" y1="41" x2="143" y2="54" stroke="#1a0804" stroke-width="0.7" opacity="0.6"/>
+          <!-- Door hinges -->
+          <rect x="127" y="43" width="3.5" height="1.5" rx="0.5" fill="#9a7050" opacity="0.8"/>
+          <rect x="127" y="49" width="3.5" height="1.5" rx="0.5" fill="#9a7050" opacity="0.8"/>
+          <rect x="153" y="43" width="3.5" height="1.5" rx="0.5" fill="#9a7050" opacity="0.65"/>
+          <rect x="153" y="49" width="3.5" height="1.5" rx="0.5" fill="#9a7050" opacity="0.65"/>
 
-          </g><!-- end mountain fills mask group -->
+          <!-- White hex star on barn body — Tennessee pride -->
+          <polygon points="142,34 143.4,38 147,38 144.2,40.2 145.3,44 142,41.8 138.7,44 139.8,40.2 137,38 140.6,38"
+            fill="rgba(255,255,255,0.28)" stroke="rgba(255,255,255,0.5)" stroke-width="0.6"/>
 
-          <!-- ═══════════════════════════════════════════════════════════════════ -->
-          <!-- TUNNEL PORTAL — full stone arch, centered x=268, spans x=248–290  -->
-          <!-- Looks like the reference photos: arch carved INTO mountain, depth   -->
-          <!-- perspective inside, tracks receding, warm headlight from inside     -->
-          <!-- ═══════════════════════════════════════════════════════════════════ -->
+          <!-- Weather vane at roof peak -->
+          <line x1="142" y1="0" x2="142" y2="5" stroke="#8a6030" stroke-width="1.4"/>
+          <polygon points="142,0 137,3 142,2.5 147,3" fill="#d4a040"/>
+          <circle cx="142" cy="2.5" r="1" fill="#c89030"/>
 
-          <!-- Rocky portal face — dark stone block embedded in mountain face -->
-          <path d="M246,64 L246,36 Q268,5 290,36 L290,64 Z" fill="#0e0a06"/>
+          <!-- ═══ WILDFLOWERS ═══ -->
 
-          <!-- ── INTERIOR: looking INTO the tunnel — semi-transparent so train glows through ── -->
-          <!-- Base tunnel void: 80% dark so locomotive is faintly visible inside -->
-          <ellipse cx="268" cy="37" rx="21" ry="26" fill="rgba(4,2,1,0.80)"/>
-          <!-- Faint daylight from far end (other side of mountain, blue sky) -->
-          <ellipse cx="268" cy="37" rx="21" ry="26" fill="url(#tunnelFarEnd)"/>
-          <!-- Warm headlight beam coming toward viewer -->
-          <ellipse cx="268" cy="37" rx="21" ry="26" fill="url(#tunnelGlow)"/>
+          <!-- Tall sunflower — far left x=52 -->
+          <g class="f-sway">
+            <line x1="52" y1="57" x2="52" y2="41" stroke="#4a8830" stroke-width="1.5"/>
+            <path d="M52,50 Q48,48 46,50" stroke="#4a8830" stroke-width="0.9" fill="none"/>
+            <ellipse cx="45" cy="49.5" rx="3" ry="1.2" fill="#4a9830" transform="rotate(-20,45,49.5)"/>
+            <ellipse cx="52" cy="37" rx="4.5" ry="2" fill="#f2c418" transform="rotate(0,52,37)"/>
+            <ellipse cx="52" cy="37" rx="4.5" ry="2" fill="#f2c418" transform="rotate(45,52,37)"/>
+            <ellipse cx="52" cy="37" rx="4.5" ry="2" fill="#f2c418" transform="rotate(90,52,37)"/>
+            <ellipse cx="52" cy="37" rx="4.5" ry="2" fill="#f0b810" transform="rotate(135,52,37)"/>
+            <circle cx="52" cy="37" r="3.8" fill="#4a1e0a"/>
+            <circle cx="51" cy="36.2" r="1" fill="rgba(255,180,60,0.45)"/>
+          </g>
 
-          <!-- Interior ceiling arch — darker, showing curvature into depth -->
-          <path d="M250,40 Q268,14 286,40" fill="rgba(0,0,0,0.4)" stroke="none"/>
-          <!-- Interior side walls — perspective lines converging to vanishing point -->
-          <path d="M250,64 L254,48 Q258,38 262,33" stroke="rgba(30,18,8,0.7)" stroke-width="1.5" fill="none"/>
-          <path d="M286,64 L282,48 Q278,38 274,33" stroke="rgba(30,18,8,0.7)" stroke-width="1.5" fill="none"/>
+          <!-- Purple Tennessee coneflower x=72 -->
+          <g class="f-sway">
+            <line x1="72" y1="57" x2="72" y2="48" stroke="#4a8030" stroke-width="1.1"/>
+            <ellipse cx="72" cy="45" rx="4" ry="1.5" fill="#c86090" opacity="0.8" transform="rotate(0,72,45)"/>
+            <ellipse cx="72" cy="45" rx="4" ry="1.5" fill="#d070a0" opacity="0.75" transform="rotate(60,72,45)"/>
+            <ellipse cx="72" cy="45" rx="4" ry="1.5" fill="#c06090" opacity="0.75" transform="rotate(120,72,45)"/>
+            <circle cx="72" cy="45" r="2.2" fill="#6a2018"/>
+            <circle cx="71.2" cy="44.3" r="0.7" fill="rgba(255,170,100,0.4)"/>
+          </g>
 
-          <!-- ── TRACKS with perspective — wide at mouth, converge inward ── -->
-          <!-- Left rail -->
-          <path d="M261,64 Q259,54 257,44" stroke="rgba(100,74,42,0.75)" stroke-width="2.2" fill="none"/>
-          <!-- Right rail -->
-          <path d="M275,64 Q276,54 279,44" stroke="rgba(100,74,42,0.75)" stroke-width="2.2" fill="none"/>
-          <!-- Cross ties — closest (widest, most detail) -->
-          <rect x="261" y="62" width="14" height="2.5" rx="0.5" fill="rgba(68,46,22,0.75)"/>
-          <!-- Tie 2 -->
-          <rect x="260" y="57" width="15" height="2" rx="0.5" fill="rgba(68,46,22,0.65)"/>
-          <!-- Tie 3 -->
-          <rect x="259" y="52" width="16" height="1.8" rx="0.5" fill="rgba(68,46,22,0.52)"/>
-          <!-- Tie 4 — perspective narrows -->
-          <rect x="258" y="47" width="17" height="1.5" rx="0.5" fill="rgba(68,46,22,0.38)"/>
-          <!-- Tie 5 — fading into depth -->
-          <rect x="257" y="43" width="18" height="1" rx="0.5" fill="rgba(68,46,22,0.22)"/>
+          <!-- Small daisy cluster x=86 -->
+          <g class="f-sway">
+            <line x1="86" y1="57" x2="86" y2="53" stroke="#5a9030" stroke-width="0.9"/>
+            <ellipse cx="86" cy="51" rx="1.2" ry="0.5" fill="#fff" transform="rotate(0,86,51)"/>
+            <ellipse cx="86" cy="51" rx="1.2" ry="0.5" fill="#fff" transform="rotate(30,86,51)"/>
+            <ellipse cx="86" cy="51" rx="1.2" ry="0.5" fill="#fff" transform="rotate(60,86,51)"/>
+            <ellipse cx="86" cy="51" rx="1.2" ry="0.5" fill="#fff" transform="rotate(90,86,51)"/>
+            <ellipse cx="86" cy="51" rx="1.2" ry="0.5" fill="#fff" transform="rotate(120,86,51)"/>
+            <ellipse cx="86" cy="51" rx="1.2" ry="0.5" fill="#fff" transform="rotate(150,86,51)"/>
+            <circle cx="86" cy="51" r="1.4" fill="#f8e040"/>
+          </g>
 
-          <!-- ── STONE ARCH — multi-layer for depth and realism ── -->
-          <!-- Outer rough edge (thick, dark) -->
-          <path d="M246,64 L246,38 Q268,5 290,38 L290,64" fill="none" stroke="#1e1008" stroke-width="8" stroke-linejoin="round"/>
-          <!-- Main arch face (mid-tone stone) -->
-          <path d="M246,64 L246,38 Q268,5 290,38 L290,64" fill="none" stroke="#4e3218" stroke-width="5" stroke-linejoin="round"/>
-          <!-- Inner arch bevel (lighter, catches light) -->
-          <path d="M249,64 L249,40 Q268,9 287,40 L287,64" fill="none" stroke="#7a5230" stroke-width="2.5" stroke-linejoin="round"/>
-          <!-- Arch inner highlight — rim light -->
-          <path d="M251,41 Q268,12 285,41" fill="none" stroke="rgba(168,122,68,0.5)" stroke-width="1.2"/>
+          <!-- Sunflower right of barn x=200 -->
+          <g class="f-sway">
+            <line x1="200" y1="57" x2="200" y2="46" stroke="#4a8830" stroke-width="1.3"/>
+            <path d="M200,53 Q204,51 206,53" stroke="#4a8830" stroke-width="0.8" fill="none"/>
+            <ellipse cx="207" cy="52.5" rx="2.5" ry="1" fill="#4a9830" transform="rotate(15,207,52.5)"/>
+            <ellipse cx="200" cy="42" rx="4" ry="1.8" fill="#f2c418" transform="rotate(0,200,42)"/>
+            <ellipse cx="200" cy="42" rx="4" ry="1.8" fill="#f2c418" transform="rotate(45,200,42)"/>
+            <ellipse cx="200" cy="42" rx="4" ry="1.8" fill="#f2c418" transform="rotate(90,200,42)"/>
+            <ellipse cx="200" cy="42" rx="4" ry="1.8" fill="#f0b810" transform="rotate(135,200,42)"/>
+            <circle cx="200" cy="42" r="3.3" fill="#4a1e0a"/>
+          </g>
 
-          <!-- Keystone at arch crown -->
-          <path d="M262,8 Q268,2 274,8 L271,6 Q268,4.5 265,6 Z" fill="rgba(100,72,38,0.8)"/>
-          <path d="M264,9 Q268,4 272,9" fill="none" stroke="rgba(140,100,55,0.55)" stroke-width="0.8"/>
+          <!-- Purple coneflower x=218 -->
+          <g class="f-sway">
+            <line x1="218" y1="57" x2="218" y2="49" stroke="#4a8030" stroke-width="1.1"/>
+            <ellipse cx="218" cy="46" rx="3.5" ry="1.4" fill="#b85888" opacity="0.82" transform="rotate(0,218,46)"/>
+            <ellipse cx="218" cy="46" rx="3.5" ry="1.4" fill="#c86898" opacity="0.78" transform="rotate(60,218,46)"/>
+            <ellipse cx="218" cy="46" rx="3.5" ry="1.4" fill="#b05880" opacity="0.78" transform="rotate(120,218,46)"/>
+            <circle cx="218" cy="46" r="2" fill="#621a12"/>
+          </g>
 
-          <!-- Voussoir blocks (stone segments in arch) — left side -->
-          <path d="M246,55 Q248,44 252,32" fill="none" stroke="rgba(35,20,8,0.45)" stroke-width="1"/>
-          <path d="M248,49 Q252,38 257,26" fill="none" stroke="rgba(35,20,8,0.38)" stroke-width="0.8"/>
-          <path d="M250,43 Q255,32 261,20" fill="none" stroke="rgba(35,20,8,0.32)" stroke-width="0.7"/>
-          <!-- Voussoir blocks — right side -->
-          <path d="M290,55 Q288,44 284,32" fill="none" stroke="rgba(35,20,8,0.45)" stroke-width="1"/>
-          <path d="M288,49 Q284,38 279,26" fill="none" stroke="rgba(35,20,8,0.38)" stroke-width="0.8"/>
-          <path d="M286,43 Q281,32 275,20" fill="none" stroke="rgba(35,20,8,0.32)" stroke-width="0.7"/>
+          <!-- Black-eyed Susan x=232 -->
+          <g class="f-sway">
+            <line x1="232" y1="57" x2="232" y2="51" stroke="#5a9030" stroke-width="1"/>
+            <ellipse cx="232" cy="48" rx="2.5" ry="1" fill="#f0a818" transform="rotate(0,232,48)"/>
+            <ellipse cx="232" cy="48" rx="2.5" ry="1" fill="#e8a010" transform="rotate(45,232,48)"/>
+            <ellipse cx="232" cy="48" rx="2.5" ry="1" fill="#f0a818" transform="rotate(90,232,48)"/>
+            <ellipse cx="232" cy="48" rx="2.5" ry="1" fill="#e8a010" transform="rotate(135,232,48)"/>
+            <circle cx="232" cy="48" r="1.8" fill="#2a1008"/>
+          </g>
 
-          <!-- Left side shadow (arch left face in shadow) -->
-          <path d="M246,64 L246,38 Q255,22 263,14 Q268,5 268,5" fill="rgba(0,0,0,0.22)" stroke="none"/>
+          <!-- Wild daisy x=246 -->
+          <g class="f-sway">
+            <line x1="246" y1="57" x2="246" y2="52" stroke="#5a9030" stroke-width="0.9"/>
+            <ellipse cx="246" cy="50" rx="1.2" ry="0.5" fill="#fff" transform="rotate(0,246,50)"/>
+            <ellipse cx="246" cy="50" rx="1.2" ry="0.5" fill="#fff" transform="rotate(30,246,50)"/>
+            <ellipse cx="246" cy="50" rx="1.2" ry="0.5" fill="#fff" transform="rotate(60,246,50)"/>
+            <ellipse cx="246" cy="50" rx="1.2" ry="0.5" fill="#fff" transform="rotate(90,246,50)"/>
+            <ellipse cx="246" cy="50" rx="1.2" ry="0.5" fill="#fff" transform="rotate(120,246,50)"/>
+            <ellipse cx="246" cy="50" rx="1.2" ry="0.5" fill="#fff" transform="rotate(150,246,50)"/>
+            <circle cx="246" cy="50" r="1.4" fill="#f0d030"/>
+          </g>
 
-          <!-- Warm amber glow spilling OUT onto mountain face from tunnel -->
-          <ellipse cx="272" cy="52" rx="28" ry="16" fill="url(#tunnelAmbient)"/>
+          <!-- Tall purple wildflower x=258 -->
+          <g class="f-sway">
+            <line x1="258" y1="57" x2="258" y2="45" stroke="#5a8030" stroke-width="1.1"/>
+            <circle cx="258" cy="42" r="4" fill="#9048a0" opacity="0.82"/>
+            <circle cx="258" cy="42" r="2" fill="#5a1a48"/>
+            <path d="M254,44 Q256,47 258,45" fill="none" stroke="#a060b0" stroke-width="1.2" opacity="0.65"/>
+            <path d="M262,44 Q260,47 258,45" fill="none" stroke="#a060b0" stroke-width="1.2" opacity="0.65"/>
+          </g>
 
-          <!-- Ground track continues right out of tunnel mouth -->
-          <line x1="261" y1="63" x2="290" y2="63" stroke="rgba(105,78,44,0.6)" stroke-width="2"/>
-          <line x1="275" y1="63" x2="290" y2="63" stroke="rgba(105,78,44,0.6)" stroke-width="2"/>
+          <!-- Grass tufts -->
+          <path d="M60,57 Q61,53 59,50"  stroke="rgba(55,105,42,0.7)" stroke-width="1.5" fill="none"/>
+          <path d="M63,57 Q64,52 67,49"  stroke="rgba(50,98,38,0.65)" stroke-width="1.5" fill="none"/>
+          <path d="M190,57 Q191,53 189,50" stroke="rgba(55,105,42,0.65)" stroke-width="1.5" fill="none"/>
+          <path d="M193,57 Q194,52 197,49" stroke="rgba(50,98,38,0.6)" stroke-width="1.5" fill="none"/>
 
-          <!-- Soft right-edge blend — only affects the outer mountain edge, not the tunnel -->
-          <rect x="0" y="0" width="290" height="64" fill="url(#edgeFade)"/>
+          <!-- Small birds in morning sky -->
+          <path d="M28,11 Q30,9 32,11"  fill="none" stroke="rgba(55,85,130,0.28)" stroke-width="1.1"/>
+          <path d="M40,7  Q42,5 44,7"   fill="none" stroke="rgba(55,85,130,0.23)" stroke-width="1.1"/>
+          <path d="M238,9  Q240,7 242,9" fill="none" stroke="rgba(55,85,130,0.22)" stroke-width="1"/>
+          <path d="M250,14 Q252,12 254,14" fill="none" stroke="rgba(55,85,130,0.2)" stroke-width="1"/>
+
+          <!-- Soft right-edge blend into page bg -->
+          <rect x="0" y="0" width="290" height="64" fill="url(#barnEdge)"/>
         </svg>
-      </div>
-
-      <!-- Warm amber glow at tunnel exit — bleeds just past mountain boundary -->
-      <div class="tunnel-exit-glow"></div>
-      <!-- Steam drifting up from the tunnel mouth -->
-      <div class="tunnel-steam">
-        <span></span><span></span><span></span>
       </div>
 
       <!-- Mountain brand — always shows app name, not current page -->
       <div class="topbar-text">
         <div class="topbar-brand-name">Bell Buckle</div>
-        <div class="topbar-brand-sub">🚂 Connect</div>
+        <div class="topbar-brand-sub">🌻 Connect</div>
       </div>
 
       <!-- Page title — in main topbar area to the right of mountain -->
