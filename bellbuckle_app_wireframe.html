@@ -352,6 +352,51 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 #channel-list button.active{background:rgba(166,50,32,.25);color:#f87a6a;}
 .chan-label{font-family:'Courier New',monospace;font-size:12px;}
 
+/* ── History two-column layout ── */
+#screen-history.active{display:flex;flex-direction:column;overflow:hidden;}
+.h-shell{display:flex;flex:1;overflow:hidden;}
+.h-timeline-panel{width:292px;flex-shrink:0;border-right:2px solid var(--wire-lt);overflow-y:auto;padding:18px 14px;background:var(--bg);}
+.h-section-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-lt);font-weight:700;padding-bottom:12px;border-bottom:1px solid var(--wire-lt);margin-bottom:14px;}
+.htl-entry{display:flex;gap:10px;margin-bottom:4px;cursor:pointer;padding:8px 6px;border-radius:8px;transition:background .15s;position:relative;}
+.htl-entry:hover{background:rgba(166,50,32,.07);}
+.htl-entry.active{background:rgba(166,50,32,.11);}
+.htl-dot-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:2px;}
+.htl-dot{width:12px;height:12px;border-radius:50%;border:2.5px solid var(--red);flex-shrink:0;}
+.htl-dot.filled{background:var(--red);}
+.htl-line{flex:1;width:2px;background:var(--wire-lt);min-height:14px;margin:4px 0;}
+.htl-era{font-size:10px;font-weight:700;color:var(--red);margin-bottom:2px;line-height:1.2;}
+.htl-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.3;}
+.htl-desc{font-size:11px;color:var(--ink-lt);line-height:1.45;}
+/* History right panel */
+.h-right{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0;}
+.h-tabs{display:flex;gap:0;border-bottom:2px solid var(--wire-lt);flex-shrink:0;background:var(--paper);}
+.h-tab-btn{display:flex;align-items:center;gap:8px;padding:11px 16px;cursor:pointer;border:none;background:transparent;color:var(--ink-lt);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-family:'Inter',sans-serif;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.h-tab-btn:hover{color:var(--ink);background:rgba(42,31,16,.03);}
+.h-tab-btn.active{color:var(--red);border-bottom-color:var(--red);background:transparent;}
+.h-tab-num{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#1a0e06;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.h-tab-btn.active .h-tab-num{background:var(--red);color:#fff;}
+.h-tab-content{display:none;flex:1;overflow-y:auto;}
+.h-tab-content.active{display:block;}
+/* Chapter cards */
+.chapter-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:12px;overflow:hidden;margin-bottom:16px;box-shadow:0 1px 5px rgba(42,31,16,.06);display:flex;transition:box-shadow .2s;}
+.chapter-card:hover{box-shadow:0 4px 18px rgba(42,31,16,.12);}
+.chapter-img{width:200px;min-height:150px;flex-shrink:0;object-fit:cover;background:#e0d4bc;}
+.chapter-body{padding:18px 20px;flex:1;}
+.chapter-badge{display:inline-block;background:#e8f4e8;color:var(--green);border:1px solid rgba(61,107,58,.2);border-radius:99px;font-size:10px;font-weight:700;padding:2px 10px;margin-bottom:8px;letter-spacing:.06em;}
+.chapter-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink);font-weight:700;margin-bottom:8px;line-height:1.2;}
+.chapter-desc{font-size:13px;color:var(--ink-lt);line-height:1.6;margin-bottom:14px;}
+.chapter-read{background:var(--wire-lt);color:var(--ink);border:none;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;width:100%;text-align:left;}
+.chapter-read:hover{background:var(--red);color:#fff;}
+/* Buildings grid */
+.building-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:18px;}
+.building-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(42,31,16,.06);}
+.building-card:hover{box-shadow:0 4px 16px rgba(42,31,16,.12);transform:translateY(-1px);}
+.building-img{width:100%;height:110px;object-fit:cover;background:#e0d4bc;display:block;}
+.building-info{padding:10px 12px;}
+.building-name{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.3;}
+.building-year{font-size:10px;color:var(--red);font-weight:700;letter-spacing:.06em;}
+.building-desc{font-size:11px;color:var(--ink-lt);margin-top:4px;line-height:1.45;}
+
 /* Utility */
 .max-w{max-width:640px;margin-left:auto;margin-right:auto;}
 .p20{padding:20px;}
@@ -772,32 +817,343 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 
       <!-- ══════ OUR HISTORY ══════ -->
       <div class="screen" id="screen-history">
-        <div class="p20 max-w">
-          <div class="page-header" style="padding:0 0 6px">
-            <h2>📜 Our History</h2>
-            <p>The Bell Buckle Community Vault — preserving our story, one entry at a time</p>
-          </div>
-          <p style="color:var(--ink-lt);font-size:12px;font-style:italic;padding:0 0 16px">Community members can add history, photos, and memories. Every entry is saved forever.</p>
+        <div class="h-shell">
 
-          <!-- Add entry form -->
-          <div class="history-add">
-            <h3>✍️ Add to the Vault</h3>
-            <div class="form-row">
-              <input id="h-year" class="form-input" placeholder="Year (e.g. 1924)" style="flex:0 0 130px">
-              <input id="h-title" class="form-input" placeholder="Title / Event name" style="flex:1">
-            </div>
-            <textarea id="h-desc" class="form-textarea" rows="3" placeholder="Tell the story… what happened? Who was there? Why does it matter?" style="margin-bottom:10px"></textarea>
-            <input id="h-img" class="form-input" placeholder="Photo URL (optional — paste a link to an image)" style="margin-bottom:10px">
-            <div style="text-align:right">
-              <button class="btn btn-red" onclick="submitHistory()">Add to History Vault</button>
-            </div>
-          </div>
+          <!-- ── LEFT: Interactive Timeline ── -->
+          <div class="h-timeline-panel">
+            <div class="h-section-label">INTERACTIVE TIMELINE</div>
 
-          <!-- Timeline -->
-          <div id="history-timeline" class="timeline">
-            <div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px 0">Loading the vault…</div>
-          </div>
-        </div>
+            <div class="htl-entry active" onclick="selectEra(0)">
+              <div class="htl-dot-col"><div class="htl-dot filled"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era">1852 · The Founding</div>
+                <div class="htl-title">Nashville &amp; Chattanooga Railroad Arrives</div>
+                <div class="htl-desc">A. D. Fuggitt donates land. Bell Buckle becomes a vital rail stop — and a town is born.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(1)">
+              <div class="htl-dot-col"><div class="htl-dot filled"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era">1870s–1900s · The Boom</div>
+                <div class="htl-title">Largest Stockyard Between Nashville &amp; Chattanooga</div>
+                <div class="htl-desc">Webb School arrives in 1870. Population tops 1,000. Victorian homes and storefronts rise along Main Street.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(2)">
+              <div class="htl-dot-col"><div class="htl-dot"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era">1915–1950s · The Quiet Years</div>
+                <div class="htl-title">Automobiles &amp; Decline</div>
+                <div class="htl-desc">The car erodes rail commerce. Storefronts board up. General Patton's tank rolls through in 1940. The town grows quiet but resilient.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(3)">
+              <div class="htl-dot-col"><div class="htl-dot filled"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era">1960s · The Resurgence</div>
+                <div class="htl-title">Restoration Wave Begins</div>
+                <div class="htl-desc">Artists and historians discover Bell Buckle's Victorian bones. Restoration purchases begin. The town starts to breathe again.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(4)">
+              <div class="htl-dot-col"><div class="htl-dot filled"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era">1976 · Recognition</div>
+                <div class="htl-title">National Register of Historic Places</div>
+                <div class="htl-desc">During the Bicentennial, Bell Buckle's downtown and Webb School area earn National Register status. Official — and permanent.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(5)">
+              <div class="htl-dot-col"><div class="htl-dot filled" style="border-color:var(--green);background:var(--green)"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era" style="color:var(--green)">Each March · Daffodil Day</div>
+                <div class="htl-title">Daffodils Bloom — A Town Tradition</div>
+                <div class="htl-desc">Sawney Webb first planted daffodil bulbs along Webb Road. The Daffodil Day tradition has bloomed every March ever since.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(6)">
+              <div class="htl-dot-col"><div class="htl-dot"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era">1982 · Arts &amp; Crafts</div>
+                <div class="htl-title">First Bell Buckle Quilt Walk</div>
+                <div class="htl-desc">Quilts hang from storefronts and porches each December. A celebration of the Victorian town's textile heritage.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(7)">
+              <div class="htl-dot-col"><div class="htl-dot filled"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era">1994 · The Festival</div>
+                <div class="htl-title">First RC Cola &amp; Moon Pie Festival</div>
+                <div class="htl-desc">Captain Rodney launches Tennessee's most beloved quirky tradition. 30,000+ visitors flock to tiny Bell Buckle every June.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(8)">
+              <div class="htl-dot-col"><div class="htl-dot"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era">2000 · Tree City USA</div>
+                <div class="htl-title">Smallest Tree City in Tennessee</div>
+                <div class="htl-desc">Bell Buckle earns Tree City USA status — the smallest Tennessee town with the honor. Governor's Environmental Award follows in 2009.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(9)">
+              <div class="htl-dot-col"><div class="htl-dot filled" style="border-color:var(--blue);background:var(--blue)"></div></div>
+              <div>
+                <div class="htl-era" style="color:var(--blue)">Today · Digital Town Square</div>
+                <div class="htl-title">Bell Buckle Connect</div>
+                <div class="htl-desc">Our community builds a digital home — keeping the conversation, history, and heart of Bell Buckle alive. 🌀</div>
+              </div>
+            </div>
+          </div><!-- /h-timeline-panel -->
+
+          <!-- ── RIGHT: Tabbed Panel ── -->
+          <div class="h-right">
+
+            <div class="h-tabs">
+              <button class="h-tab-btn active" data-tab="chapters" onclick="switchHistoryTab('chapters')">
+                <div class="h-tab-num">1</div>
+                CHAPTER SPOTLIGHTS
+              </button>
+              <button class="h-tab-btn" data-tab="buildings" onclick="switchHistoryTab('buildings')">
+                <div class="h-tab-num">2</div>
+                HISTORIC BUILDINGS
+              </button>
+              <button class="h-tab-btn" data-tab="vault" onclick="switchHistoryTab('vault')">
+                <div class="h-tab-num">3</div>
+                ADD TO VAULT
+              </button>
+            </div>
+
+            <!-- ── Tab 1: Chapter Spotlights ── -->
+            <div id="htab-chapters" class="h-tab-content active" style="padding:18px 20px;">
+
+              <div class="chapter-card">
+                <img class="chapter-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/33777.jpg" alt="Railroad Square" onerror="this.src='';this.style.background='#c4ae8f'">
+                <div class="chapter-body">
+                  <div class="chapter-badge">Chapter 1</div>
+                  <div class="chapter-title">The Railroad Boom</div>
+                  <div class="chapter-desc">When the Nashville &amp; Chattanooga line came through in 1852, it didn't just bring trains — it brought prosperity. Bell Buckle grew into the largest livestock shipping point between the two cities. Victorian storefronts, churches, and fine homes rose along Main Street as the town's population surged past 1,000.</div>
+                  <button class="chapter-read" onclick="switchHistoryTab('buildings')">Explore Historic Buildings →</button>
+                </div>
+              </div>
+
+              <div class="chapter-card">
+                <img class="chapter-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/7609838.png" alt="Hoover Home" onerror="this.src='';this.style.background='#c4ae8f'">
+                <div class="chapter-body">
+                  <div class="chapter-badge">Chapter 2</div>
+                  <div class="chapter-title">The Victorian Homes</div>
+                  <div class="chapter-desc">From Greek Revival to Victorian Queen Anne, Bell Buckle's residential architecture tells a century of prosperity. The Hoover Home (c. 1870) is the oldest surviving residence — once a funeral parlor, then a hotel. Walk the streets and see 40+ architecturally significant structures still standing today.</div>
+                  <button class="chapter-read" onclick="switchHistoryTab('buildings')">See the Walking Tour →</button>
+                </div>
+              </div>
+
+              <div class="chapter-card">
+                <img class="chapter-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/418172_orig.jpg" alt="White House / Arrowlet B&B" onerror="this.src='';this.style.background='#c4ae8f'">
+                <div class="chapter-body">
+                  <div class="chapter-badge">Chapter 3</div>
+                  <div class="chapter-title">Historic Preservation</div>
+                  <div class="chapter-desc">The White House (1895) — now the charming Arrowlet B&amp;B — was built by Dr. White, one of Bell Buckle's three town physicians. His daughter Bette White married a Mr. Davis… making her "Bette Davis." In 1976, the district earned National Register of Historic Places status.</div>
+                  <button class="chapter-read" onclick="switchHistoryTab('buildings')">Learn More →</button>
+                </div>
+              </div>
+
+              <div class="chapter-card">
+                <img class="chapter-img" src="https://bellbucklechamber.com/wp-content/uploads/2022/02/2019-RCMP-Cloggers-scaled.jpg" alt="RC Cola Festival" onerror="this.src='';this.style.background='#c4ae8f'">
+                <div class="chapter-body">
+                  <div class="chapter-badge">Chapter 4</div>
+                  <div class="chapter-title">The Festival Tradition</div>
+                  <div class="chapter-desc">From Daffodil Day each March to the RC Cola &amp; Moon Pie Festival every June, Bell Buckle built a reputation as Tennessee's most spirited small town. The RC Cola festival draws 30,000+ visitors a year to a community of fewer than 600 residents — Southern quirkiness done right.</div>
+                  <button class="chapter-read" onclick="switchHistoryTab('vault')">Add Your Memory →</button>
+                </div>
+              </div>
+
+              <div style="background:rgba(166,50,32,.06);border:1px dashed rgba(166,50,32,.3);border-radius:10px;padding:16px;text-align:center;margin-top:4px">
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px">📖 Know a story we missed?</div>
+                <div style="font-size:12px;color:var(--ink-lt);margin-bottom:12px">Every family, every building, every moment deserves to be remembered.</div>
+                <button class="btn btn-red" onclick="switchHistoryTab('vault')">+ Add to the Vault</button>
+              </div>
+
+            </div><!-- /htab-chapters -->
+
+            <!-- ── Tab 2: Historic Buildings ── -->
+            <div id="htab-buildings" class="h-tab-content">
+              <div style="padding:14px 18px 8px;border-bottom:1px solid var(--wire-lt);">
+                <div class="h-section-label">BELL BUCKLE WALKING TOUR · HISTORIC BUILDINGS</div>
+                <p style="font-size:12px;color:var(--ink-lt);margin:0">Bell Buckle's National Register Historic District contains 40+ architecturally significant structures. Here are some of our favorites.</p>
+              </div>
+              <div class="building-grid">
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/33777.jpg" alt="Railroad Square" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Railroad Square</div>
+                    <div class="building-year">Est. 1852</div>
+                    <div class="building-desc">Once a sawmill, then a Victorian clothing store. Today home to Phillips General Store — still stocked with original Victorian-era goods.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/8116770.png" alt="Webb Cottage" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Webb Cottage</div>
+                    <div class="building-year">Built 1868 · Oldest Home</div>
+                    <div class="building-desc">The oldest surviving home in Bell Buckle. Temporary home of Sawney Webb himself. Featured in Country Kitchen Magazine, 2002.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/7609838.png" alt="Hoover Home" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Hoover / Strobel Home</div>
+                    <div class="building-year">Built c. 1870 · Greek Revival</div>
+                    <div class="building-desc">The oldest standing residence in Bell Buckle. Once a funeral home, then the Lynch Hotel. Locals say it's haunted — current residents love it.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/2001151.jpg" alt="Methodist Church" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Bell Buckle Methodist Church</div>
+                    <div class="building-year">Est. 1875 · Rebuilt 1893</div>
+                    <div class="building-desc">Founded by Sawney Webb and Rev. A.T. Crawford. The Nashville-gifted pipe organ has filled this sanctuary since 1932.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/3177115.jpg" alt="A.E. Fuggitt Home" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">A.E. Fuggitt Home</div>
+                    <div class="building-year">Built 1880</div>
+                    <div class="building-desc">Built by the family who donated land to found Bell Buckle. A Hungarian family fleeing WWII later purchased it and taught at Webb School.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/6852443.jpg" alt="Alison Home" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Alison / Burl White Home</div>
+                    <div class="building-year">Late 1800s</div>
+                    <div class="building-desc">Once home to noted country singer Burl White. A piece of Bell Buckle's musical heritage, tucked behind white picket fencing.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/418172_orig.jpg" alt="Arrowlet B&B" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">White House · Arrowlet B&amp;B</div>
+                    <div class="building-year">Built 1895</div>
+                    <div class="building-desc">Built by Dr. White, one of Bell Buckle's three town doctors. His daughter Bette White married a Mr. Davis — making her "Bette Davis."</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/5751423.png" alt="Reagor Home" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Reagor Home</div>
+                    <div class="building-year">Built 1898 · Victorian Queen Anne</div>
+                    <div class="building-desc">Classic Queen Anne style with stunning wrap-around porches. Purchased in 1940 for $2,000 by a widow raising four children — she made it sing.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/4212291_orig.jpg" alt="First Telephone House" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">John Hoover Home · Phone #1</div>
+                    <div class="building-year">Built 1898</div>
+                    <div class="building-desc">First house in Bell Buckle with a telephone. His number was literally "#1." Known for its charming diamond-shaped gable windows.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/2212195.jpg" alt="Russ Faxon Studio" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Russ Faxon Studio</div>
+                    <div class="building-year">1800s · Survived a Fire</div>
+                    <div class="building-desc">Once a saloon and feed mill across the tracks. The only building to survive a devastating late-1800s fire. Now home to world-renowned sculptor Russ Faxon.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/5083533.jpg" alt="Paty Home" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Paty Home · "Flying Pig Manor"</div>
+                    <div class="building-year">Built 1914</div>
+                    <div class="building-desc">Home of John Paty Sr. In the 1940s–60s it housed Webb School boarders. Still has the original hand pump and cistern. Named for a beloved garden pig.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/4554854_orig.jpg" alt="Bank / Arts Center" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Bank of Bell Buckle · Arts Center</div>
+                    <div class="building-year">c. 1900</div>
+                    <div class="building-desc">In 1976 artist Anne White-Scruggs opened Bell Buckle Crafts here — sparking the arts-and-crafts identity that defines the town today.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/265514.png" alt="Judge Pady Home" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Judge Pady / Hunt Home</div>
+                    <div class="building-year">Built 1890s</div>
+                    <div class="building-desc">Home of one of Bell Buckle's most prominent early judges. Its classic Victorian lines and wide veranda have welcomed generations.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/1913779.jpg" alt="Whiteside Home" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Whiteside / Russ Taff Home</div>
+                    <div class="building-year">Built 1905</div>
+                    <div class="building-desc">Later home to Grammy-winning gospel singer Russ Taff. A beautiful early 20th-century residence bridging Bell Buckle's Victorian and modern eras.</div>
+                  </div>
+                </div>
+
+                <div class="building-card">
+                  <img class="building-img" src="https://bellbucklechamber.com/wp-content/uploads/2022/02/5K-neighborhood-shot-1024x683.jpg" alt="Downtown Bell Buckle" onerror="this.src='';this.style.background='#c4ae8f'">
+                  <div class="building-info">
+                    <div class="building-name">Downtown Bell Buckle</div>
+                    <div class="building-year">National Register · 1976</div>
+                    <div class="building-desc">The 92-acre Bell Buckle Historic District — 40+ architecturally significant structures, Victorian storefronts, churches, and homes preserved for generations.</div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- /htab-buildings -->
+
+            <!-- ── Tab 3: Add to Vault ── -->
+            <div id="htab-vault" class="h-tab-content" style="padding:20px;">
+              <div class="h-section-label">COMMUNITY HISTORY VAULT</div>
+              <p style="font-size:13px;color:var(--ink-lt);margin-bottom:18px;line-height:1.6">Every family, building, and moment that shaped Bell Buckle deserves to be remembered. Share what you know — a story, a photo, a year. Community entries are saved forever.</p>
+
+              <div id="vault-community-entries" style="margin-bottom:20px">
+                <div style="color:var(--ink-lt);font-size:13px;padding:10px;border:1px dashed var(--wire);border-radius:8px;text-align:center">Loading community entries…</div>
+              </div>
+
+              <div class="history-add">
+                <h3>✍️ Add Your Entry</h3>
+                <div class="form-row">
+                  <input id="h-year" class="form-input" placeholder="Year (e.g. 1924)" style="flex:0 0 130px">
+                  <input id="h-title" class="form-input" placeholder="Title / Event name" style="flex:1">
+                </div>
+                <textarea id="h-desc" class="form-textarea" rows="3" placeholder="Tell the story… what happened? Who was there? Why does it matter?" style="margin-bottom:10px"></textarea>
+                <input id="h-img" class="form-input" placeholder="Photo URL (optional — paste a link to an image)" style="margin-bottom:10px">
+                <div style="text-align:right">
+                  <button class="btn btn-red" onclick="submitHistory()">Add to History Vault</button>
+                </div>
+              </div>
+            </div><!-- /htab-vault -->
+
+          </div><!-- /h-right -->
+        </div><!-- /h-shell -->
       </div>
 
       <!-- ══════ GIVE BACK ══════ -->
@@ -1245,41 +1601,41 @@ const SEED_HISTORY = [
 function listenHistory() {
   db.collection('history_vault').orderBy('year','asc')
     .onSnapshot(snap => {
-      const tl = document.getElementById('history-timeline');
-      // Combine seed + community entries
+      const el = document.getElementById('vault-community-entries');
+      if (!el) return;
       const community = [];
-      snap.forEach(doc => community.push({ ...doc.data(), id: doc.id }));
-
-      // Merge: show seed entries, plus any community entries not already covered
-      const combined = [...SEED_HISTORY];
-      community.forEach(e => { if (!e.seed) combined.push(e); });
-      combined.sort((a,b) => parseInt(a.year)||0 > parseInt(b.year)||0 ? 1 : -1);
-
-      if (combined.length === 0) { tl.innerHTML='<div style="color:var(--ink-lt);text-align:center;padding:32px">Loading the vault…</div>'; return; }
-
-      tl.innerHTML = combined.map((e, i) => `
-        <div class="tl-entry" onclick="expandEntry(this)">
-          <div class="tl-card">
-            <div class="tl-year">${esc(e.year||'')}</div>
-            <div class="tl-title">${esc(e.title||'')}</div>
-            <div class="tl-desc">${esc(e.desc||'')}</div>
-            ${e.img ? `<img class="tl-img" src="${esc(e.img)}" alt="${esc(e.title)}" onerror="this.style.display='none'">` : ''}
-            ${e.seed ? '' : `<div class="tl-added">Added by ${esc(e.displayName||'a neighbor')}</div>`}
+      snap.forEach(doc => { const d = doc.data(); if (!d.seed) community.push({...d, id: doc.id}); });
+      if (community.length === 0) {
+        el.innerHTML = '<div style="color:var(--ink-lt);font-size:13px;padding:12px;border:1px dashed var(--wire);border-radius:8px;text-align:center">No community entries yet — be the first to add your piece of Bell Buckle history!</div>';
+        return;
+      }
+      el.innerHTML = community.map(e => `
+        <div class="post-card" style="margin-bottom:10px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            ${e.img ? `<img src="${esc(e.img)}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;border:1px solid var(--wire-lt)" onerror="this.style.display='none'">` : ''}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em">${esc(e.year||'')}</div>
+              <div style="font-size:14px;font-weight:700;color:var(--ink)">${esc(e.title||'')}</div>
+              <div style="font-size:12px;color:var(--ink-lt);margin-top:3px;line-height:1.5">${esc(e.desc||'')}</div>
+              <div style="font-size:10px;color:var(--wire);margin-top:5px;font-style:italic">Added by ${esc(e.displayName||'a neighbor')}</div>
+            </div>
           </div>
-          <div class="tl-dot"></div>
         </div>
       `).join('');
     });
 }
 
+function switchHistoryTab(tab) {
+  document.querySelectorAll('.h-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.h-tab-content').forEach(c => c.classList.toggle('active', c.id === 'htab-' + tab));
+}
+
+function selectEra(idx) {
+  document.querySelectorAll('.htl-entry').forEach((e, i) => e.classList.toggle('active', i === idx));
+}
+
 function expandEntry(el) {
-  // Toggle highlight
-  el.querySelector('.tl-card').style.boxShadow = '0 6px 24px rgba(166,50,32,.22)';
-  el.querySelector('.tl-card').style.borderColor = 'var(--red)';
-  setTimeout(() => {
-    el.querySelector('.tl-card').style.boxShadow = '';
-    el.querySelector('.tl-card').style.borderColor = '';
-  }, 1200);
+  el.querySelector('.tl-card') && (el.querySelector('.tl-card').style.borderColor = 'var(--red)');
 }
 
 function submitHistory() {
