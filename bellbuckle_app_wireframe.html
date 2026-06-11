@@ -449,16 +449,16 @@
           <!-- Sky — unified, full width, no seam -->
           <rect x="0" y="0" width="1000" height="64" fill="url(#natSky)"/>
 
-          <!-- Distant hazy back ridge -->
-          <path d="M250,64 L250,36 Q340,18 460,28 Q580,38 700,20 Q820,4 950,14 L1000,18 L1000,64 Z" fill="rgba(118,158,110,0.22)"/>
+          <!-- Distant hazy back ridge — now spans full width -->
+          <path d="M0,64 L0,38 Q80,24 160,30 Q210,34 250,36 Q340,18 460,28 Q580,38 700,20 Q820,4 950,14 L1000,18 L1000,64 Z" fill="rgba(118,158,110,0.22)"/>
 
-          <!-- Main rolling hills — x=290 starts at y=40 to meet mountain right edge -->
+          <!-- Main rolling hills — full width -->
           <path d="M0,64 L0,42 Q80,34 160,38 Q230,42 270,40 L290,40 Q360,40 430,32 Q500,24 570,32 Q640,40 720,32 Q800,22 880,32 Q940,40 1000,34 L1000,64 Z" fill="rgba(50,96,44,0.44)"/>
 
-          <!-- Foreground treeline / ridge base -->
-          <path d="M280,64 L280,50 Q340,42 405,50 Q465,58 530,48 Q595,38 665,48 Q730,58 800,48 Q855,40 920,48 Q962,54 1000,50 L1000,64 Z" fill="rgba(34,66,28,0.52)"/>
+          <!-- Foreground treeline — now spans full width -->
+          <path d="M0,64 L0,52 Q70,44 150,50 Q220,56 280,50 Q340,42 405,50 Q465,58 530,48 Q595,38 665,48 Q730,58 800,48 Q855,40 920,48 Q962,54 1000,50 L1000,64 Z" fill="rgba(34,66,28,0.52)"/>
 
-          <!-- ── TREES (right side only — left 290px covered by mountain) ── -->
+          <!-- ── TREES (right side only — left 290px is barn panel) ── -->
 
           <!-- Pine cluster x≈310 -->
           <g class="t-sway-c">
@@ -664,26 +664,11 @@
       <div class="topbar-mountain">
         <svg viewBox="0 0 290 64" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
           <defs>
-            <linearGradient id="barnSky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"  stop-color="#aecfe8"/>
-              <stop offset="55%" stop-color="#cde4c0" stop-opacity="0.55"/>
-              <stop offset="100%" stop-color="#e8d8a8" stop-opacity="0.18"/>
-            </linearGradient>
             <linearGradient id="barnEdge" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="82%" stop-color="#f2ebe0" stop-opacity="0"/>
-              <stop offset="100%" stop-color="#f2ebe0" stop-opacity="0.52"/>
+              <stop offset="80%" stop-color="#fdfaf4" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#fdfaf4" stop-opacity="0.4"/>
             </linearGradient>
           </defs>
-
-          <!-- Sky -->
-          <rect x="0" y="0" width="290" height="64" fill="url(#barnSky)"/>
-
-          <!-- Distant soft hills -->
-          <path d="M0,64 L0,42 Q45,26 100,34 Q155,42 210,30 Q255,20 290,28 L290,64 Z" fill="rgba(88,138,68,0.25)"/>
-          <!-- Mid hills -->
-          <path d="M0,64 L0,50 Q50,42 105,48 Q160,54 215,46 Q255,40 290,46 L290,64 Z" fill="rgba(58,108,44,0.4)"/>
-          <!-- Ground strip -->
-          <rect x="0" y="56" width="290" height="8" fill="rgba(48,90,36,0.52)"/>
 
           <!-- ═══ BARN (See Rock City style) ═══ -->
           <!-- Stone foundation -->
@@ -719,15 +704,17 @@
           <line x1="117" y1="22" x2="142" y2="4"  stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
           <line x1="167" y1="22" x2="142" y2="4"  stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
 
-          <!-- "BELL BUCKLE" text on roof — Rock City style -->
-          <text x="142" y="20" text-anchor="middle"
+          <!-- Painted roof text — Rock City style, white on dark roof -->
+          <text x="142" y="19" text-anchor="middle"
             font-family="'Arial Black','Impact',sans-serif"
-            font-size="7" font-weight="900" fill="#ffffff"
-            letter-spacing="0.5" opacity="0.96">BELL BUCKLE</text>
-          <text x="142" y="26.5" text-anchor="middle"
-            font-family="'Arial Black',sans-serif"
-            font-size="4.2" font-weight="700" fill="rgba(255,255,255,0.72)"
-            letter-spacing="2">CONNECT</text>
+            font-size="6.8" font-weight="900" fill="#ffffff"
+            letter-spacing="0.8" opacity="0.95"
+            style="text-shadow:none;">SEE BELL BUCKLE</text>
+          <!-- Painted sign on barn body — RC Cola & Moon Pie nod -->
+          <rect x="116" y="43" width="52" height="8" rx="1" fill="rgba(0,0,0,0.18)"/>
+          <text x="142" y="49.5" text-anchor="middle"
+            font-family="sans-serif" font-size="4.8" fill="#f2e8c8"
+            letter-spacing="1.2" font-weight="700" opacity="0.9">RC COLA · MOON PIE</text>
 
           <!-- Gable / hay loft window -->
           <rect x="132" y="13" width="20" height="13" rx="1" fill="#0c0808"/>
@@ -879,10 +866,10 @@
         </svg>
       </div>
 
-      <!-- Mountain brand — always shows app name, not current page -->
+      <!-- Brand overlay on barn panel -->
       <div class="topbar-text">
         <div class="topbar-brand-name">Bell Buckle</div>
-        <div class="topbar-brand-sub">🌻 Connect</div>
+        <div class="topbar-brand-sub">🐝 Bee City · Est. 1852</div>
       </div>
 
       <!-- Page title — in main topbar area to the right of mountain -->
