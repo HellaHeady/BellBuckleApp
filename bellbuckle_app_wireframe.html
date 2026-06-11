@@ -376,6 +376,10 @@
   .chapter-sub { font-size: 12px; color: var(--ink-light); font-family: sans-serif; }
 
 </style>
+<!-- Firebase SDK (compat build — works in plain HTML, no bundler needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -873,8 +877,10 @@
       </div>
 
       <div class="topbar-actions">
+        <span id="topbar-user" style="font-size:11px;font-family:sans-serif;color:rgba(255,255,255,0.75);margin-right:6px;"></span>
         <div class="btn btn-secondary" onclick="showScreen('post')">+ Post</div>
         <div class="btn btn-primary" onclick="showScreen('fundraising')">Donate</div>
+        <div id="topbar-signout" style="display:none;" class="btn" onclick="auth.signOut()" style="font-size:11px;cursor:pointer;background:transparent;border:1px solid rgba(255,255,255,0.35);color:#fff;padding:4px 9px;border-radius:5px;">Sign out</div>
       </div>
       <!-- Animated train running along the bottom of the header bar -->
       <div class="train-ride">
@@ -2430,11 +2436,11 @@
 
             <div class="form-group">
               <div class="form-label">Title</div>
-              <div class="form-input" style="color:#bbb;">Describe the item or need in a few words...</div>
+              <input id="post-title" class="form-input" placeholder="Describe the item or need in a few words..." style="width:100%; font-family:Georgia,serif; font-size:13px; color:var(--ink); background:var(--paper); border:1px solid var(--wire-light); border-radius:6px; padding:8px 10px; outline:none;"/>
             </div>
             <div class="form-group">
               <div class="form-label">Description</div>
-              <div class="form-textarea" style="color:#bbb; height:80px;">Give details — condition, location, how to reach you...</div>
+              <textarea id="post-desc" class="form-textarea" placeholder="Give details — condition, location, how to reach you..." style="width:100%; height:80px; font-family:Georgia,serif; font-size:13px; color:var(--ink); background:var(--paper); border:1px solid var(--wire-light); border-radius:6px; padding:8px 10px; outline:none; resize:vertical;"></textarea>
             </div>
             <div class="form-group">
               <div class="form-label">Add Photos (optional)</div>
@@ -2465,7 +2471,7 @@
               <div class="body-sm">All posts are visible to Bell Buckle residents. Keep it kind, keep it local. No commercial spam. Posts may be removed by community moderators.</div>
             </div>
 
-            <div class="btn btn-primary" style="width:100%; text-align:center; padding:10px; font-size:14px;">Post to Community Board</div>
+            <button onclick="submitCommunityPost()" class="btn btn-primary" style="width:100%; text-align:center; padding:10px; font-size:14px; border:none; cursor:pointer;">Post to Community Board</button>
             <div class="meta" style="text-align:center; margin-top:6px;">Posts go live immediately · You can delete anytime</div>
           </div>
         </div>
@@ -2679,13 +2685,11 @@
 
             <!-- Message input -->
             <div style="padding:12px 16px; border-top:1px solid var(--wire-light); background:var(--paper); flex-shrink:0;">
-              <div style="display:flex; align-items:center; gap:8px; background:#f0e8d8; border:1px solid var(--wire-light); border-radius:8px; padding:8px 12px;">
-                <div style="flex:1; font-size:12px; font-family:sans-serif; color:var(--wire);" id="chat-placeholder">Message #town-square...</div>
-                <div style="display:flex; gap:8px;">
-                  <span style="cursor:pointer; font-size:16px;">😊</span>
-                  <span style="cursor:pointer; font-size:16px;">📎</span>
-                  <span style="cursor:pointer; font-size:16px;">🖼️</span>
-                </div>
+              <div style="display:flex; align-items:center; gap:8px; background:#f0e8d8; border:1px solid var(--wire-light); border-radius:8px; padding:6px 10px;">
+                <input id="chat-input" type="text" placeholder="Message #town-square..." id="chat-placeholder"
+                  style="flex:1; font-size:13px; font-family:sans-serif; color:var(--ink); background:transparent; border:none; outline:none; padding:4px 2px;"
+                  onkeydown="if(event.key==='Enter') sendChatMsg()"/>
+                <button onclick="sendChatMsg()" style="background:var(--accent2); color:#fff; border:none; border-radius:6px; padding:6px 14px; font-size:12px; font-family:sans-serif; font-weight:700; cursor:pointer;">Send</button>
               </div>
             </div>
           </div><!-- /chat-main -->
@@ -3416,6 +3420,9 @@ function switchChan(id, el) {
   // Update input placeholder
   const ph = document.getElementById('chat-placeholder');
   if (ph) ph.textContent = `Message ${info[0]}...`;
+
+  // Switch Firebase real-time listener to new channel
+  if (typeof currentUser !== 'undefined' && currentUser) listenChatMessages(id);
 }
 
 /* ── Lost & Found tab switcher ── */
@@ -3488,6 +3495,220 @@ const titles = {
   tick();
   setInterval(tick, 1000);
 })();
+
+/* ═══════════════════════════════════════════════════════════════
+   FIREBASE — Bell Buckle Connect
+   Auth · Firestore community posts · Real-time chat
+   ═══════════════════════════════════════════════════════════════ */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDa9RPP82t2GPsJZ06vyAc7rgloo5dYO6c",
+  authDomain: "bell-buckle-app.firebaseapp.com",
+  projectId: "bell-buckle-app",
+  storageBucket: "bell-buckle-app.firebasestorage.app",
+  messagingSenderId: "655036299539",
+  appId: "1:655036299539:web:c42ee25b3550ff4bc242e6"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+/* ── Auth overlay ──────────────────────────────────────────── */
+function buildAuthOverlay() {
+  if (document.getElementById('auth-overlay')) return;
+  const ov = document.createElement('div');
+  ov.id = 'auth-overlay';
+  ov.innerHTML = `
+    <div style="position:fixed;inset:0;background:rgba(42,31,16,0.82);z-index:9999;display:flex;align-items:center;justify-content:center;">
+      <div style="background:#fdfaf4;border-radius:12px;padding:36px 32px;width:340px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,0.4);">
+        <div style="text-align:center;margin-bottom:6px;">
+          <div style="font-size:28px;">🏡</div>
+          <div style="font-size:19px;font-weight:bold;color:#2a1f10;margin-top:4px;">Bell Buckle Connect</div>
+          <div style="font-size:11px;font-family:sans-serif;color:#6b5840;letter-spacing:2px;text-transform:uppercase;margin-top:2px;">Bell Buckle, Tennessee</div>
+        </div>
+
+        <div id="auth-tabs" style="display:flex;gap:0;margin:18px 0 16px;border:1px solid #c4ae8f;border-radius:8px;overflow:hidden;">
+          <button id="tab-login" onclick="authTab('login')" style="flex:1;padding:8px;font-family:sans-serif;font-size:13px;font-weight:700;background:#a63220;color:#fff;border:none;cursor:pointer;">Sign In</button>
+          <button id="tab-signup" onclick="authTab('signup')" style="flex:1;padding:8px;font-family:sans-serif;font-size:13px;font-weight:700;background:transparent;color:#a63220;border:none;cursor:pointer;">Join Free</button>
+        </div>
+
+        <div id="auth-login-form">
+          <input id="auth-email" type="email" placeholder="Email address" style="width:100%;padding:10px;border:1px solid #c4ae8f;border-radius:6px;font-size:14px;margin-bottom:10px;font-family:sans-serif;outline:none;background:#f9f5ee;"/>
+          <input id="auth-pass" type="password" placeholder="Password" style="width:100%;padding:10px;border:1px solid #c4ae8f;border-radius:6px;font-size:14px;margin-bottom:14px;font-family:sans-serif;outline:none;background:#f9f5ee;"/>
+          <button onclick="doLogin()" style="width:100%;padding:11px;background:#a63220;color:#fff;border:none;border-radius:7px;font-size:14px;font-family:sans-serif;font-weight:700;cursor:pointer;">Sign In →</button>
+        </div>
+
+        <div id="auth-signup-form" style="display:none;">
+          <input id="auth-name" type="text" placeholder="Your first name or nickname" style="width:100%;padding:10px;border:1px solid #c4ae8f;border-radius:6px;font-size:14px;margin-bottom:10px;font-family:sans-serif;outline:none;background:#f9f5ee;"/>
+          <input id="auth-email2" type="email" placeholder="Email address" style="width:100%;padding:10px;border:1px solid #c4ae8f;border-radius:6px;font-size:14px;margin-bottom:10px;font-family:sans-serif;outline:none;background:#f9f5ee;"/>
+          <input id="auth-pass2" type="password" placeholder="Create a password (6+ characters)" style="width:100%;padding:10px;border:1px solid #c4ae8f;border-radius:6px;font-size:14px;margin-bottom:14px;font-family:sans-serif;outline:none;background:#f9f5ee;"/>
+          <button onclick="doSignup()" style="width:100%;padding:11px;background:#3d6b3a;color:#fff;border:none;border-radius:7px;font-size:14px;font-family:sans-serif;font-weight:700;cursor:pointer;">Join Bell Buckle Connect →</button>
+        </div>
+
+        <div id="auth-error" style="display:none;margin-top:12px;padding:8px 12px;background:#fde8e8;border-radius:6px;font-size:12px;font-family:sans-serif;color:#a63220;text-align:center;"></div>
+        <div style="margin-top:14px;font-size:11px;font-family:sans-serif;color:#6b5840;text-align:center;">Free to join · Bell Buckle residents & friends welcome</div>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+}
+
+function authTab(tab) {
+  document.getElementById('auth-login-form').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('auth-signup-form').style.display = tab === 'signup' ? '' : 'none';
+  document.getElementById('tab-login').style.background = tab === 'login' ? '#a63220' : 'transparent';
+  document.getElementById('tab-login').style.color = tab === 'login' ? '#fff' : '#a63220';
+  document.getElementById('tab-signup').style.background = tab === 'signup' ? '#3d6b3a' : 'transparent';
+  document.getElementById('tab-signup').style.color = tab === 'signup' ? '#fff' : '#3d6b3a';
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  if (el) { el.textContent = msg; el.style.display = ''; }
+}
+
+function doLogin() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  if (!email || !pass) return showAuthError('Please fill in both fields.');
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(e => showAuthError(e.message));
+}
+
+function doSignup() {
+  const name  = document.getElementById('auth-name').value.trim();
+  const email = document.getElementById('auth-email2').value.trim();
+  const pass  = document.getElementById('auth-pass2').value;
+  if (!name || !email || !pass) return showAuthError('Please fill in all fields.');
+  if (pass.length < 6) return showAuthError('Password must be at least 6 characters.');
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(cred => cred.user.updateProfile({ displayName: name }))
+    .catch(e => showAuthError(e.message));
+}
+
+let currentUser = null;
+let chatUnsub = null;
+
+auth.onAuthStateChanged(user => {
+  const ov = document.getElementById('auth-overlay');
+  if (user) {
+    currentUser = user;
+    if (ov) ov.remove();
+    // Update topbar with user name
+    const tb = document.getElementById('topbar-user');
+    if (tb) tb.textContent = '👋 ' + (user.displayName || user.email.split('@')[0]);
+    const so = document.getElementById('topbar-signout');
+    if (so) so.style.display = '';
+    // Load real data
+    listenCommunityPosts();
+    listenChatMessages('townsquare');
+  } else {
+    currentUser = null;
+    buildAuthOverlay();
+    if (chatUnsub) { chatUnsub(); chatUnsub = null; }
+  }
+});
+
+/* ── Community Board — real-time posts ─────────────────────── */
+function listenCommunityPosts() {
+  db.collection('posts')
+    .orderBy('createdAt', 'desc')
+    .limit(20)
+    .onSnapshot(snap => {
+      const feed = document.getElementById('community-feed');
+      if (!feed) return;
+      if (snap.empty) return; // keep wireframe placeholder cards
+      feed.innerHTML = '';
+      snap.forEach(doc => {
+        const d = doc.data();
+        const time = d.createdAt ? new Date(d.createdAt.toDate()).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'Just now';
+        feed.innerHTML += `
+          <div class="card" style="margin-bottom:12px; padding:14px 16px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+              <div style="font-weight:bold;font-size:14px;color:var(--ink);">${escHtml(d.title)}</div>
+              <div style="font-size:10px;font-family:sans-serif;color:var(--ink-light);">${time}</div>
+            </div>
+            <div style="font-size:13px;color:var(--ink-light);margin-bottom:8px;">${escHtml(d.body)}</div>
+            <div style="font-size:11px;font-family:sans-serif;color:var(--accent3);">— ${escHtml(d.author)} &nbsp;·&nbsp; ${escHtml(d.type||'Community Post')}</div>
+          </div>`;
+      });
+    });
+}
+
+function submitCommunityPost() {
+  if (!currentUser) return;
+  const titleEl = document.getElementById('post-title');
+  const descEl  = document.getElementById('post-desc');
+  const title = (titleEl && titleEl.value.trim()) || '';
+  const body  = (descEl  && descEl.value.trim())  || '';
+  if (!title) { alert('Please add a title for your post.'); return; }
+  db.collection('posts').add({
+    title,
+    body,
+    author: currentUser.displayName || currentUser.email.split('@')[0],
+    uid: currentUser.uid,
+    type: 'Community Post',
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    if (titleEl) titleEl.value = '';
+    if (descEl)  descEl.value  = '';
+    alert('✅ Posted! Your listing is now live on the Community Board.');
+    showScreen('community');
+  }).catch(e => alert('Error posting: ' + e.message));
+}
+
+/* ── Chat — real-time messages ─────────────────────────────── */
+let activeChan = 'townsquare';
+
+function listenChatMessages(channel) {
+  if (chatUnsub) chatUnsub();
+  activeChan = channel;
+  chatUnsub = db.collection('chat').doc(channel).collection('messages')
+    .orderBy('createdAt', 'asc')
+    .limit(50)
+    .onSnapshot(snap => {
+      const box = document.getElementById('chat-messages');
+      if (!box) return;
+      // Clear existing wire messages, keep only real ones
+      box.querySelectorAll('.real-msg').forEach(m => m.remove());
+      snap.forEach(doc => {
+        const d = doc.data();
+        const time = d.createdAt ? new Date(d.createdAt.toDate()).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : '';
+        const isMe = currentUser && d.uid === currentUser.uid;
+        const div = document.createElement('div');
+        div.className = 'real-msg';
+        div.style.cssText = `display:flex;flex-direction:column;align-items:${isMe?'flex-end':'flex-start'};margin-bottom:10px;`;
+        div.innerHTML = `
+          <div style="font-size:10px;font-family:sans-serif;color:var(--ink-light);margin-bottom:3px;">${escHtml(d.author)} · ${time}</div>
+          <div style="background:${isMe?'var(--accent2)':'var(--paper)'};color:${isMe?'#fff':'var(--ink)'};padding:8px 12px;border-radius:10px;font-size:13px;max-width:75%;border:1px solid ${isMe?'transparent':'var(--wire-light)'};">${escHtml(d.text)}</div>`;
+        box.appendChild(div);
+      });
+      box.scrollTop = box.scrollHeight;
+    });
+}
+
+function sendChatMsg() {
+  if (!currentUser) return;
+  const inp = document.getElementById('chat-input');
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  db.collection('chat').doc(activeChan).collection('messages').add({
+    text,
+    author: currentUser.displayName || currentUser.email.split('@')[0],
+    uid: currentUser.uid,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).catch(e => console.error('Chat error:', e));
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ─────────────────────────────────────────────────────────── */
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
