@@ -1180,14 +1180,66 @@ function submitLF() {
 
 // ─── History Vault ────────────────────────────────────────────────────────────
 const SEED_HISTORY = [
-  { year:'1852', title:'Bell Buckle Founded', desc:'The town of Bell Buckle was established when the Nashville, Chattanooga & St. Louis Railroad laid tracks through Bedford County. Legend says the name came from a bell and buckle carved on a tree near the creek — tokens left by early settlers.', img:'', seed:true },
-  { year:'1870', title:'Post Office Opens', desc:'Bell Buckle\'s first official post office opened, cementing the community\'s place on the Tennessee map and connecting residents to the wider world via the railroad mail route.', img:'', seed:true },
-  { year:'1886', title:'Webb School Founded', desc:'William Robert "Sawney" Webb founded the Webb School of Bell Buckle, which would go on to become one of the most respected preparatory schools in the Southeast. Dozens of its alumni became U.S. senators and governors.', img:'', seed:true },
-  { year:'1900s', title:'Downtown Thrives', desc:'The early 1900s saw Bell Buckle\'s downtown district boom with general stores, a hotel, a mill, and the railroad depot at its heart. The town became a hub for commerce and culture in Bedford County.', img:'', seed:true },
-  { year:'1952', title:'Centennial Celebration', desc:'Bell Buckle celebrated its 100th anniversary with a grand downtown festival, reuniting families who had spread across the South but kept the town in their hearts.', img:'', seed:true },
-  { year:'1986', title:'First RC Cola & Moon Pie Festival', desc:'The beloved RC Cola & Moon Pie Festival was launched downtown, celebrating two quintessentially Southern treats. What started as a small local event grew into one of Tennessee\'s most unique and beloved annual traditions.', img:'', seed:true },
-  { year:'2000s', title:'"Coolest Small Town" Recognition', desc:'Bell Buckle gained national attention when it was featured in travel publications as one of America\'s coolest small towns — recognized for its art scene, antique shops, café culture, and preserved Victorian character.', img:'', seed:true },
-  { year:'2024', title:'Bell Buckle Connect Launched', desc:'Community members came together to build Bell Buckle Connect — a digital town square to keep neighbors informed, preserve local history, and strengthen the bonds that make Bell Buckle special.', img:'', seed:true },
+  {
+    year:'~1820s', title:'First Settlers Arrive',
+    desc:'Early settlers discover Bell Buckle Creek, named for a carving — a bell and buckle — found etched into a tree near the water. Whether carved by Native Americans as a warning or by surveyors marking good pastureland, that symbol gave this land its enduring name and its soul.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/welcome-tohistoric-bell-buckle-tennessee.jpg', seed:true
+  },
+  {
+    year:'1852', title:'Railroad Arrives — Bell Buckle is Born',
+    desc:'A. D. Fuggitt donates land for the Nashville & Chattanooga Railroad, transforming a small rural settlement into a thriving town overnight. Bell Buckle becomes the largest livestock shipping point between Nashville and Chattanooga. Fuggitt opens the first general store that same year.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/AI-Image-Editor-2026-06-01_16-33-25-e1780346061210.jpg', seed:true
+  },
+  {
+    year:'1853', title:'The Depot Opens — Heart of the Town',
+    desc:'Bell Buckle\'s railroad depot is completed and becomes the heartbeat of commerce — livestock, lumber, and goods flowing through daily. The town name was still spelled "Belle Buckle" on the depot sign and post office cancellations, a spelling that persisted into the early 1900s.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/5K-neighborhood-shot-1024x683.jpg', seed:true
+  },
+  {
+    year:'1870–1900', title:'Bell Buckle\'s Golden Era',
+    desc:'The town flourishes with over 1,000 residents — the economic and social hub of Bedford County. Victorian and Arts & Crafts style homes fill the streets alongside churches, hotels, and shops. This era\'s architecture still shapes the character you see walking downtown today.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/welcome-tohistoric-bell-buckle-tennessee.jpg', seed:true
+  },
+  {
+    year:'1886', title:'Webb School Comes to Bell Buckle',
+    desc:'William Robert "Sawney" Webb relocates his acclaimed college preparatory school from Culleoka. The Webb School goes on to produce U.S. senators, governors, and community leaders across generations. Today it sits on 150 acres with 420 students and still holds to Sawney\'s founding principles.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/RCMP-chamber-tent-1-scaled.jpg', seed:true
+  },
+  {
+    year:'1920s–40s', title:'Hard Times — The Depression Years',
+    desc:'The rise of the automobile and the decline of rail freight hit Bell Buckle hard. The Great Depression devastates trade and most downtown storefronts go dark, boarded up for decades. But the Victorian bones remain intact — preserved by hard times, quietly waiting for revival.',
+    img:'', seed:true
+  },
+  {
+    year:'1940', title:'General Patton\'s Tank Rolls Through Town',
+    desc:'In June 1940, U.S. Army maneuvers centered on Bell Buckle bring General George S. Patton\'s Second Armored Division to town. A tank from Patton\'s unit accidentally drives into the two-story town hall, bringing the building down. Even sleepy small towns find themselves in the middle of history.',
+    img:'', seed:true
+  },
+  {
+    year:'1960s–76', title:'Revival & The National Register',
+    desc:'A new appreciation for Bell Buckle\'s Victorian heritage sparks a wave of purchases, rentals, and renovations. Artists, craftspeople, and dreamers move in. In 1976, during the nation\'s Bicentennial, the Bell Buckle Historic District — including downtown and the Webb School property — is listed on the National Register of Historic Places.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/welcome-tohistoric-bell-buckle-tennessee.jpg', seed:true
+  },
+  {
+    year:'1994', title:'First RC Cola & Moon Pie Festival',
+    desc:'Captain Rodney launches what becomes one of Tennessee\'s most beloved quirky traditions — celebrating Moon Pie\'s 75th anniversary with music, cloggers, parades, and the World\'s Largest MoonPie. Today 30,000+ visitors descend on our tiny town every June for this one-of-a-kind celebration.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/2019-RCMP-RC-Van-scaled.jpg', seed:true
+  },
+  {
+    year:'2000', title:'Tree City USA — Smallest in Tennessee',
+    desc:'Bell Buckle earns Tree City USA designation, making it the smallest town in Tennessee with this honor. A community park with half-mile walking trail, amphitheater, playground, arboretum, and local art structures is developed. The park earns the 2009 Governor\'s Stewardship Award.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/5K-neighborhood-shot-1024x683.jpg', seed:true
+  },
+  {
+    year:'Every June', title:'The Festival Lives On',
+    desc:'Each year on the third Saturday in June, Bell Buckle throws open its doors to the world. Cloggers dance, the RC Cola van rolls in, MoonPie games fill the streets, a king and queen are crowned, and the World\'s Largest MoonPie is cut and shared. Free dessert for all — that\'s Bell Buckle.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/2019-RCMP-Cloggers-scaled.jpg', seed:true
+  },
+  {
+    year:'Today', title:'Bell Buckle Connect — Our Digital Town Square',
+    desc:'Families moving in. Old houses being restored. Downtown vibrant and healthy. And now — community members have built Bell Buckle Connect — a digital home for the conversations, connections, history, and heart that have always made this beloved little town extraordinary.',
+    img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/2019-RCMP-awards-on-stage-scaled.jpg', seed:true
+  },
 ];
 
 function listenHistory() {
