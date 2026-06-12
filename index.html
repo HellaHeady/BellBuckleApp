@@ -331,6 +331,26 @@ body.guest .guest-veil{
 .flag-stale{background:#fef9c3;color:#854d0e;}
 .flag-word{background:#fef2f2;color:#9b1d1d;}
 
+/* Hot Topics */
+.hot-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
+.hot-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.hot-head span{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ink);}
+.hot-list{display:flex;flex-wrap:wrap;gap:8px;}
+.hot-topic{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--wire);border-radius:99px;padding:6px 13px;font-size:12.5px;color:var(--ink);cursor:pointer;transition:all .15s;}
+.hot-topic:hover{border-color:var(--red);color:var(--red);}
+.hot-topic.active{background:var(--red);border-color:var(--red);color:#fff;}
+.hot-flame{font-size:11px;}
+.hot-count{font-size:10px;font-weight:700;background:rgba(166,50,32,.12);color:var(--red);border-radius:99px;padding:1px 7px;}
+.hot-topic.active .hot-count{background:rgba(255,255,255,.25);color:#fff;}
+.hot-rank-1{box-shadow:0 0 0 2px rgba(232,184,48,.4);}
+.hot-detail-card{margin-top:12px;border-top:1px solid var(--wire-lt);padding-top:12px;}
+.hot-snippet{font-size:12.5px;color:#44321e;line-height:1.5;padding:7px 0;border-bottom:1px solid var(--wire-lt);}
+.hot-snippet:last-child{border-bottom:none;}
+.hot-snippet .who{font-size:10.5px;color:var(--ink-lt);}
+.hot-snippet .where{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:var(--wire-lt);color:var(--ink-lt);border-radius:99px;padding:1px 7px;margin-right:6px;}
+.tag-link{color:var(--red);font-weight:600;cursor:pointer;}
+.tag-link:hover{text-decoration:underline;}
+
 /* Town parade — decorative icon strip */
 .parade{
   display:flex;flex-wrap:wrap;gap:10px 13px;justify-content:center;align-items:center;
@@ -967,6 +987,16 @@ body.guest .guest-veil{
           <div class="page-header" style="padding:0 0 16px">
             <h2>Community Board</h2>
             <p>Neighbor news, questions &amp; updates</p>
+          </div>
+
+          <!-- Hot Topics -->
+          <div class="hot-card">
+            <div class="hot-head">
+              <span>🔥 What Bell Buckle's Talking About</span>
+              <button class="adm-btn" style="padding:3px 9px" onclick="computeHotTopics()">↻</button>
+            </div>
+            <div id="hot-list" class="hot-list"><span style="font-size:12px;color:var(--ink-lt)">Taking the town's temperature…</span></div>
+            <div id="hot-detail"></div>
           </div>
 
           <!-- Compose -->
@@ -2238,6 +2268,7 @@ function nav(id) {
 
   if (id === 'chat') setTimeout(scrollChat, 80);
   if (id === 'kids') initCanvasPage(document.querySelector('.cpage-wrap.active'));
+  if (id === 'community') computeHotTopics(false);
 }
 
 // ─── Chat channels ────────────────────────────────────────────────────────────
@@ -2355,7 +2386,7 @@ function postHTML(d, compact) {
       <div class="post-avatar"><span>${esc(nm[0].toUpperCase())}</span></div>
       <div><div class="post-name">${esc(nm)}</div><div class="post-time">${dt}</div></div>
     </div>
-    <div class="post-text">${esc(d.text||'')}</div>
+    <div class="post-text">${linkifyTags(esc(d.text||''))}</div>
     ${!compact?`<div class="post-actions"><button class="post-action-btn">👍 Like</button><button class="post-action-btn">💬 Reply</button></div>`:''}
   </div>`;
 }
@@ -2438,7 +2469,7 @@ function listenGarden() {
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
         feed.innerHTML += `<div class="post-card">
           <div><span class="gd-badge ${t.c}">${t.e} ${t.l}</span></div>
-          <div class="post-text">${esc(d.text||'')}</div>
+          <div class="post-text">${linkifyTags(esc(d.text||''))}</div>
           ${d.img ? `<img class="feed-photo" src="${esc(d.img)}" onerror="this.style.display='none'">` : ''}
           <div style="font-size:11px;color:var(--ink-lt);margin-top:6px">Posted by ${esc(nm)} · ${dt}</div>
         </div>`;
@@ -2480,7 +2511,7 @@ function listenBuzz() {
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
         feed.innerHTML += `<div class="post-card">
           <div><span class="gd-badge ${t.c}">${t.e} ${t.l}</span></div>
-          <div class="post-text">${esc(d.text||'')}</div>
+          <div class="post-text">${linkifyTags(esc(d.text||''))}</div>
           ${d.img ? `<img class="feed-photo" src="${esc(d.img)}" onerror="this.style.display='none'">` : ''}
           <div style="font-size:11px;color:var(--ink-lt);margin-top:6px">Shared by ${esc(nm)} · ${dt}</div>
         </div>`;
@@ -2785,6 +2816,115 @@ function floodFill(cv, sx, sy, hex) {
   ctx.putImageData(im, 0, 0);
 }
 
+// ─── Hot Topics — what the town is talking about ──────────────────────────────
+const HOT_STOP = new Set('the and but for with from this that these those have has had will would could should about into your you our their there here what when where which who how why all any can did does else been being then than them they out off over under just like more most some such only also even much many well your yours need needs want wants get got going gonna really thing things stuff today tomorrow yesterday morning night week weekend bell buckle neighbor neighbors folks yall everyone someone anybody please thanks thank hello howdy good great nice love come came back down good'.split(' '));
+const HOT_SOURCES = [
+  { coll:'community_posts',  where:'Board',      text:d=>d.text },
+  { coll:'lost_found',       where:'Lost&Found', text:d=>(d.title||'')+' '+(d.desc||'') },
+  { coll:'garden_updates',   where:'Garden',     text:d=>d.text },
+  { coll:'pollinator_posts', where:'Bee City',   text:d=>d.text },
+  { coll:'local_biz',        where:'Biz',        text:d=>(d.name||'')+' '+(d.desc||'') },
+];
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+let hotCorpus = [], hotRanked = [], hotLastRun = 0;
+
+async function gatherHotCorpus() {
+  const corpus = [];
+  for (const s of HOT_SOURCES) {
+    try {
+      const snap = await db.collection(s.coll).orderBy('ts','desc').limit(s.coll==='community_posts'?60:25).get();
+      snap.forEach(doc => { const d = doc.data(); if (!d.hidden) corpus.push({ where:s.where, who:d.displayName||'a neighbor', text:(s.text(d)||'') }); });
+    } catch (e) {}
+  }
+  for (const ch of CHANNELS.map(c => c.id)) {
+    try {
+      const snap = await db.collection('channels').doc(ch).collection('messages').orderBy('ts','desc').limit(25).get();
+      snap.forEach(doc => { const d = doc.data(); corpus.push({ where:'#'+ch, who:d.displayName||'a neighbor', text:(d.text||'') }); });
+    } catch (e) {}
+  }
+  hotCorpus = corpus; return corpus;
+}
+
+async function computeHotTopics(force) {
+  const listEl = document.getElementById('hot-list');
+  if (!listEl) return;
+  if (!currentUser) { listEl.innerHTML = '<span style="font-size:12px;color:var(--ink-lt)">Sign in to see what\'s buzzing.</span>'; return; }
+  if (!force && hotRanked.length && Date.now() - hotLastRun < 120000) return;
+  listEl.innerHTML = '<span style="font-size:12px;color:var(--ink-lt)">Taking the town\'s temperature…</span>';
+  document.getElementById('hot-detail').innerHTML = '';
+  await gatherHotCorpus();
+  hotLastRun = Date.now();
+  const score = {};
+  const bump = (key, label, w) => { (score[key] || (score[key] = { count:0, label })).count += w; };
+  hotCorpus.forEach(item => {
+    const raw = item.text || '';
+    (raw.match(/#(\w{2,})/g) || []).forEach(h => bump('#'+h.slice(1).toLowerCase(), h, 3));
+    (raw.match(/\b([A-Z][a-z]{2,})\s([A-Z][a-z]{2,})\b/g) || []).forEach(p => {
+      if (!HOT_STOP.has(p.split(' ')[0].toLowerCase())) bump('p:'+p.toLowerCase(), p, 2);
+    });
+    // strip hashtags before word pass so a #tag isn't also counted as a plain word
+    (raw.replace(/#\w+/g,'').toLowerCase().match(/[a-z][a-z'-]{4,}/g) || []).forEach(w => { if (!HOT_STOP.has(w)) bump('w:'+w, w, 1); });
+  });
+  // rank, then drop topics already represented by a higher-ranked one
+  const sorted = Object.entries(score).filter(([k,v]) => v.count >= 2)
+    .map(([k,v]) => ({ key:k, ...v })).sort((a,b) => b.count - a.count);
+  const covered = new Set(), ranked = [];
+  for (const t of sorted) {
+    const words = t.key.startsWith('#') ? [t.key.slice(1)]
+                : t.key.startsWith('p:') ? t.key.slice(2).split(' ')
+                : [t.key.slice(2)];
+    if (words.every(w => covered.has(w))) continue;
+    words.forEach(w => covered.add(w));
+    ranked.push(t);
+    if (ranked.length >= 8) break;
+  }
+  if (!ranked.length) {
+    listEl.innerHTML = '<span style="font-size:12px;color:var(--ink-lt)">Quiet on the square right now. Add a <strong style="color:var(--red)">#hashtag</strong> to a post and it\'ll bubble up here!</span>';
+    hotRanked = []; return;
+  }
+  hotRanked = ranked.map(t => {
+    let rx;
+    if (t.key.startsWith('#'))       rx = new RegExp('#' + reEsc(t.key.slice(1)), 'i');
+    else if (t.key.startsWith('w:')) rx = new RegExp('\\b' + reEsc(t.key.slice(2)) + '\\b', 'i');
+    else                              rx = new RegExp(reEsc(t.key.slice(2)), 'i');
+    return { label:t.label, count:t.count, rx };
+  });
+  listEl.innerHTML = hotRanked.map((t,i) =>
+    `<span class="hot-topic${i===0?' hot-rank-1':''}" onclick="openTopic(${i})">
+       <span class="hot-flame">${i===0?'🔥':i<3?'✨':'•'}</span>${esc(t.label)}<span class="hot-count">${t.count}</span></span>`
+  ).join('');
+}
+
+function renderHotHits(rx) {
+  const hits = hotCorpus.filter(c => rx.test(c.text)).slice(0, 8);
+  document.getElementById('hot-detail').innerHTML = hits.length
+    ? '<div class="hot-detail-card">' + hits.map(h =>
+        `<div class="hot-snippet"><span class="where">${esc(h.where)}</span>${esc((h.text||'').slice(0,180))}<div class="who">— ${esc(h.who)}</div></div>`
+      ).join('') + '</div>'
+    : '<div class="hot-detail-card" style="font-size:12px;color:var(--ink-lt)">Nothing else on that one yet.</div>';
+}
+
+function openTopic(i) {
+  const chips = document.querySelectorAll('.hot-topic');
+  const wasActive = chips[i] && chips[i].classList.contains('active');
+  chips.forEach(c => c.classList.remove('active'));
+  if (wasActive) { document.getElementById('hot-detail').innerHTML = ''; return; }
+  if (chips[i]) chips[i].classList.add('active');
+  renderHotHits(hotRanked[i].rx);
+}
+
+async function searchTopic(term) {
+  nav('community');
+  if (!hotCorpus.length) await gatherHotCorpus();
+  document.querySelectorAll('.hot-topic').forEach(c => c.classList.remove('active'));
+  renderHotHits(new RegExp(reEsc(term), 'i'));
+  document.querySelector('.hot-card')?.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function linkifyTags(s) {
+  return s.replace(/#(\w{2,})/g, (m,w) => `<span class="tag-link" onclick="searchTopic('${w.toLowerCase()}')">#${w}</span>`);
+}
+
 // ─── Town Hall (admin) ────────────────────────────────────────────────────────
 // Entry: tap the footer bell 5 times. Real security = Firestore rules + the
 // admins/{uid} collection; this UI only appears for accounts listed there.
@@ -2804,8 +2944,19 @@ function admColl(val) {
     : db.collection(val);
 }
 
-function openAdmin() {
+async function openAdmin() {
   if (!currentUser) { alert('Sign in first, then ring the bell five times. 🛎️'); if (isGuest) leaveApp(); return; }
+  if (!isAdminUser) {
+    // Re-verify at tap time — the initial load check may have been slow or
+    // run just before the database rules finished going live.
+    try {
+      const s = await db.collection('admins').doc(currentUser.uid).get();
+      isAdminUser = s.exists;
+    } catch (e) {
+      alert("Couldn't reach the admin list right now: " + e.message + "\nTry again in a moment.");
+      return;
+    }
+  }
   if (!isAdminUser) { alert('That bell only rings for town admins. 🛎️'); return; }
   nav('admin');
   const k = document.getElementById('ai-key');
