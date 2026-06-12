@@ -331,6 +331,24 @@ body.guest .guest-veil{
 .flag-stale{background:#fef9c3;color:#854d0e;}
 .flag-word{background:#fef2f2;color:#9b1d1d;}
 
+/* Admin gate (secret bell game) */
+#admin-gate{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#18100c,#2c1a0e 55%,#18100c);}
+#admin-gate .gate-card{background:var(--paper);border-radius:18px;padding:26px 24px;width:100%;max-width:360px;
+  box-shadow:0 28px 60px rgba(0,0,0,.5);text-align:center;margin:16px;}
+#admin-gate h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--ink);margin-bottom:6px;}
+#admin-gate p{font-size:13px;color:var(--ink-lt);line-height:1.5;margin-bottom:14px;}
+.gate-play{position:relative;height:230px;border:2px dashed var(--wire);border-radius:12px;background:#fff;
+  overflow:hidden;touch-action:none;user-select:none;margin-bottom:8px;}
+.gate-line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.gate-node{position:absolute;width:54px;height:54px;border-radius:50%;background:var(--bg);
+  border:2px solid var(--wire);display:flex;align-items:center;justify-content:center;}
+.gate-node svg{width:30px;height:30px;pointer-events:none;}
+.gate-node.src{cursor:grab;border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,48,.28);touch-action:none;}
+.gate-node.src:active{cursor:grabbing;}
+.gate-node.solved{border-color:var(--green);box-shadow:0 0 0 3px rgba(61,107,58,.32);}
+.gate-hint{font-size:11px;color:var(--wire);margin-bottom:2px;}
+
 /* Hot Topics */
 .hot-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
 .hot-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
@@ -2101,6 +2119,38 @@ body.guest .guest-veil{
 </div><!-- /shell -->
 
 <!-- ════════════════════════════════
+     ADMIN GATE (secret bell game → re-sign-in)
+════════════════════════════════ -->
+<div id="admin-gate">
+  <div class="gate-card">
+    <!-- Step 1: connect the bell to the buckle -->
+    <div id="gate-game">
+      <h3>🔔 Town Hall</h3>
+      <p>Drag a line from the <strong>bell</strong> to the <strong>buckle</strong> to knock.</p>
+      <div class="gate-play" id="gate-play">
+        <svg class="gate-line" id="gate-line" preserveAspectRatio="none"></svg>
+        <div class="gate-node src" id="gate-bell" style="left:16px;top:88px"><svg><use href="#bbi-bell"/></svg></div>
+        <div class="gate-node tgt" id="gate-buckle" data-role="buckle"><svg><use href="#bbi-buckle"/></svg></div>
+        <div class="gate-node tgt" id="gate-d1" data-role="train"><svg><use href="#bbi-train"/></svg></div>
+        <div class="gate-node tgt" id="gate-d2" data-role="bee"><svg><use href="#bbi-bee"/></svg></div>
+      </div>
+      <div class="gate-hint" id="gate-hint">Tip: press on the bell and drag across.</div>
+      <button class="auth-btn auth-btn-outline" style="margin-top:14px" onclick="closeAdminGate()">Never mind</button>
+    </div>
+    <!-- Step 2: re-sign-in -->
+    <div id="gate-signin" style="display:none">
+      <h3>🛡️ Admins Only</h3>
+      <p>Nice knock! Confirm it's you to enter Town Hall.</p>
+      <div id="gate-error" style="color:#dc2626;font-size:12px;margin-bottom:8px;min-height:14px"></div>
+      <input id="gate-email" class="auth-input" type="email" placeholder="Email" autocomplete="username">
+      <input id="gate-pw" class="auth-input" type="password" placeholder="Password" style="margin-bottom:12px" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminReauth()">
+      <button class="auth-btn auth-btn-primary" onclick="adminReauth()">Enter Town Hall</button>
+      <button class="auth-btn auth-btn-outline" style="margin-top:8px" onclick="closeAdminGate()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
      JAVASCRIPT
 ════════════════════════════════ -->
 <script>
@@ -2944,35 +2994,104 @@ function admColl(val) {
     : db.collection(val);
 }
 
-async function openAdmin() {
-  if (!currentUser) { alert('Sign in first, then ring the bell five times. 🛎️'); if (isGuest) leaveApp(); return; }
-  if (!isAdminUser) {
-    // Re-verify at tap time — the initial load check may have been slow or
-    // run just before the database rules finished going live.
-    try {
-      const s = await db.collection('admins').doc(currentUser.uid).get();
-      isAdminUser = s.exists;
-    } catch (e) {
-      alert("Couldn't reach the admin list right now: " + e.message + "\nTry again in a moment.");
-      return;
-    }
+// Secret bell: one click → connect-the-bell-to-the-buckle game → re-sign-in
+function openAdminGate() {
+  document.getElementById('gate-game').style.display = 'block';
+  document.getElementById('gate-signin').style.display = 'none';
+  document.getElementById('gate-error').textContent = '';
+  document.getElementById('gate-line').innerHTML = '';
+  document.getElementById('gate-bell').classList.remove('solved');
+  document.querySelectorAll('.gate-node.tgt').forEach(n => n.classList.remove('solved'));
+  layoutGateGame();
+  document.getElementById('admin-gate').style.display = 'flex';
+}
+function closeAdminGate() {
+  document.getElementById('admin-gate').style.display = 'none';
+}
+
+// Scatter the buckle + decoys down the right side in a random order each time
+function layoutGateGame() {
+  const slots = [30, 100, 170];
+  const nodes = ['gate-buckle','gate-d1','gate-d2'].sort(() => Math.random() - 0.5);
+  nodes.forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.style.left = '244px';
+    el.style.top  = slots[i] + 'px';
+  });
+}
+
+function gateSolved() {
+  const ln = document.querySelector('#gate-line line');
+  if (ln) { ln.setAttribute('stroke', '#3d6b3a'); ln.removeAttribute('stroke-dasharray'); }
+  document.getElementById('gate-bell').classList.add('solved');
+  document.getElementById('gate-buckle').classList.add('solved');
+  document.getElementById('gate-hint').textContent = 'Got it! 🔔🔩';
+  setTimeout(() => {
+    document.getElementById('gate-game').style.display = 'none';
+    document.getElementById('gate-signin').style.display = 'block';
+    const em = document.getElementById('gate-email');
+    if (currentUser && currentUser.email) em.value = currentUser.email;
+    em.focus();
+  }, 550);
+}
+
+async function adminReauth() {
+  const e   = document.getElementById('gate-email').value.trim();
+  const p   = document.getElementById('gate-pw').value;
+  const err = document.getElementById('gate-error');
+  err.textContent = 'Checking…';
+  try {
+    const cred = await auth.signInWithEmailAndPassword(e, p);
+    const s = await db.collection('admins').doc(cred.user.uid).get();
+    if (!s.exists) { err.textContent = "That account isn't a town admin."; return; }
+    isAdminUser = true;
+    document.getElementById('gate-pw').value = '';
+    closeAdminGate();
+    nav('admin');
+    const k = document.getElementById('ai-key');
+    if (k && !k.value) k.value = localStorage.getItem('bb_api_key') || '';
+    renderSeason(); renderAdminFeed(); runOversight();
+  } catch (ex) {
+    err.textContent = ex.message;
   }
-  if (!isAdminUser) { alert('That bell only rings for town admins. 🛎️'); return; }
-  nav('admin');
-  const k = document.getElementById('ai-key');
-  if (k && !k.value) k.value = localStorage.getItem('bb_api_key') || '';
-  renderSeason(); renderAdminFeed(); runOversight();
 }
 
 (function secretBell(){
   const bell = document.querySelector('.sb-footer svg');
-  if (!bell) return;
+  const play = document.getElementById('gate-play');
+  const bellNode = document.getElementById('gate-bell');
+  const line = document.getElementById('gate-line');
+  if (!bell || !play || !bellNode) return;
+
   bell.style.cursor = 'pointer';
-  let taps = 0, timer = null;
-  bell.addEventListener('click', () => {
-    taps++; clearTimeout(timer);
-    timer = setTimeout(() => { taps = 0; }, 2500);
-    if (taps >= 5) { taps = 0; openAdmin(); }
+  bell.addEventListener('click', openAdminGate);
+
+  let dragging = false;
+  const bellCenter = () => {
+    const r = bellNode.getBoundingClientRect(), p = play.getBoundingClientRect();
+    return { x: r.left + r.width/2 - p.left, y: r.top + r.height/2 - p.top };
+  };
+  bellNode.addEventListener('pointerdown', e => {
+    dragging = true;
+    const c = bellCenter();
+    line.innerHTML = `<line x1="${c.x}" y1="${c.y}" x2="${c.x}" y2="${c.y}" stroke="#a63220" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 8"/>`;
+    e.preventDefault();
+  });
+  window.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const p = play.getBoundingClientRect();
+    const ln = line.querySelector('line');
+    if (ln) { ln.setAttribute('x2', e.clientX - p.left); ln.setAttribute('y2', e.clientY - p.top); }
+  });
+  window.addEventListener('pointerup', e => {
+    if (!dragging) return;
+    dragging = false;
+    const r = document.getElementById('gate-buckle').getBoundingClientRect();
+    const pad = 18; // forgiving — release on or near the buckle counts
+    const hit = e.clientX >= r.left - pad && e.clientX <= r.right + pad &&
+                e.clientY >= r.top  - pad && e.clientY <= r.bottom + pad;
+    if (hit) gateSolved();
+    else line.innerHTML = '';
   });
 })();
 
