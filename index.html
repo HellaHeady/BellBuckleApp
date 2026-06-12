@@ -319,6 +319,18 @@ body.guest .guest-veil{
 .cregion:hover{filter:brightness(.93);}
 .ccanvas{display:block;width:100%;height:auto;cursor:crosshair;background:#fff;min-height:120px;}
 
+/* Town Hall (admin) */
+.adm-row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--wire-lt);border-radius:8px;margin-bottom:8px;background:var(--paper);}
+.adm-row.is-hidden{opacity:.55;background:#f3ead9;}
+.adm-meta{font-size:10px;color:var(--ink-lt);margin-top:3px;}
+.adm-btn{border:1px solid var(--wire);background:#fff;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;color:var(--ink);flex-shrink:0;}
+.adm-btn:hover{border-color:var(--red);color:var(--red);}
+.adm-btn.danger:hover{background:var(--red);color:#fff;border-color:var(--red);}
+.flag-chip{display:inline-block;font-size:10px;font-weight:700;border-radius:99px;padding:2px 8px;margin-right:6px;}
+.flag-dup{background:#ede9fe;color:#5b21b6;}
+.flag-stale{background:#fef9c3;color:#854d0e;}
+.flag-word{background:#fef2f2;color:#9b1d1d;}
+
 /* Town parade — decorative icon strip */
 .parade{
   display:flex;flex-wrap:wrap;gap:10px 13px;justify-content:center;align-items:center;
@@ -1947,6 +1959,88 @@ body.guest .guest-veil{
         </div>
       </div>
 
+      <!-- ══════ TOWN HALL (ADMIN — hidden, no nav entry) ══════ -->
+      <div class="screen" id="screen-admin">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 14px">
+            <h2>🛡️ Town Hall</h2>
+            <p>The admin desk — only town admins can see this</p>
+          </div>
+
+          <!-- Needs a look (oversight flags) -->
+          <div class="card" style="padding:16px 18px;margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <h3 class="serif" style="font-size:16px;color:var(--ink)">🔎 Needs a Look</h3>
+              <button class="adm-btn" onclick="runOversight()">↻ Re-scan</button>
+            </div>
+            <div id="adm-flags" style="font-size:12px;color:var(--ink-lt)">Scanning…</div>
+          </div>
+
+          <!-- Moderation -->
+          <div class="card" style="padding:16px 18px;margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+              <h3 class="serif" style="font-size:16px;color:var(--ink)">🗂️ Moderation Desk</h3>
+              <div style="display:flex;gap:8px">
+                <select id="adm-coll" class="form-input" style="padding:6px 10px;font-size:12px" onchange="renderAdminFeed()">
+                  <option value="community_posts">📋 Community Board</option>
+                  <option value="garden_updates">🌱 Garden Board</option>
+                  <option value="pollinator_posts">🐝 Buzz Board</option>
+                  <option value="lost_found">🔍 Lost &amp; Found</option>
+                  <option value="local_biz">🏪 Businesses</option>
+                  <option value="chat:general"># general</option>
+                  <option value="chat:announcements"># announcements</option>
+                  <option value="chat:lost-found"># lost-found</option>
+                  <option value="chat:buy-sell"># buy-sell</option>
+                  <option value="chat:events"># events</option>
+                  <option value="chat:help-needed"># help-needed</option>
+                  <option value="chat:local-biz"># local-biz</option>
+                  <option value="chat:weather"># weather</option>
+                </select>
+                <button class="adm-btn" onclick="renderAdminFeed()">↻</button>
+              </div>
+            </div>
+            <p style="font-size:11px;color:var(--ink-lt);margin-bottom:10px">
+              <strong>Hide</strong> takes a post off the public page (reversible any time). <strong>Delete</strong> is forever.
+            </p>
+            <div id="adm-feed" style="font-size:13px">Loading…</div>
+          </div>
+
+          <!-- AI Helper -->
+          <div class="card" style="padding:16px 18px;margin-bottom:14px">
+            <h3 class="serif" style="font-size:16px;color:var(--ink);margin-bottom:4px">🤖 AI Helper</h3>
+            <p style="font-size:11px;color:var(--ink-lt);margin-bottom:10px">
+              Powered by Claude using <strong>your own API key</strong> — it's stored only in this browser, never in the app.
+              Nothing is ever posted without you pressing the post button.
+            </p>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <input id="ai-key" type="password" class="form-input" style="flex:1;min-width:170px" placeholder="Anthropic API key (sk-ant-…)">
+              <select id="ai-model" class="form-input" style="flex:0 0 175px">
+                <option value="claude-opus-4-8">Opus 4.8 · smartest</option>
+                <option value="claude-sonnet-4-6">Sonnet 4.6 · balanced</option>
+                <option value="claude-haiku-4-5">Haiku 4.5 · cheapest</option>
+              </select>
+              <button class="adm-btn" onclick="saveAiKey()">Save key</button>
+            </div>
+            <textarea id="ai-draft" class="form-textarea" rows="2" placeholder="Rough note to polish — e.g. 'tomatoes done til next week, need waterers sat morning'"></textarea>
+            <div style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap">
+              <button class="btn btn-red" style="font-size:12px" onclick="aiPolish()">✨ Polish my draft</button>
+              <button class="btn btn-outline" style="font-size:12px" onclick="aiDigest()">📋 Today's digest</button>
+              <button class="btn btn-outline" style="font-size:12px" onclick="aiReview()">🛰️ What needs attention</button>
+            </div>
+            <textarea id="ai-output" class="form-textarea" rows="6" placeholder="AI output lands here — read it, edit it, then post if you approve"></textarea>
+            <div style="text-align:right;margin-top:8px">
+              <button class="btn btn-red" style="font-size:12px" onclick="aiPostToBoard()">Post to Community Board</button>
+            </div>
+          </div>
+
+          <!-- Seasonal planner -->
+          <div class="card" style="padding:16px 18px">
+            <h3 class="serif" style="font-size:16px;color:var(--ink);margin-bottom:8px">📅 This Month in Bell Buckle</h3>
+            <div id="adm-season" style="font-size:12.5px;color:#44321e;line-height:1.85"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- ══════ NEW POST ══════ -->
       <div class="screen" id="screen-post">
         <div class="p20 max-w" style="max-width:520px">
@@ -2022,6 +2116,7 @@ const SCREEN_META = {
   biz:         { t:'🏪 Local Businesses',  c:'Bell Buckle Connect › Shop Local' },
   giveback:    { t:'❤️ Give Back',         c:'Bell Buckle Connect › Give Back' },
   kids:        { t:'🖍️ Kids Corner',       c:'Bell Buckle Connect › Kids Corner' },
+  admin:       { t:'🛡️ Town Hall',         c:'Bell Buckle Connect › Admin' },
   post:        { t:'✏️ New Post',           c:'Bell Buckle Connect › Post' },
   chat:        { t:'💬 The Depot',         c:'Bell Buckle Connect › Depot Chat' },
 };
@@ -2032,6 +2127,10 @@ auth.onAuthStateChanged(user => {
   if (user) {
     isGuest = false;
     document.body.classList.remove('guest');
+    isAdminUser = false;
+    db.collection('admins').doc(user.uid).get()
+      .then(s => { isAdminUser = s.exists; })
+      .catch(() => { isAdminUser = false; });
     document.getElementById('auth-overlay').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     document.getElementById('sb-signout').textContent = 'Sign out';
@@ -2183,6 +2282,7 @@ function listenChat(channelId) {
       box.innerHTML = '';
       snap.forEach(doc => {
         const d   = doc.data();
+        if (d.hidden) return;
         const own = d.uid === currentUser?.uid;
         const nm  = d.displayName || d.email?.split('@')[0] || 'Neighbor';
         const t   = d.ts?.toDate ? d.ts.toDate().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '';
@@ -2221,7 +2321,7 @@ function listenHomePosts() {
       const el = document.getElementById('home-posts');
       if (snap.empty) { el.innerHTML='<div style="color:var(--ink-lt);font-size:13px">No posts yet — be the first!</div>'; return; }
       el.innerHTML = '';
-      snap.forEach(doc => { el.innerHTML += postHTML(doc.data(), true); });
+      snap.forEach(doc => { if (!doc.data().hidden) el.innerHTML += postHTML(doc.data(), true); });
     }, () => {
       document.getElementById('home-posts').innerHTML = '<div style="color:var(--ink-lt);font-size:13px">Sign in to see what neighbors are sharing.</div>';
     });
@@ -2241,7 +2341,7 @@ function listenCommunityPosts() {
       }
       if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">No posts yet. Share something with your neighbors!</div>'; return; }
       feed.innerHTML = '';
-      snap.forEach(doc => { feed.innerHTML += postHTML(doc.data(), false); });
+      snap.forEach(doc => { if (!doc.data().hidden) feed.innerHTML += postHTML(doc.data(), false); });
     }, () => {
       document.getElementById('community-feed').innerHTML = '<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">Sign in to read the community board, neighbor.</div>';
     });
@@ -2287,6 +2387,7 @@ function listenLostFound() {
       feed.innerHTML = '';
       snap.forEach(doc => {
         const d  = doc.data();
+        if (d.hidden) return;
         const nm = d.displayName || d.email?.split('@')[0] || 'Neighbor';
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
         const isLost = d.type === 'lost';
@@ -2331,6 +2432,7 @@ function listenGarden() {
       feed.innerHTML = '';
       snap.forEach(doc => {
         const d  = doc.data();
+        if (d.hidden) return;
         const t  = GD_TYPES[d.type] || GD_TYPES.ripe;
         const nm = d.displayName || 'A neighbor';
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
@@ -2372,6 +2474,7 @@ function listenBuzz() {
       feed.innerHTML = '';
       snap.forEach(doc => {
         const d  = doc.data();
+        if (d.hidden) return;
         const t  = BZ_TYPES[d.type] || BZ_TYPES.sighting;
         const nm = d.displayName || 'A neighbor';
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
@@ -2412,7 +2515,7 @@ function listenBiz() {
     .onSnapshot(snap => {
       const feed = document.getElementById('biz-feed');
       if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">No neighbor listings yet — be the first on the map! 🗺️</div>'; return; }
-      feed.innerHTML = '<div class="biz-grid">' + Array.from(snap.docs).map(doc => {
+      feed.innerHTML = '<div class="biz-grid">' + Array.from(snap.docs).filter(doc => !doc.data().hidden).map(doc => {
         const d = doc.data();
         const c = BIZ_CATS[d.cat] || BIZ_CATS.comm;
         return `<div class="biz-card">
@@ -2680,6 +2783,225 @@ function floodFill(cv, sx, sy, hex) {
     }
   }
   ctx.putImageData(im, 0, 0);
+}
+
+// ─── Town Hall (admin) ────────────────────────────────────────────────────────
+// Entry: tap the footer bell 5 times. Real security = Firestore rules + the
+// admins/{uid} collection; this UI only appears for accounts listed there.
+let isAdminUser = false;
+
+const ADMIN_COLLS = {
+  community_posts:  d => d.text,
+  garden_updates:   d => d.text,
+  pollinator_posts: d => d.text,
+  lost_found:       d => (d.title || '') + ' — ' + (d.desc || ''),
+  local_biz:        d => (d.name || '') + ' — ' + (d.desc || ''),
+};
+
+function admColl(val) {
+  return val.startsWith('chat:')
+    ? db.collection('channels').doc(val.slice(5)).collection('messages')
+    : db.collection(val);
+}
+
+function openAdmin() {
+  if (!currentUser) { alert('Sign in first, then ring the bell five times. 🛎️'); if (isGuest) leaveApp(); return; }
+  if (!isAdminUser) { alert('That bell only rings for town admins. 🛎️'); return; }
+  nav('admin');
+  const k = document.getElementById('ai-key');
+  if (k && !k.value) k.value = localStorage.getItem('bb_api_key') || '';
+  renderSeason(); renderAdminFeed(); runOversight();
+}
+
+(function secretBell(){
+  const bell = document.querySelector('.sb-footer svg');
+  if (!bell) return;
+  bell.style.cursor = 'pointer';
+  let taps = 0, timer = null;
+  bell.addEventListener('click', () => {
+    taps++; clearTimeout(timer);
+    timer = setTimeout(() => { taps = 0; }, 2500);
+    if (taps >= 5) { taps = 0; openAdmin(); }
+  });
+})();
+
+async function renderAdminFeed() {
+  const val  = document.getElementById('adm-coll').value;
+  const feed = document.getElementById('adm-feed');
+  feed.innerHTML = 'Loading…';
+  try {
+    const snap = await admColl(val).orderBy('ts','desc').limit(25).get();
+    if (snap.empty) { feed.innerHTML = '<div style="color:var(--ink-lt)">Nothing here yet.</div>'; return; }
+    feed.innerHTML = '';
+    snap.forEach(doc => {
+      const d   = doc.data();
+      const txt = val.startsWith('chat:') ? d.text : (ADMIN_COLLS[val] ? ADMIN_COLLS[val](d) : d.text);
+      const dt  = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+      const row = document.createElement('div');
+      row.className = 'adm-row' + (d.hidden ? ' is-hidden' : '');
+      row.innerHTML = `<div style="flex:1;min-width:0">
+          <div style="font-size:12.5px;color:var(--ink)">${d.hidden ? '<span class="flag-chip flag-word">hidden</span>' : ''}${esc((txt||'').slice(0,160))}</div>
+          <div class="adm-meta">${esc(d.displayName||'?')} · ${dt}</div>
+        </div>
+        <button class="adm-btn" onclick="admToggleHide('${val}','${doc.id}',${d.hidden ? 'false' : 'true'})">${d.hidden ? '👁 Show' : '🙈 Hide'}</button>
+        <button class="adm-btn danger" onclick="admDelete('${val}','${doc.id}')">🗑</button>`;
+      feed.appendChild(row);
+    });
+  } catch (e) { feed.innerHTML = '<div style="color:#9b1d1d">' + esc(e.message) + '</div>'; }
+}
+
+function admToggleHide(coll, id, hide) {
+  admColl(coll).doc(id).update({ hidden: hide }).then(renderAdminFeed).catch(e => alert(e.message));
+}
+function admDelete(coll, id) {
+  if (!confirm("Delete forever? This can't be undone.")) return;
+  admColl(coll).doc(id).delete().then(renderAdminFeed).catch(e => alert(e.message));
+}
+
+// ── Oversight scan: duplicates, stale items, watch-words (runs locally, free)
+const WATCH_WORDS = ['fuck','shit','bitch','asshole','scam','viagra','casino','crypto giveaway','xxx','porn','free money'];
+
+async function gatherRecent(limit) {
+  const out = [];
+  for (const coll of Object.keys(ADMIN_COLLS)) {
+    const snap = await db.collection(coll).orderBy('ts','desc').limit(limit || 30).get();
+    snap.forEach(doc => {
+      const d = doc.data();
+      out.push({ coll, id: doc.id, d, txt: (ADMIN_COLLS[coll](d) || '').toString() });
+    });
+  }
+  return out;
+}
+
+async function runOversight() {
+  const el = document.getElementById('adm-flags');
+  el.innerHTML = 'Scanning…';
+  try {
+    const items = await gatherRecent(30);
+    const flags = [], seen = {};
+    const now = Date.now();
+    items.forEach(it => {
+      const norm = it.txt.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+      const key  = it.coll + '|' + norm;
+      if (norm.length > 12 && seen[key]) flags.push({ label:'duplicate', cls:'flag-dup', it });
+      seen[key] = true;
+      const low = it.txt.toLowerCase();
+      if (WATCH_WORDS.some(w => low.includes(w))) flags.push({ label:'check language', cls:'flag-word', it });
+      const t = it.d.ts?.toDate ? it.d.ts.toDate().getTime() : now;
+      if (it.coll === 'garden_updates' && it.d.type === 'ripe' && now - t > 14*86400000 && !it.d.hidden)
+        flags.push({ label:'stale — ripe >2 wks', cls:'flag-stale', it });
+      if (it.coll === 'lost_found' && now - t > 60*86400000 && !it.d.hidden)
+        flags.push({ label:'old listing >60 days', cls:'flag-stale', it });
+    });
+    if (!flags.length) { el.innerHTML = '✅ All quiet on the square — nothing needs a look.'; return; }
+    el.innerHTML = '';
+    flags.slice(0, 12).forEach(f => {
+      const row = document.createElement('div');
+      row.className = 'adm-row';
+      row.innerHTML = `<div style="flex:1;min-width:0"><span class="flag-chip ${f.cls}">${f.label}</span>
+          <span style="font-size:12px">${esc(f.it.txt.slice(0,110))}</span>
+          <div class="adm-meta">${f.it.coll} · ${esc(f.it.d.displayName||'?')}</div></div>
+        <button class="adm-btn" onclick="admToggleHide('${f.it.coll}','${f.it.id}',true)">🙈 Hide</button>`;
+      el.appendChild(row);
+    });
+  } catch (e) { el.innerHTML = '<span style="color:#9b1d1d">' + esc(e.message) + '</span>'; }
+}
+
+// ── Seasonal planner (Engagement Agent — no API needed)
+const SEASONS = {
+  0:  ['Winter garden checklist post — tool sharpening, seed catalogs','Tease Daffodil Day coming in March 🌼'],
+  1:  ['"Start your seeds indoors" reminder for the garden crew','Draft the spring Bee City planting list'],
+  2:  ['🌼 Daffodil Day month! Call for photos on the Buzz Board','Announce the first spring garden workday'],
+  3:  ['Spring planting in full swing — nudge weekly status board updates','Bee City: plant natives now post'],
+  4:  ['Tomato season prep — cages & stakes donation call','Farmers market opening announcement'],
+  5:  ['🥧 RC Cola & Moon Pie Festival month — pin festival info everywhere!','Summer heat: watering volunteer schedule'],
+  6:  ['Peak harvest — keep the Ripe & Ready board fresh','"Set out water dishes for pollinators" reminder'],
+  7:  ['Late summer: post what to plant for fall harvest','Tease the Tennessee Crafts Fair coming in September'],
+  8:  ['Fall planting: asters & goldenrod for the bees','Crafts Fair month — welcome-visitors post'],
+  9:  ['🍂 Fall Festival month — refresh the events page','Plant daffodil bulbs NOW for Daffodil Day'],
+  10: ['"Leave the leaves" pollinator overwintering reminder','Garden cleanup day + tool inventory call'],
+  11: ['🎄 Quilt Walk season — call for downtown photos','Holiday craft swap on the community board'],
+};
+function renderSeason() {
+  const el = document.getElementById('adm-season');
+  if (el) el.innerHTML = (SEASONS[new Date().getMonth()] || []).map(s => '• ' + s).join('<br>');
+}
+
+// ── AI Helper — calls Claude directly with the admin's own API key
+function saveAiKey() {
+  const v = document.getElementById('ai-key').value.trim();
+  localStorage.setItem('bb_api_key', v);
+  alert(v ? 'Key saved — in this browser only.' : 'Key cleared.');
+}
+
+async function askClaude(system, user, maxTok) {
+  const key = (document.getElementById('ai-key').value || '').trim() || localStorage.getItem('bb_api_key');
+  if (!key) { alert('Paste your Anthropic API key first (get one at console.anthropic.com).'); return null; }
+  document.getElementById('ai-output').value = 'Thinking…';
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: document.getElementById('ai-model').value,
+      max_tokens: maxTok || 2048,
+      system: system,
+      messages: [{ role: 'user', content: user }]
+    })
+  });
+  const data = await res.json();
+  if (data.type === 'error') throw new Error(data.error.message);
+  return data.content.filter(b => b.type === 'text').map(b => b.text).join('\n');
+}
+
+const BB_VOICE = 'You help run Bell Buckle Connect, the community app for Bell Buckle, Tennessee (population about 500). Your voice: warm, plain-spoken, neighborly, lightly playful, never corporate.';
+
+async function aiPolish() {
+  const draft = document.getElementById('ai-draft').value.trim();
+  if (!draft) { alert('Write a rough note first.'); return; }
+  try {
+    const text = await askClaude(BB_VOICE + " Rewrite the admin's rough note into a short, friendly public post for the community board. Return only the post text, no preamble.", draft);
+    if (text != null) document.getElementById('ai-output').value = text;
+  } catch (e) { document.getElementById('ai-output').value = 'Error: ' + e.message; }
+}
+
+async function contentDump(hours) {
+  const items = await gatherRecent(25);
+  const cutoff = Date.now() - hours * 3600000;
+  return items
+    .filter(it => { const t = it.d.ts?.toDate ? it.d.ts.toDate().getTime() : 0; return t >= cutoff; })
+    .map(it => `[${it.coll}] ${it.d.displayName || '?'}: ${it.txt}${it.d.hidden ? ' (HIDDEN)' : ''}`)
+    .join('\n') || '(no posts in this window)';
+}
+
+async function aiDigest() {
+  try {
+    const dump = await contentDump(24);
+    const text = await askClaude(BB_VOICE + ' Write a short "what happened today" digest for the admin: a few bullets covering new posts and anything notable, then one suggestion for tomorrow. Under 150 words.', 'Last 24 hours of app content:\n\n' + dump);
+    if (text != null) document.getElementById('ai-output').value = text;
+  } catch (e) { document.getElementById('ai-output').value = 'Error: ' + e.message; }
+}
+
+async function aiReview() {
+  try {
+    const dump = await contentDump(24 * 14);
+    const text = await askClaude(BB_VOICE + ' Review the community content below as a gentle moderator. Flag anything needing admin attention: inappropriate language, spam, duplicates, outdated info (like ripe veggies posted weeks ago), or safety concerns. For each flag give one line: the item, the reason, a suggested action. If everything looks fine, say so cheerfully.', 'Recent app content (last 2 weeks):\n\n' + dump);
+    if (text != null) document.getElementById('ai-output').value = text;
+  } catch (e) { document.getElementById('ai-output').value = 'Error: ' + e.message; }
+}
+
+function aiPostToBoard() {
+  const txt = document.getElementById('ai-output').value.trim();
+  if (!txt || txt === 'Thinking…') { alert('Nothing to post yet.'); return; }
+  if (!currentUser) { guestNudge(); return; }
+  if (!confirm('Post this to the public Community Board?')) return;
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('community_posts').add({ text: txt, uid: currentUser.uid, email: currentUser.email, displayName: nm, ts: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(() => { alert('Posted! 📋'); document.getElementById('ai-output').value = ''; });
 }
 
 // ─── Train conductor — continual roll, a few trips east then back west ───────
