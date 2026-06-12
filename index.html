@@ -40,7 +40,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 ════════════════════════════════ */
 #auth-overlay{
   position:fixed;inset:0;z-index:999;
-  background:linear-gradient(145deg,#18100c,#2c1a0e 55%,#18100c);
+  background:linear-gradient(145deg,rgba(24,16,12,.82),rgba(44,26,14,.66) 55%,rgba(24,16,12,.86)),
+             url('banner.webp') center/cover, #2c1a0e;
   display:flex;align-items:center;justify-content:center;
 }
 .auth-card{
@@ -67,6 +68,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 .auth-btn-primary{background:var(--red);color:#fff;margin-bottom:8px;}
 .auth-btn-outline{background:transparent;border:2px solid var(--red);color:var(--red);}
 #auth-error{color:#dc2626;font-size:12px;text-align:center;margin-bottom:8px;display:none;}
+.auth-guest{
+  background:none;border:none;width:100%;margin-top:12px;cursor:pointer;
+  color:var(--ink-lt);font-size:11.5px;font-family:'Inter',sans-serif;
+  text-decoration:underline dotted;transition:color .15s;
+}
+.auth-guest:hover{color:var(--red);}
 
 /* ════════════════════════════════
    SHELL
@@ -121,7 +128,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 
 /* ── Topbar ── */
 .topbar{
-  background:var(--paper);border-bottom:2px solid var(--wire-lt);
+  background:linear-gradient(rgba(253,250,244,.88),rgba(253,250,244,.88)),
+             url('banner.webp') center 36%/cover, var(--paper);
+  border-bottom:2px solid var(--wire-lt);
   display:flex;align-items:center;flex-shrink:0;
   position:relative;overflow:hidden;min-height:68px;
 }
@@ -171,21 +180,153 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 
 /* Train */
 @keyframes choo-choo{
-  0%  {transform:translateX(-340px);}
-  100%{transform:translateX(calc(100vw + 340px));}
+  0%  {transform:translateX(-380px);}
+  100%{transform:translateX(calc(100vw + 380px));}
 }
-.train-ride{position:absolute;bottom:0;left:0;animation:choo-choo 22s linear infinite;pointer-events:none;z-index:5;}
+.train-ride{position:absolute;bottom:0;left:0;pointer-events:none;z-index:5;transform:translateX(-380px);}
+.train-ride.go-east{animation:choo-choo 24s linear forwards;}
+.train-ride.go-west{animation:choo-choo-rev 24s linear forwards;}
+@keyframes choo-choo-rev{
+  0%  {transform:translateX(calc(100vw + 380px)) scaleX(-1);}
+  100%{transform:translateX(-380px) scaleX(-1);}
+}
+@keyframes wheelspin{to{transform:rotate(360deg);}}
+.train-ride .tw{transform-box:fill-box;transform-origin:center;animation:wheelspin .8s linear infinite;}
+@keyframes chug-bob{from{transform:translateY(0);}to{transform:translateY(-1px);}}
+.train-ride svg{animation:chug-bob .5s ease-in-out infinite alternate;}
 
-/* Steam */
+/* Steam — rides along with the locomotive */
 @keyframes steam{
   0%  {opacity:.6;transform:translateY(0) scale(.7);}
   100%{opacity:0;transform:translateY(-22px) scale(2);}
 }
-.steam{position:absolute;left:278px;top:3px;z-index:9;pointer-events:none;}
+.steam{position:absolute;left:284px;top:-10px;z-index:9;pointer-events:none;}
 .steam span{display:block;position:absolute;border-radius:50%;background:rgba(200,185,165,.55);animation:steam 2.4s ease-out infinite;}
 .steam span:nth-child(1){width:14px;height:14px;left:0;animation-delay:0s;}
 .steam span:nth-child(2){width:10px;height:10px;left:10px;animation-delay:.8s;}
 .steam span:nth-child(3){width:8px;height:8px;left:-5px;animation-delay:1.6s;}
+
+/* Quilt strip — pieced-quilt divider, a nod to the Quilt Walk */
+.quilt-strip{
+  height:6px;flex-shrink:0;opacity:.8;
+  background:repeating-linear-gradient(135deg,
+    var(--red) 0 10px, var(--gold) 10px 20px,
+    var(--green) 20px 30px, var(--copper) 30px 40px);
+}
+
+/* Daffodils — Sawney Webb's bulbs, swaying trackside */
+@keyframes daffodil-sway{
+  0%,100%{transform:rotate(-3deg);}
+  50%    {transform:rotate(3.5deg);}
+}
+.daffodil{position:absolute;bottom:-2px;z-index:3;pointer-events:none;transform-origin:bottom center;animation:daffodil-sway 3.6s ease-in-out infinite;}
+.daffodil.d2{animation-delay:1.1s;}
+.daffodil.d3{animation-delay:2.2s;}
+
+/* Festival countdown chip */
+.fest-countdown{
+  display:none;align-items:center;gap:5px;
+  background:var(--gold);color:#1a0e06;border-radius:99px;
+  padding:4px 13px;font-size:11px;font-weight:800;margin-bottom:9px;
+}
+
+/* Guest veil — frosted "Neighbors Only" lock for guests */
+.guest-veil{display:none;}
+body.guest .guest-lockable{position:relative;}
+body.guest .guest-lockable > *:not(.guest-veil){
+  filter:blur(7px);pointer-events:none;user-select:none;
+}
+body.guest .guest-veil{
+  display:flex;position:absolute;inset:0;z-index:60;
+  align-items:center;justify-content:center;
+  filter:none !important;pointer-events:auto !important;
+}
+.veil-card{
+  background:var(--paper);border:1px solid var(--wire-lt);border-radius:14px;
+  padding:28px 30px;max-width:330px;text-align:center;
+  box-shadow:0 18px 50px rgba(0,0,0,.35);margin:20px;
+}
+.veil-emoji{font-size:34px;margin-bottom:8px;}
+.veil-title{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.veil-sub{font-size:12.5px;color:var(--ink-lt);line-height:1.55;margin-bottom:16px;}
+
+/* Community Garden status board */
+.gd-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 9px;border-radius:99px;margin-bottom:5px;letter-spacing:.04em;}
+.gd-ripe{background:#f0fdf4;color:#166534;}
+.gd-soon{background:#fef9c3;color:#854d0e;}
+.gd-care{background:#dbeafe;color:#1e40af;}
+.guide-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;}
+.guide-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:14px;box-shadow:0 1px 4px rgba(42,31,16,.06);}
+.guide-card h4{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:7px;}
+.guide-card ul{margin:0;padding-left:16px;}
+.guide-card li{font-size:11.5px;color:var(--ink-lt);line-height:1.65;margin-bottom:3px;}
+.feed-photo{width:100%;border-radius:8px;margin-top:8px;max-height:180px;object-fit:cover;border:1px solid var(--wire-lt);}
+
+/* Bee City */
+.season-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.season-btn{border:1px solid var(--wire);background:transparent;color:var(--ink-lt);border-radius:99px;padding:6px 15px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.season-btn:hover{border-color:var(--gold);color:var(--ink);}
+.season-btn.active{background:var(--gold);border-color:var(--gold);color:#1a0e06;}
+.season-panel{display:none;}
+.season-panel.active{display:block;}
+.plant-chip{display:inline-block;background:#fff;border:1px solid var(--wire);border-radius:99px;padding:6px 13px;font-size:12px;color:var(--ink);margin:0 5px 7px 0;}
+.tip-list{margin:0;padding-left:18px;}
+.tip-list li{font-size:12.5px;color:#44321e;line-height:1.85;}
+.bz-sighting{background:#fef9c3;color:#854d0e;}
+.bz-photo{background:#fce7f3;color:#9d174d;}
+.bz-tip{background:#f0fdf4;color:#166534;}
+
+/* Local businesses */
+.biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.biz-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:15px 16px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
+.biz-emoji{font-size:26px;margin-bottom:6px;}
+.biz-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.biz-desc{font-size:12px;color:var(--ink-lt);line-height:1.55;}
+.biz-contact{font-size:11px;color:var(--red);margin-top:7px;font-weight:600;}
+.bc-eat{background:#fef3c7;color:#92400e;}
+.bc-shop{background:#ede9fe;color:#5b21b6;}
+.bc-serv{background:#dbeafe;color:#1e40af;}
+.bc-art{background:#f0fdf4;color:#166534;}
+.bc-comm{background:#fef2f2;color:#9b1d1d;}
+
+/* ── Bell Buckle icon set & little animations ── */
+.bb-icon{width:24px;height:24px;display:inline-block;vertical-align:middle;}
+@keyframes bb-swing{0%,100%{transform:rotate(-9deg);}50%{transform:rotate(9deg);}}
+.anim-swing{animation:bb-swing 2.4s ease-in-out infinite;transform-origin:50% 10%;}
+@keyframes bb-buzz{0%,100%{transform:translate(0,0);}25%{transform:translate(1px,-1.5px);}50%{transform:translate(-1px,.5px);}75%{transform:translate(.5px,1.5px);}}
+.anim-buzz{animation:bb-buzz .8s linear infinite;}
+@keyframes bb-sway{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4.5deg);}}
+.anim-sway{animation:bb-sway 3.4s ease-in-out infinite;transform-origin:50% 95%;}
+@keyframes bb-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-2.5px);}}
+.anim-bob{animation:bb-bob 2.1s ease-in-out infinite;}
+@keyframes bb-flutter{0%,100%{transform:scale(1,1);}50%{transform:scale(.84,1.05) rotate(3deg);}}
+.anim-flutter{animation:bb-flutter 1.1s ease-in-out infinite;}
+@keyframes bb-rock{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(6deg);}}
+.anim-rock{animation:bb-rock 2.8s ease-in-out infinite;transform-origin:50% 88%;}
+@keyframes bb-spin{to{transform:rotate(360deg);}}
+.anim-spin-slow{animation:bb-spin 14s linear infinite;}
+@keyframes bb-chug{0%,100%{transform:translateX(0);}50%{transform:translateX(1.6px);}}
+.anim-chug{animation:bb-chug .7s ease-in-out infinite;}
+/* Kids Corner — coloring pages */
+.crayon-box{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;}
+.crayon{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid rgba(42,31,16,.15);transition:transform .12s;flex-shrink:0;}
+.crayon:hover{transform:scale(1.12);}
+.crayon.active{border-color:var(--ink);transform:scale(1.15);box-shadow:0 2px 8px rgba(42,31,16,.3);}
+.cpage-wrap{display:none;background:#fff;border:2px solid var(--wire-lt);border-radius:12px;overflow:hidden;}
+.cpage-wrap.active{display:block;}
+.cpage-wrap svg{display:block;width:100%;height:auto;}
+.cregion{cursor:pointer;}
+.cregion:hover{filter:brightness(.93);}
+.ccanvas{display:block;width:100%;height:auto;cursor:crosshair;background:#fff;min-height:120px;}
+
+/* Town parade — decorative icon strip */
+.parade{
+  display:flex;flex-wrap:wrap;gap:10px 13px;justify-content:center;align-items:center;
+  background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;
+  padding:13px 16px;margin:18px 0;box-shadow:0 1px 4px rgba(42,31,16,.06);
+}
+.parade .bb-icon{width:26px;height:26px;}
+.parade-label{width:100%;text-align:center;font-size:9px;letter-spacing:.24em;color:var(--ink-lt);font-weight:700;text-transform:uppercase;margin-bottom:3px;}
 
 /* Topbar right side */
 .topbar-right{flex:1;display:flex;align-items:center;justify-content:space-between;padding:0 20px;min-width:0;z-index:7;}
@@ -325,7 +466,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 .action-label{font-size:11px;font-weight:600;color:var(--ink);line-height:1.3;}
 
 /* Hero mural */
-.home-hero{position:relative;height:200px;overflow:hidden;border-radius:10px;margin-bottom:16px;}
+.home-hero{position:relative;height:235px;overflow:hidden;border-radius:10px;margin-bottom:16px;}
 .home-hero img{width:100%;height:100%;object-fit:cover;}
 .home-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,16,8,.88) 0%,transparent 50%);}
 .home-hero-text{position:absolute;bottom:0;left:0;padding:18px 20px;}
@@ -412,13 +553,52 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 <body>
 
 <!-- ════════════════════════════════
+     BELL BUCKLE ICON SET (20)
+     Use: <svg class="bb-icon anim-swing"><use href="#bbi-bell"/></svg>
+════════════════════════════════ -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="bbi-bell" viewBox="0 0 24 24"><path d="M10.5 2.5 h3 v2 h-3 Z" fill="#7c4a22"/><path d="M12 4 C7.5 4.8 6.8 8.6 6.7 13.4 L5 16 Q12 18.6 19 16 L17.3 13.4 C17.2 8.6 16.5 4.8 12 4 Z" fill="#e8b830" stroke="#7c4a22" stroke-width="1"/><circle cx="12" cy="19.3" r="1.7" fill="#2a1f10"/></symbol>
+    <symbol id="bbi-buckle" viewBox="0 0 24 24"><rect x="9" y="1.5" width="6" height="5" rx="1" fill="#7c4a22"/><rect x="9" y="17.5" width="6" height="5" rx="1" fill="#7c4a22"/><rect x="5.5" y="6.5" width="13" height="11" rx="3.5" fill="none" stroke="#e8b830" stroke-width="2.6"/><line x1="12" y1="7" x2="12" y2="13" stroke="#e8b830" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="bbi-train" viewBox="0 0 24 24"><rect x="1.2" y="6.5" width="8.6" height="2" rx="1" fill="#1a0e06"/><rect x="2" y="8" width="7" height="9" fill="#3a1e0e"/><rect x="3.5" y="10" width="3.5" height="3.5" rx=".5" fill="#ffe9a8" opacity=".8"/><rect x="9" y="10.5" width="10" height="6.5" rx="3" fill="#2c1a0e"/><path d="M13.5 3 h5 l-1 2.6 h-3 Z" fill="#1a0e06"/><rect x="14.5" y="5.5" width="3" height="5" fill="#1a0e06"/><path d="M19 17 L23 21 H19 Z" fill="#2a1408"/><circle cx="6" cy="19" r="2.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.2"/><circle cx="13" cy="19" r="2.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.2"/><circle cx="18.5" cy="19.4" r="2.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.2"/></symbol>
+    <symbol id="bbi-caboose" viewBox="0 0 24 24"><rect x="7.5" y="1" width="9" height="1.6" rx=".8" fill="#2a1408"/><rect x="8.5" y="2.4" width="7" height="3.6" fill="#a63220" stroke="#7c2018" stroke-width=".8"/><rect x="9.8" y="3.3" width="2" height="1.8" rx=".3" fill="#ffe9a8" opacity=".85"/><rect x="12.6" y="3.3" width="2" height="1.8" rx=".3" fill="#ffe9a8" opacity=".85"/><rect x="2.5" y="6" width="19" height="2" rx="1" fill="#2a1408"/><rect x="3.5" y="8" width="17" height="9" fill="#a63220" stroke="#7c2018" stroke-width="1"/><rect x="6" y="10" width="3.5" height="3.5" rx=".5" fill="#ffe9a8" opacity=".85"/><rect x="14.5" y="10" width="3.5" height="3.5" rx=".5" fill="#ffe9a8" opacity=".85"/><rect x="3.5" y="15.2" width="17" height="1.1" fill="#e8b830"/><circle cx="7.5" cy="19.5" r="2.4" fill="#1a0e06" stroke="#8a6030" stroke-width="1.1"/><circle cx="16.5" cy="19.5" r="2.4" fill="#1a0e06" stroke="#8a6030" stroke-width="1.1"/></symbol>
+    <symbol id="bbi-tracks" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="2.4" rx="1" fill="#7c4a22"/><rect x="3" y="9" width="18" height="2.4" rx="1" fill="#7c4a22"/><rect x="3" y="14" width="18" height="2.4" rx="1" fill="#7c4a22"/><rect x="3" y="19" width="18" height="2.4" rx="1" fill="#7c4a22"/><rect x="6.5" y="2" width="2.4" height="20" fill="#2a1f10"/><rect x="15.1" y="2" width="2.4" height="20" fill="#2a1f10"/></symbol>
+    <symbol id="bbi-depot" viewBox="0 0 24 24"><path d="M2 9 L12 3 L22 9 Z" fill="#7c2018"/><rect x="2.5" y="8.5" width="19" height="1.6" fill="#5a2d12"/><rect x="4" y="10" width="16" height="10" fill="#c8702a"/><rect x="10" y="13" width="4" height="7" rx=".6" fill="#3a1e0e"/><rect x="5.8" y="12" width="3.2" height="3.2" rx=".5" fill="#ffe9a8" opacity=".85"/><rect x="15" y="12" width="3.2" height="3.2" rx=".5" fill="#ffe9a8" opacity=".85"/></symbol>
+    <symbol id="bbi-moonpie" viewBox="0 0 24 24"><ellipse cx="12" cy="14.5" rx="9" ry="4" fill="#5a2d12"/><ellipse cx="12" cy="11.5" rx="8.6" ry="3.6" fill="#fdfaf4"/><ellipse cx="12" cy="9" rx="9" ry="4" fill="#7c4a22"/><path d="M5 8.2 q3.5 -2.2 8 -1.6" stroke="#9c6232" stroke-width="1" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="bbi-cola" viewBox="0 0 24 24"><rect x="10.6" y="1.5" width="2.8" height="2" fill="#8a6030"/><path d="M10.5 3.5 h3 v3 q2 1.5 2 4 v9 a1.5 1.5 0 0 1 -1.5 1.5 h-4 a1.5 1.5 0 0 1 -1.5 -1.5 v-9 q0 -2.5 2 -4 Z" fill="#5a2d12"/><rect x="8.5" y="11" width="7" height="4.5" rx=".8" fill="#a63220"/><circle cx="12" cy="13.2" r="1.3" fill="#fdfaf4"/></symbol>
+    <symbol id="bbi-daffodil" viewBox="0 0 24 24"><path d="M12 21 C12 16 12 13 12 10" stroke="#3d6b3a" stroke-width="1.8" fill="none"/><path d="M12 18 C8 17 6.5 14.5 6 12" stroke="#3d6b3a" stroke-width="1.5" fill="none"/><ellipse cx="12" cy="3.8" rx="1.9" ry="3" fill="#f5d33f"/><ellipse cx="12" cy="10.2" rx="1.9" ry="3" fill="#f5d33f"/><ellipse cx="8.8" cy="7" rx="3" ry="1.9" fill="#f5d33f"/><ellipse cx="15.2" cy="7" rx="3" ry="1.9" fill="#f5d33f"/><circle cx="12" cy="7" r="2.6" fill="#c8702a"/><circle cx="12" cy="7" r="1.2" fill="#a3531a"/></symbol>
+    <symbol id="bbi-bee" viewBox="0 0 24 24"><ellipse cx="10" cy="6.5" rx="4.5" ry="2.6" fill="#cfe8f7" opacity=".9" transform="rotate(-25 10 6.5)"/><ellipse cx="15.5" cy="6" rx="4" ry="2.3" fill="#cfe8f7" opacity=".75" transform="rotate(-15 15.5 6)"/><ellipse cx="12.5" cy="13.5" rx="6.5" ry="4.6" fill="#e8b830"/><ellipse cx="11" cy="13.5" rx="1.4" ry="4.4" fill="#2a1a08" opacity=".7"/><ellipse cx="14.5" cy="13.5" rx="1.4" ry="4.4" fill="#2a1a08" opacity=".7"/><circle cx="5.5" cy="13.5" r="3" fill="#2a1a08"/><circle cx="4.6" cy="12.5" r=".8" fill="#fdfaf4" opacity=".7"/><polygon points="18.6,13.5 21.5,12.6 21.5,14.4" fill="#2a1a08"/></symbol>
+    <symbol id="bbi-hive" viewBox="0 0 24 24"><rect x="6.5" y="3" width="11" height="3.6" rx="1.8" fill="#e8b830"/><rect x="5" y="7" width="14" height="3.8" rx="1.9" fill="#d9a92c"/><rect x="4" y="11.2" width="16" height="4" rx="2" fill="#e8b830"/><rect x="5" y="15.6" width="14" height="3.8" rx="1.9" fill="#d9a92c"/><path d="M10.3 19.4 a1.7 1.7 0 0 1 3.4 0 Z" fill="#3a1e0e"/></symbol>
+    <symbol id="bbi-butterfly" viewBox="0 0 24 24"><ellipse cx="7.5" cy="8" rx="4.6" ry="3.6" fill="#c8702a" transform="rotate(-20 7.5 8)"/><ellipse cx="16.5" cy="8" rx="4.6" ry="3.6" fill="#c8702a" transform="rotate(20 16.5 8)"/><ellipse cx="8.3" cy="14.8" rx="3.4" ry="2.8" fill="#e8b830" transform="rotate(15 8.3 14.8)"/><ellipse cx="15.7" cy="14.8" rx="3.4" ry="2.8" fill="#e8b830" transform="rotate(-15 15.7 14.8)"/><rect x="11.2" y="6" width="1.6" height="12" rx=".8" fill="#2a1f10"/><path d="M11.5 6 Q10 3.5 8.8 2.8 M12.5 6 Q14 3.5 15.2 2.8" stroke="#2a1f10" stroke-width="1" fill="none"/><circle cx="6.5" cy="7" r=".9" fill="#fdfaf4" opacity=".8"/><circle cx="17.5" cy="7" r=".9" fill="#fdfaf4" opacity=".8"/></symbol>
+    <symbol id="bbi-quilt" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1.5" fill="#fdfaf4" stroke="#7c4a22" stroke-width="1.4"/><path d="M12 12 L4.5 4.5 H12 Z" fill="#a63220"/><path d="M12 12 L19.5 4.5 V12 Z" fill="#e8b830"/><path d="M12 12 L19.5 19.5 H12 Z" fill="#3d6b3a"/><path d="M12 12 L4.5 19.5 V12 Z" fill="#c8702a"/></symbol>
+    <symbol id="bbi-steeple" viewBox="0 0 24 24"><path d="M12 1 L14.5 6 H9.5 Z" fill="#7c2018"/><rect x="9.5" y="6" width="5" height="6" fill="#fdfaf4" stroke="#c4ae8f" stroke-width=".8"/><rect x="10.9" y="7.2" width="2.2" height="3" rx="1.1" fill="#3a6e9e" opacity=".7"/><path d="M4 14 L12 9.5 L20 14 Z" fill="#7c2018"/><rect x="5.5" y="14" width="13" height="8" fill="#fdfaf4" stroke="#c4ae8f" stroke-width=".8"/><path d="M10.5 22 v-4.5 a1.5 1.5 0 0 1 3 0 V22 Z" fill="#a63220"/></symbol>
+    <symbol id="bbi-store" viewBox="0 0 24 24"><rect x="3" y="2.5" width="18" height="3.4" rx=".8" fill="#7c2018"/><rect x="4" y="6" width="16" height="14" fill="#c8702a"/><rect x="3.5" y="6" width="17" height="3" fill="#a63220"/><rect x="6.3" y="6" width="2.8" height="3" fill="#fdfaf4"/><rect x="11.9" y="6" width="2.8" height="3" fill="#fdfaf4"/><rect x="17.2" y="6" width="2.8" height="3" fill="#fdfaf4"/><rect x="6" y="11" width="6.5" height="5.5" rx=".6" fill="#ffe9a8" opacity=".85"/><rect x="14.5" y="11" width="4" height="9" rx=".6" fill="#3a1e0e"/></symbol>
+    <symbol id="bbi-rocker" viewBox="0 0 24 24"><path d="M3 19.5 Q12 24 21 19.5" stroke="#7c4a22" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M7.5 2.5 L8.3 13.5 H16 M16 13.5 L17 19 M8.3 13.5 L6.8 19" stroke="#7c4a22" stroke-width="1.9" fill="none" stroke-linecap="round"/><path d="M7.7 4.5 q3.5 -.8 6.3 0 M7.9 7 q3.3 -.7 6 0 M8.1 9.5 q3 -.6 5.7 0" stroke="#7c4a22" stroke-width="1.3" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="bbi-banjo" viewBox="0 0 24 24"><circle cx="9" cy="15" r="6" fill="#fdfaf4" stroke="#7c4a22" stroke-width="1.8"/><line x1="13.2" y1="10.8" x2="21" y2="3" stroke="#7c4a22" stroke-width="2.2" stroke-linecap="round"/><rect x="19.2" y="1.6" width="3.4" height="3.4" rx=".8" fill="#7c4a22"/><line x1="12.6" y1="11.4" x2="20.4" y2="3.6" stroke="#c4ae8f" stroke-width=".7"/><circle cx="9" cy="15" r="1.2" fill="#7c4a22"/></symbol>
+    <symbol id="bbi-barber" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="2.6" rx="1.3" fill="#e8b830"/><rect x="8" y="19.4" width="8" height="2.6" rx="1.3" fill="#e8b830"/><rect x="9" y="4.6" width="6" height="14.8" fill="#fdfaf4" stroke="#c4ae8f" stroke-width=".6"/><path d="M9 8.5 l6 -3 v2.6 l-6 3 Z" fill="#a63220"/><path d="M9 13.5 l6 -3 v2.6 l-6 3 Z" fill="#3a6e9e"/><path d="M9 17.2 l6 -3 v2.2 l-6 3 Z" fill="#a63220"/></symbol>
+    <symbol id="bbi-tomato" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="8" fill="#a63220"/><path d="M12 5.5 q-.6 -2 1.2 -3" stroke="#3d6b3a" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M12 6 L8.5 4.5 L11 7 L7 7.5 L10.6 9 L12 6 L15.5 4.5 L13 7 L17 7.5 L13.4 9 Z" fill="#3d6b3a"/><ellipse cx="9" cy="10.5" rx="1.8" ry="1" fill="#fdfaf4" opacity=".35" transform="rotate(-25 9 10.5)"/></symbol>
+    <symbol id="bbi-can" viewBox="0 0 24 24"><rect x="7" y="9" width="10" height="10" rx="2" fill="#3d6b3a"/><path d="M7.5 12 L2.5 7.5 L4.5 6 L9 10.5 Z" fill="#3d6b3a"/><circle cx="3.4" cy="6.6" r="1.7" fill="#2e5230"/><path d="M16.8 11 q4 .5 3.4 5 q-.3 2.2 -2.4 2.6" stroke="#2e5230" stroke-width="1.6" fill="none"/><path d="M9 9 q3 -2.6 6 0" stroke="#2e5230" stroke-width="1.6" fill="none"/><circle cx="1.8" cy="3.6" r=".8" fill="#3a6e9e"/><circle cx="3.6" cy="2.2" r=".8" fill="#3a6e9e"/><circle cx="5" cy="4.2" r=".7" fill="#3a6e9e"/></symbol>
+  </defs>
+</svg>
+
+<!-- ════════════════════════════════
      AUTH OVERLAY
 ════════════════════════════════ -->
 <div id="auth-overlay">
   <div class="auth-card">
     <div class="auth-logo">
-      <img src="https://bellbucklechamber.com/wp-content/uploads/2022/02/quilt-square-300x300.png"
-           alt="Bell Buckle" onerror="this.style.display='none'">
+      <svg viewBox="0 0 48 66" width="46" height="63" style="display:block;margin:0 auto 10px" aria-label="Bell and buckle">
+        <!-- strap through the buckle -->
+        <rect x="21" y="0" width="6" height="9" rx="1" fill="#7c4a22"/>
+        <rect x="14" y="7" width="20" height="14" rx="4.5" fill="none" stroke="#e8b830" stroke-width="3.4"/>
+        <line x1="24" y1="9" x2="24" y2="16" stroke="#e8b830" stroke-width="2.4" stroke-linecap="round"/>
+        <rect x="21" y="19" width="6" height="8" rx="1" fill="#7c4a22"/>
+        <!-- bell hanging beneath -->
+        <path d="M24 26 Q13 28 12.5 44 L9.5 48.5 Q24 53 38.5 48.5 L35.5 44 Q35 28 24 26 Z"
+              fill="#c8702a" stroke="#7c2018" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M17 31 Q15.5 36 15.5 42" fill="none" stroke="rgba(255,235,190,.55)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="24" cy="53.5" r="3.6" fill="#2a1f10"/>
+      </svg>
       <h1>Bell Buckle</h1>
       <p>Connect</p>
       <small>Bell Buckle, Tennessee · Est. 1852</small>
@@ -430,7 +610,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
            style="margin-bottom:14px" onkeydown="if(event.key==='Enter')doSignIn()">
     <button class="auth-btn auth-btn-primary" onclick="doSignIn()">Sign In</button>
     <button class="auth-btn auth-btn-outline" onclick="doSignUp()">Create Account</button>
-    <p style="text-align:center;color:var(--ink-lt);font-size:11px;margin-top:14px">Community members only · Bell Buckle, TN</p>
+    <button class="auth-guest" onclick="enterGuestMode()">👀 Just visiting? Take a look around →</button>
+    <p style="text-align:center;color:var(--ink-lt);font-size:11px;margin-top:12px">Community members only · Bell Buckle, TN</p>
   </div>
 </div>
 
@@ -442,8 +623,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
   <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
     <div class="sb-brand">
-      <img src="https://bellbucklechamber.com/wp-content/uploads/2022/02/quilt-square-300x300.png"
-           alt="Quilt" onerror="this.style.display='none'">
+      <svg viewBox="0 0 48 66" width="28" height="38" style="flex-shrink:0" aria-label="Bell and buckle">
+        <rect x="21" y="0" width="6" height="9" rx="1" fill="#7c4a22"/>
+        <rect x="14" y="7" width="20" height="14" rx="4.5" fill="none" stroke="#e8b830" stroke-width="3.4"/>
+        <line x1="24" y1="9" x2="24" y2="16" stroke="#e8b830" stroke-width="2.4" stroke-linecap="round"/>
+        <rect x="21" y="19" width="6" height="8" rx="1" fill="#7c4a22"/>
+        <path d="M24 26 Q13 28 12.5 44 L9.5 48.5 Q24 53 38.5 48.5 L35.5 44 Q35 28 24 26 Z"
+              fill="#c8702a" stroke="#7c2018" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M17 31 Q15.5 36 15.5 42" fill="none" stroke="rgba(255,235,190,.55)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="24" cy="53.5" r="3.6" fill="#2a1f10"/>
+      </svg>
       <div class="sb-brand-text">
         <div class="sb-brand-name">Bell Buckle</div>
         <div class="sb-brand-sub">Connect</div>
@@ -453,7 +642,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
     <div class="sb-user">
       <div class="sb-avatar"><span id="sb-initial">?</span></div>
       <div class="sb-user-email" id="sb-email">Loading…</div>
-      <button class="sb-signout" onclick="auth.signOut()">Sign out</button>
+      <button class="sb-signout" id="sb-signout" onclick="leaveApp()">Sign out</button>
     </div>
 
     <nav class="sb-nav">
@@ -462,18 +651,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
       <button class="nav-item" onclick="nav('community')" data-s="community"><span class="nav-icon">📋</span> Community Board</button>
       <button class="nav-item" onclick="nav('events')" data-s="events"><span class="nav-icon">🗓️</span> Events</button>
       <button class="nav-item" onclick="nav('lostfound')" data-s="lostfound"><span class="nav-icon">🔍</span> Lost &amp; Found</button>
-      <button class="nav-item" onclick="nav('marketplace')" data-s="marketplace"><span class="nav-icon">🛍️</span> Marketplace</button>
+      <button class="nav-item" onclick="nav('marketplace')" data-s="marketplace"><span class="nav-icon">🛍️</span> Trading Post</button>
 
       <div class="sb-section-label">Bell Buckle</div>
       <button class="nav-item" onclick="nav('history')" data-s="history"><span class="nav-icon">📜</span> Our History</button>
+      <button class="nav-item" onclick="nav('garden')" data-s="garden"><span class="nav-icon">🌱</span> Community Garden</button>
+      <button class="nav-item" onclick="nav('beecity')" data-s="beecity"><span class="nav-icon">🐝</span> Bee City</button>
+      <button class="nav-item" onclick="nav('biz')" data-s="biz"><span class="nav-icon">🏪</span> Local Businesses</button>
       <button class="nav-item" onclick="nav('giveback')" data-s="giveback"><span class="nav-icon">❤️</span> Give Back</button>
 
-      <div class="sb-section-label">Chat</div>
+      <div class="sb-section-label">Just for Fun</div>
+      <button class="nav-item" onclick="nav('kids')" data-s="kids"><span class="nav-icon">🖍️</span> Kids Corner</button>
+
+      <div class="sb-section-label">🚂 The Depot · Chat</div>
       <div id="channel-list"></div>
     </nav>
 
     <div class="sb-footer">
-      <p>"Close to home, but a world away"<br>Bell Buckle, TN · Est. 1852<br>Mark Ethan Designs</p>
+      <svg class="bb-icon anim-swing" style="width:18px;height:18px;display:block;margin:0 auto 6px;opacity:.8"><use href="#bbi-bell"/></svg>
+      <p style="text-align:center">"Close to home, but a world away"<br>Bell Buckle, TN · Est. 1852<br>Mark Ethan Designs</p>
     </div>
   </aside>
 
@@ -542,52 +738,116 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 
       <!-- Train -->
       <div class="train-ride">
-        <svg viewBox="0 0 300 28" height="28" style="display:block">
-          <!-- Caboose -->
-          <rect x="82" y="3" width="18" height="9" rx="1.5" fill="#a63220"/>
-          <rect x="80" y="10" width="40" height="4" rx="1.5" fill="#3a1e0e"/>
-          <rect x="78" y="14" width="44" height="10" rx="2" fill="#7c2018"/>
-          <rect x="80" y="15" width="40" height="8" rx="1.5" fill="#a63220"/>
-          <rect x="84" y="16" width="8" height="5" rx="1" fill="rgba(255,220,100,.45)"/>
-          <rect x="96" y="16" width="8" height="5" rx="1" fill="rgba(255,220,100,.45)"/>
-          <rect x="108" y="16" width="8" height="5" rx="1" fill="rgba(255,220,100,.45)"/>
-          <circle cx="86" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
-          <circle cx="86" cy="25" r="1.5" fill="#3a1e0e"/>
-          <circle cx="114" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
-          <circle cx="114" cy="25" r="1.5" fill="#3a1e0e"/>
-          <!-- Freight car -->
-          <rect x="125" y="12" width="60" height="12" rx="1.5" fill="#4a7844"/>
-          <rect x="127" y="14" width="56" height="8" rx="1" fill="#3d6b3a"/>
-          <rect x="130" y="15" width="10" height="6" rx=".5" fill="rgba(0,0,0,.25)"/>
-          <rect x="145" y="15" width="10" height="6" rx=".5" fill="rgba(0,0,0,.25)"/>
-          <rect x="160" y="15" width="10" height="6" rx=".5" fill="rgba(0,0,0,.25)"/>
-          <circle cx="132" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
-          <circle cx="132" cy="25" r="1.5" fill="#3a1e0e"/>
-          <circle cx="178" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
-          <circle cx="178" cy="25" r="1.5" fill="#3a1e0e"/>
+        <svg viewBox="0 0 344 34" height="32" style="display:block">
+          <!-- Caboose — the red one downtown, cupola and all -->
+          <rect x="22" y="2.5" width="20" height="3" rx="1.5" fill="#2a1408"/>
+          <rect x="24" y="5" width="16" height="7" fill="#a63220" stroke="#7c2018" stroke-width="1"/>
+          <rect x="26.5" y="6.5" width="4.5" height="3.5" rx=".5" fill="#ffe9a8" opacity=".85"/>
+          <rect x="33" y="6.5" width="4.5" height="3.5" rx=".5" fill="#ffe9a8" opacity=".85"/>
+          <rect x="12" y="6" width="3" height="6" fill="#1a0e06"/>
+          <rect x="2" y="11" width="60" height="3" rx="1.5" fill="#2a1408"/>
+          <rect x="4" y="13" width="56" height="12" fill="#a63220" stroke="#7c2018" stroke-width="1"/>
+          <rect x="10" y="15.5" width="6" height="5" rx=".8" fill="#ffe9a8" opacity=".85"/>
+          <rect x="48" y="15.5" width="6" height="5" rx=".8" fill="#ffe9a8" opacity=".85"/>
+          <rect x="4" y="22.4" width="56" height="1.4" fill="#e8b830" opacity=".9"/>
+          <rect x="60" y="24" width="10" height="2.2" fill="#1a0e06"/>
+          <g class="tw"><circle cx="12" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="12" y1="25.6" x2="12" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="9.1" y1="28.5" x2="14.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="22" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="22" y1="25.6" x2="22" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="19.1" y1="28.5" x2="24.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="42" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="42" y1="25.6" x2="42" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="39.1" y1="28.5" x2="44.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="52" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="52" y1="25.6" x2="52" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="49.1" y1="28.5" x2="54.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <!-- Boxcar -->
+          <rect x="70" y="10" width="72" height="2.6" rx="1.3" fill="#24401f"/>
+          <rect x="72" y="12" width="68" height="13" fill="#3d6b3a" stroke="#2e5230" stroke-width="1"/>
+          <rect x="96" y="13" width="19" height="1.2" fill="#1a0e06" opacity=".5"/>
+          <rect x="98" y="14.2" width="15" height="10.8" fill="#2e5230"/>
+          <rect x="79" y="14" width="1" height="11" fill="rgba(0,0,0,.15)"/>
+          <rect x="87" y="14" width="1" height="11" fill="rgba(0,0,0,.15)"/>
+          <rect x="122" y="14" width="1" height="11" fill="rgba(0,0,0,.15)"/>
+          <rect x="130" y="14" width="1" height="11" fill="rgba(0,0,0,.15)"/>
+          <rect x="140" y="24" width="8" height="2.2" fill="#1a0e06"/>
+          <g class="tw"><circle cx="80" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="80" y1="25.6" x2="80" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="77.1" y1="28.5" x2="82.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="90" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="90" y1="25.6" x2="90" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="87.1" y1="28.5" x2="92.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="122" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="122" y1="25.6" x2="122" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="119.1" y1="28.5" x2="124.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="132" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="132" y1="25.6" x2="132" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="129.1" y1="28.5" x2="134.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <!-- Tender -->
+          <rect x="148" y="13" width="44" height="12" rx="1" fill="#2c1a0e" stroke="#1a0e06" stroke-width="1"/>
+          <path d="M150 13 Q156 9 162 12 Q168 8.5 174 12 Q181 9 190 13 Z" fill="#1a0e06"/>
+          <rect x="148" y="22.4" width="44" height="1.2" fill="#e8b830" opacity=".55"/>
+          <rect x="192" y="24" width="8" height="2.2" fill="#1a0e06"/>
+          <g class="tw"><circle cx="157" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="157" y1="25.6" x2="157" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="154.1" y1="28.5" x2="159.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="183" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="183" y1="25.6" x2="183" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="180.1" y1="28.5" x2="185.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
           <!-- Locomotive -->
-          <rect x="192" y="8" width="20" height="6" rx="1" fill="#3a1e0e"/>
-          <rect x="189" y="10" width="90" height="4" rx="1" fill="#1a0e06"/>
-          <rect x="186" y="14" width="96" height="10" rx="2" fill="#2c1a0e"/>
-          <rect x="188" y="15" width="92" height="8" rx="1.5" fill="#3a1e0e"/>
-          <rect x="250" y="10" width="35" height="14" rx="2" fill="#3a1e0e"/>
-          <rect x="252" y="12" width="31" height="10" rx="1.5" fill="#4a2a18"/>
-          <rect x="254" y="13" width="11" height="7" rx="1" fill="rgba(255,220,100,.5)"/>
-          <rect x="268" y="13" width="11" height="7" rx="1" fill="rgba(255,220,100,.5)"/>
-          <circle cx="280" cy="10" r="5" fill="#2c1a0e" stroke="#6a4020" stroke-width="1"/>
-          <circle cx="280" cy="10" r="3" fill="#1a0e06"/>
-          <rect x="282" y="5" width="5" height="6" rx="1" fill="#1a0e06"/>
-          <circle cx="196" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
-          <circle cx="196" cy="25" r="1.5" fill="#3a1e0e"/>
-          <circle cx="240" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
-          <circle cx="240" cy="25" r="1.5" fill="#3a1e0e"/>
-          <circle cx="270" cy="25" r="3.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.5"/>
-          <circle cx="270" cy="25" r="1.5" fill="#3a1e0e"/>
+          <rect x="198" y="4.5" width="40" height="3" rx="1.5" fill="#1a0e06"/>
+          <rect x="201" y="7" width="34" height="18" fill="#3a1e0e" stroke="#2a1408" stroke-width="1"/>
+          <rect x="207" y="10" width="11" height="8" rx="1" fill="#ffe9a8" opacity=".75"/>
+          <rect x="201" y="22.4" width="34" height="1.4" fill="#e8b830" opacity=".8"/>
+          <rect x="235" y="11" width="80" height="14" rx="6.5" fill="#2c1a0e" stroke="#1a0e06" stroke-width="1"/>
+          <rect x="252" y="11" width="1.6" height="14" fill="#e8b830" opacity=".45"/>
+          <rect x="272" y="11" width="1.6" height="14" fill="#e8b830" opacity=".45"/>
+          <rect x="292" y="11" width="1.6" height="14" fill="#e8b830" opacity=".45"/>
+          <path d="M262 11 q0 -5 6 -5 q6 0 6 5 Z" fill="#3a1e0e"/>
+          <path d="M283.5 6 c-1.8 .4 -2.1 2.2 -2.1 3.4 l-.9 1.1 q3 1.2 6 0 l-.9 -1.1 c0 -1.2 -.3 -3 -2.1 -3.4 Z" fill="#e8b830"/>
+          <circle cx="283.5" cy="11" r=".8" fill="#2a1f10"/>
+          <path d="M301 1.5 h11 l-2 4.5 h-7 Z" fill="#1a0e06"/>
+          <rect x="304" y="6" width="5" height="6" fill="#1a0e06"/>
+          <rect x="312" y="6.5" width="8" height="6" rx="1" fill="#2a1408"/>
+          <circle cx="319" cy="9.5" r="1.8" fill="#ffe9a8"/>
+          <circle cx="316" cy="18" r="7" fill="#1a0e06" stroke="#6a4020" stroke-width="1"/>
+          <circle cx="316" cy="18" r="3" fill="#3a1e0e"/>
+          <path d="M320 24 L338 31.5 L320 31.5 Z" fill="#2a1408"/>
+          <line x1="324" y1="25.6" x2="330" y2="31.5" stroke="#6a4020" stroke-width="1"/>
+          <g class="tw"><circle cx="208" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="208" y1="25.6" x2="208" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="205.1" y1="28.5" x2="210.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="222" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="222" y1="25.6" x2="222" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="219.1" y1="28.5" x2="224.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="246" cy="26.5" r="5.8" fill="#1a0e06" stroke="#8a6030" stroke-width="1.6"/><line x1="246" y1="21.4" x2="246" y2="31.6" stroke="#8a6030" stroke-width="1.2"/><line x1="240.9" y1="26.5" x2="251.1" y2="26.5" stroke="#8a6030" stroke-width="1.2"/><circle cx="246" cy="26.5" r="1.4" fill="#8a6030"/></g>
+          <g class="tw"><circle cx="266" cy="26.5" r="5.8" fill="#1a0e06" stroke="#8a6030" stroke-width="1.6"/><line x1="266" y1="21.4" x2="266" y2="31.6" stroke="#8a6030" stroke-width="1.2"/><line x1="260.9" y1="26.5" x2="271.1" y2="26.5" stroke="#8a6030" stroke-width="1.2"/><circle cx="266" cy="26.5" r="1.4" fill="#8a6030"/></g>
+          <rect x="240" y="25.6" width="32" height="1.8" rx=".9" fill="#8a6030" opacity=".85"/>
+          <g class="tw"><circle cx="296" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="296" y1="25.6" x2="296" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="293.1" y1="28.5" x2="298.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="308" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="308" y1="25.6" x2="308" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="305.1" y1="28.5" x2="310.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
         </svg>
+        <!-- Steam from the smokestack, rides with the engine -->
+        <div class="steam"><span></span><span></span><span></span></div>
       </div>
 
-      <!-- Steam from engine -->
-      <div class="steam"><span></span><span></span><span></span></div>
+      <!-- Daffodils along the tracks (Sawney Webb's bulbs) -->
+      <div class="daffodil" style="left:310px">
+        <svg viewBox="0 0 16 26" width="13" height="21">
+          <path d="M8 26 Q8 17 8 10" fill="none" stroke="#3d6b3a" stroke-width="1.6"/>
+          <path d="M8 22 Q3 20 2 15" fill="none" stroke="#3d6b3a" stroke-width="1.4"/>
+          <g>
+            <ellipse cx="8" cy="3.5" rx="2" ry="3.2" fill="#f5d33f"/>
+            <ellipse cx="8" cy="10.5" rx="2" ry="3.2" fill="#f5d33f"/>
+            <ellipse cx="4.5" cy="7" rx="3.2" ry="2" fill="#f5d33f"/>
+            <ellipse cx="11.5" cy="7" rx="3.2" ry="2" fill="#f5d33f"/>
+            <circle cx="8" cy="7" r="2.4" fill="#c8702a"/>
+          </g>
+        </svg>
+      </div>
+      <div class="daffodil d2" style="left:52%">
+        <svg viewBox="0 0 16 26" width="12" height="20">
+          <path d="M8 26 Q8 17 8 10" fill="none" stroke="#3d6b3a" stroke-width="1.6"/>
+          <path d="M8 22 Q13 20 14 15" fill="none" stroke="#3d6b3a" stroke-width="1.4"/>
+          <g>
+            <ellipse cx="8" cy="3.5" rx="2" ry="3.2" fill="#f5d33f"/>
+            <ellipse cx="8" cy="10.5" rx="2" ry="3.2" fill="#f5d33f"/>
+            <ellipse cx="4.5" cy="7" rx="3.2" ry="2" fill="#f5d33f"/>
+            <ellipse cx="11.5" cy="7" rx="3.2" ry="2" fill="#f5d33f"/>
+            <circle cx="8" cy="7" r="2.4" fill="#c8702a"/>
+          </g>
+        </svg>
+      </div>
+      <div class="daffodil d3" style="left:79%">
+        <svg viewBox="0 0 16 26" width="13" height="22">
+          <path d="M8 26 Q8 17 8 10" fill="none" stroke="#3d6b3a" stroke-width="1.6"/>
+          <path d="M8 22 Q3 20 2 15" fill="none" stroke="#3d6b3a" stroke-width="1.4"/>
+          <g>
+            <ellipse cx="8" cy="3.5" rx="2" ry="3.2" fill="#f5d33f"/>
+            <ellipse cx="8" cy="10.5" rx="2" ry="3.2" fill="#f5d33f"/>
+            <ellipse cx="4.5" cy="7" rx="3.2" ry="2" fill="#f5d33f"/>
+            <ellipse cx="11.5" cy="7" rx="3.2" ry="2" fill="#f5d33f"/>
+            <circle cx="8" cy="7" r="2.4" fill="#c8702a"/>
+          </g>
+        </svg>
+      </div>
 
       <!-- Right: page info + actions -->
       <div class="topbar-right">
@@ -602,6 +862,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
         </div>
       </div>
     </div><!-- /topbar -->
+
+    <!-- Quilt Walk divider -->
+    <div class="quilt-strip"></div>
 
     <!-- SCREENS -->
     <div class="canvas">
@@ -618,7 +881,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
             <div class="home-hero-text">
               <div class="home-hero-eyebrow">Est. 1852 · Bedford County, Tennessee</div>
               <div class="home-hero-title">Bell Buckle</div>
-              <div class="home-hero-sub">Your community, connected.</div>
+              <div class="home-hero-sub" id="hero-greet">Your community, connected.</div>
             </div>
           </div>
 
@@ -637,7 +900,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
             <div class="action-card" onclick="switchChan('general')"><div class="action-emoji">💬</div><div class="action-label">Chat</div></div>
             <div class="action-card" onclick="nav('lostfound')"><div class="action-emoji">🔍</div><div class="action-label">Lost &amp; Found</div></div>
             <div class="action-card" onclick="nav('history')"><div class="action-emoji">📜</div><div class="action-label">Our History</div></div>
-            <div class="action-card" onclick="nav('marketplace')"><div class="action-emoji">🛍️</div><div class="action-label">Marketplace</div></div>
+            <div class="action-card" onclick="nav('marketplace')"><div class="action-emoji">🛍️</div><div class="action-label">Trading Post</div></div>
+            <div class="action-card" onclick="nav('garden')"><div class="action-emoji">🌱</div><div class="action-label">Community Garden</div></div>
+            <div class="action-card" onclick="nav('beecity')"><div class="action-emoji">🐝</div><div class="action-label">Bee City</div></div>
+            <div class="action-card" onclick="nav('kids')"><div class="action-emoji">🖍️</div><div class="action-label">Kids Corner</div></div>
           </div>
 
           <!-- Featured event -->
@@ -645,7 +911,33 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
             <div class="featured-label">🎉 Featured Event</div>
             <div class="featured-title">RC Cola &amp; Moon Pie Festival</div>
             <div class="featured-sub">June 20, 2026 · Downtown Bell Buckle · Free Admission</div>
+            <div class="fest-countdown" id="fest-countdown"></div>
             <div class="featured-desc">The South's quirkiest festival returns — live music, Moon Pie contests, local vendors, and small-town magic.</div>
+          </div>
+
+          <!-- Town parade — the Bell Buckle icon set on display -->
+          <div class="parade">
+            <div class="parade-label">Bell Buckle, Through &amp; Through</div>
+            <svg class="bb-icon anim-swing"><use href="#bbi-bell"/></svg>
+            <svg class="bb-icon anim-swing" style="animation-delay:.6s"><use href="#bbi-buckle"/></svg>
+            <svg class="bb-icon anim-chug"><use href="#bbi-train"/></svg>
+            <svg class="bb-icon anim-chug" style="animation-delay:.35s"><use href="#bbi-caboose"/></svg>
+            <svg class="bb-icon"><use href="#bbi-tracks"/></svg>
+            <svg class="bb-icon"><use href="#bbi-depot"/></svg>
+            <svg class="bb-icon anim-bob"><use href="#bbi-moonpie"/></svg>
+            <svg class="bb-icon anim-bob" style="animation-delay:.7s"><use href="#bbi-cola"/></svg>
+            <svg class="bb-icon anim-sway"><use href="#bbi-daffodil"/></svg>
+            <svg class="bb-icon anim-buzz"><use href="#bbi-bee"/></svg>
+            <svg class="bb-icon anim-bob" style="animation-delay:1.2s"><use href="#bbi-hive"/></svg>
+            <svg class="bb-icon anim-flutter"><use href="#bbi-butterfly"/></svg>
+            <svg class="bb-icon anim-spin-slow"><use href="#bbi-quilt"/></svg>
+            <svg class="bb-icon"><use href="#bbi-steeple"/></svg>
+            <svg class="bb-icon"><use href="#bbi-store"/></svg>
+            <svg class="bb-icon anim-rock"><use href="#bbi-rocker"/></svg>
+            <svg class="bb-icon anim-sway" style="animation-delay:1.5s"><use href="#bbi-banjo"/></svg>
+            <svg class="bb-icon anim-bob" style="animation-delay:.3s"><use href="#bbi-barber"/></svg>
+            <svg class="bb-icon anim-bob" style="animation-delay:1s"><use href="#bbi-tomato"/></svg>
+            <svg class="bb-icon anim-rock" style="animation-delay:.9s"><use href="#bbi-can"/></svg>
           </div>
 
           <!-- Recent board posts -->
@@ -658,7 +950,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
       </div>
 
       <!-- ══════ COMMUNITY BOARD ══════ -->
-      <div class="screen" id="screen-community">
+      <div class="screen guest-lockable" id="screen-community">
         <div class="p20 max-w">
           <div class="page-header" style="padding:0 0 16px">
             <h2>Community Board</h2>
@@ -682,10 +974,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 
           <div id="community-feed"><div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px 0">Loading posts…</div></div>
         </div>
+        <div class="guest-veil">
+          <div class="veil-card">
+            <div class="veil-emoji">🔒</div>
+            <div class="veil-title">Neighbors Only</div>
+            <div class="veil-sub">The Community Board is where Bell Buckle shares news, asks for help, and looks out for each other. Create a free account to join your neighbors.</div>
+            <button class="auth-btn auth-btn-primary" onclick="leaveApp()">Sign In / Create Account</button>
+          </div>
+        </div>
       </div>
 
       <!-- ══════ CHAT ══════ -->
-      <div class="screen-dark" id="screen-chat">
+      <div class="screen-dark guest-lockable" id="screen-chat">
         <!-- Channel header -->
         <div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px;flex-shrink:0">
           <span id="chat-ch-name" style="color:#fff;font-weight:600;font-size:14px"># general</span>
@@ -708,6 +1008,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
                      onkeydown="if(event.key==='Enter')sendMsg()">
               <button onclick="sendMsg()" style="background:var(--red);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
             </div>
+          </div>
+        </div>
+        <div class="guest-veil">
+          <div class="veil-card">
+            <div class="veil-emoji">🚂</div>
+            <div class="veil-title">The Depot is for Neighbors</div>
+            <div class="veil-sub">Eight live chat channels where Bell Buckle catches up — general talk, events, local business, weather alerts &amp; more. Create a free account to join the conversation.</div>
+            <button class="auth-btn auth-btn-primary" onclick="leaveApp()">Sign In / Create Account</button>
           </div>
         </div>
       </div>
@@ -934,6 +1242,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 
             <!-- ── Tab 1: Chapter Spotlights ── -->
             <div id="htab-chapters" class="h-tab-content active" style="padding:18px 20px;">
+
+              <img src="banner.webp" alt="Bell Buckle — a bell and a buckle"
+                   style="width:100%;border-radius:12px;border:1px solid var(--wire-lt);margin-bottom:6px;display:block;box-shadow:var(--shadow)"
+                   onerror="this.style.display='none'">
+              <p style="font-size:11px;color:var(--ink-lt);font-style:italic;text-align:center;margin-bottom:16px">
+                The legend itself — a bell and a buckle, found carved by the creek. That's how a town gets a name.
+              </p>
 
               <div class="chapter-card">
                 <img class="chapter-img" src="https://bellbucklewalkingtour.weebly.com/uploads/2/4/9/5/24957454/33777.jpg" alt="Railroad Square" onerror="this.src='';this.style.background='#c4ae8f'">
@@ -1222,8 +1537,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
       <div class="screen" id="screen-marketplace">
         <div class="p20 max-w">
           <div class="page-header" style="padding:0 0 16px">
-            <h2>Marketplace</h2>
-            <p>Buy, sell &amp; trade with your neighbors</p>
+            <h2>Trading Post</h2>
+            <p>Buy, sell &amp; trade with your neighbors — general store style</p>
           </div>
 
           <div class="market-grid">
@@ -1238,6 +1553,400 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
         </div>
       </div>
 
+      <!-- ══════ COMMUNITY GARDEN ══════ -->
+      <div class="screen" id="screen-garden">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>🌱 Bell Buckle Community Garden</h2>
+            <p>Planted by neighbors, shared by everyone</p>
+          </div>
+
+          <!-- Welcome & directions -->
+          <div class="card" style="padding:18px;margin-bottom:16px">
+            <p style="font-size:13.5px;color:#44321e;line-height:1.65;margin-bottom:12px">
+              Tucked right out front of the Bell Buckle Dump, our community garden turns an unlikely corner of town into
+              the most generous patch of dirt in Bedford County. Neighbors plant it, neighbors tend it, and neighbors
+              eat from it — that's the whole idea. Whether you've got a green thumb or just a hungry family,
+              you're welcome here.
+            </p>
+            <div style="background:rgba(61,107,58,.08);border:1px solid rgba(61,107,58,.25);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--ink);line-height:1.6">
+              📍 <strong>Finding it:</strong> head for the Bell Buckle Dump — the garden beds are right out front.
+              If you can see the dump gate, you're there. Park along the drive and come say hi to the tomatoes.
+            </div>
+          </div>
+
+          <!-- Status board -->
+          <h3 class="serif" style="font-size:17px;color:var(--ink);margin-bottom:4px">🧑‍🌾 Garden Status Board</h3>
+          <p style="font-size:12px;color:var(--ink-lt);margin-bottom:10px">
+            Volunteers — keep the town posted! Share what's ripe, what's on the way, and what could use a hand.
+          </p>
+
+          <div class="compose-box" style="margin-bottom:14px">
+            <div style="display:flex;gap:8px;margin-bottom:10px">
+              <select id="gd-type" class="form-input" style="flex:0 0 175px">
+                <option value="ripe">🍅 Ripe &amp; Ready</option>
+                <option value="soon">🌱 Coming Soon</option>
+                <option value="care">💧 Needs Some Love</option>
+              </select>
+              <input id="gd-text" class="form-input" style="flex:1" placeholder="e.g. Cherry tomatoes are ready on the south bed!">
+            </div>
+            <input id="gd-img" class="form-input" placeholder="Photo URL (optional — show off that harvest!)" style="margin-bottom:10px">
+            <div style="text-align:right">
+              <button class="btn btn-red" onclick="submitGarden()">Post Update</button>
+            </div>
+          </div>
+
+          <div id="garden-feed"><div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">Loading garden updates…</div></div>
+
+          <!-- Guides -->
+          <h3 class="serif" style="font-size:17px;color:var(--ink);margin:20px 0 4px">🌻 Garden Manners &amp; How to Help</h3>
+          <div class="guide-grid">
+            <div class="guide-card">
+              <h4>🧺 Picking with Care</h4>
+              <ul>
+                <li>Take what your family will eat — leave plenty for the next neighbor</li>
+                <li>Harvest gently: hold the vine with one hand, pick with the other</li>
+                <li>Not sure it's ripe? Check the status board above</li>
+                <li>Pull a weed while you're there — the garden says thank you</li>
+              </ul>
+            </div>
+            <div class="guide-card">
+              <h4>🙋 Lend a Hand</h4>
+              <ul>
+                <li>No sign-up needed — just show up with gloves</li>
+                <li>Watering, weeding, planting: every little bit helps</li>
+                <li>Done a chore? Post it on the status board so folks know</li>
+                <li>Bring the kids — little hands grow big gardeners</li>
+              </ul>
+            </div>
+            <div class="guide-card">
+              <h4>🎁 Giving Back</h4>
+              <ul>
+                <li>Extra seeds, starts, soil, or tools are always welcome</li>
+                <li>Leave donations by the tool box at the garden</li>
+                <li>Something big to give? Post on the Community Board and we'll holler</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ BEE CITY ══════ -->
+      <div class="screen" id="screen-beecity">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>🐝 Bee City Bell Buckle</h2>
+            <p>A pollinator paradise, one yard at a time</p>
+          </div>
+
+          <!-- What is Bee City -->
+          <div style="background:linear-gradient(135deg,#3a2a08,#5e4512);border-radius:10px;padding:18px 20px;margin-bottom:14px;color:#fff;position:relative;overflow:hidden">
+            <div style="position:absolute;right:-15px;top:-15px;width:90px;height:90px;border-radius:50%;background:rgba(232,184,48,.12)"></div>
+            <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-weight:700">🐝 Bee City USA Affiliate</div>
+            <div class="serif" style="font-size:19px;font-weight:700;margin-bottom:6px">What's a Bee City?</div>
+            <div style="font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.65">
+              Bee City USA is a nationwide promise: towns that sign on commit to making life better for the bees,
+              butterflies, hummingbirds, and moths that keep gardens growing and farms producing. Bell Buckle is a
+              proud affiliate — for a town with a community garden, a farmers market, and daffodils down every road,
+              taking care of pollinators is just taking care of ourselves.
+            </div>
+          </div>
+
+          <!-- Why it matters -->
+          <div class="stats-row" style="margin:0 0 16px">
+            <div class="stat-pill"><div class="stat-num">1 in 3</div><div class="stat-lbl">bites of food needs a pollinator</div></div>
+            <div class="stat-pill"><div class="stat-num">3,600+</div><div class="stat-lbl">native bee species in North America</div></div>
+            <div class="stat-pill"><div class="stat-num">75%</div><div class="stat-lbl">of flowering plants rely on pollinators</div></div>
+          </div>
+
+          <!-- What to plant -->
+          <div class="card" style="padding:18px;margin-bottom:14px">
+            <h3 class="serif" style="font-size:17px;color:var(--ink);margin-bottom:4px">🌸 What to Plant in Bell Buckle</h3>
+            <p style="font-size:12px;color:var(--ink-lt);margin-bottom:12px">
+              Tennessee natives are the best meal in town for our pollinators. Pick a season — plant a few from each
+              and you'll have blooms (and bees) from thaw to frost.
+            </p>
+            <div class="season-tabs">
+              <button class="season-btn active" data-season="spring" onclick="switchSeason('spring')">🌷 Spring</button>
+              <button class="season-btn" data-season="summer" onclick="switchSeason('summer')">☀️ Summer</button>
+              <button class="season-btn" data-season="fall" onclick="switchSeason('fall')">🍂 Fall</button>
+            </div>
+            <div class="season-panel active" id="season-spring">
+              <span class="plant-chip">🌳 Eastern Redbud</span>
+              <span class="plant-chip">🌼 Golden Alexander</span>
+              <span class="plant-chip">🌸 Wild Columbine</span>
+              <span class="plant-chip">💜 Woodland Phlox</span>
+              <span class="plant-chip">🌼 Lanceleaf Coreopsis</span>
+              <span class="plant-chip">🍓 Wild Strawberry</span>
+            </div>
+            <div class="season-panel" id="season-summer">
+              <span class="plant-chip">💜 Purple Coneflower</span>
+              <span class="plant-chip">🌻 Black-Eyed Susan</span>
+              <span class="plant-chip">🐝 Bee Balm</span>
+              <span class="plant-chip">🦋 Butterfly Milkweed</span>
+              <span class="plant-chip">🌿 Mountain Mint</span>
+              <span class="plant-chip">🌻 Sunflowers</span>
+            </div>
+            <div class="season-panel" id="season-fall">
+              <span class="plant-chip">💜 New England Aster</span>
+              <span class="plant-chip">💛 Goldenrod</span>
+              <span class="plant-chip">🌸 Joe-Pye Weed</span>
+              <span class="plant-chip">💜 Ironweed</span>
+              <span class="plant-chip">🌺 Autumn Sedum</span>
+            </div>
+          </div>
+
+          <!-- Habitat tips -->
+          <div class="card" style="padding:18px;margin-bottom:16px">
+            <h3 class="serif" style="font-size:17px;color:var(--ink);margin-bottom:8px">🏡 Make Your Yard a Pollinator B&amp;B</h3>
+            <ul class="tip-list">
+              <li>Plant in clumps of three or more — easier for bees to find than singles</li>
+              <li>Aim for something blooming spring through fall</li>
+              <li>Skip the pesticides, especially while plants are flowering</li>
+              <li>Leave a sunny patch of bare dirt — most native bees nest in the ground</li>
+              <li>Leave the leaves and dead stems over winter — that's where pollinators sleep</li>
+              <li>Set out a shallow dish of water with pebbles for landing spots</li>
+              <li>Mow a little less and let the clover bloom — the bees will thank you</li>
+            </ul>
+          </div>
+
+          <!-- Buzz board -->
+          <h3 class="serif" style="font-size:17px;color:var(--ink);margin-bottom:4px">📣 The Buzz Board</h3>
+          <p style="font-size:12px;color:var(--ink-lt);margin-bottom:10px">
+            Spotted a monarch? Planted a pollinator patch? Got a plant the bees can't resist? Share it with the town!
+          </p>
+
+          <div class="compose-box" style="margin-bottom:14px">
+            <div style="display:flex;gap:8px;margin-bottom:10px">
+              <select id="bz-type" class="form-input" style="flex:0 0 185px">
+                <option value="sighting">🐝 Pollinator Sighting</option>
+                <option value="photo">📸 Garden Photo</option>
+                <option value="tip">🌸 Plant Tip</option>
+              </select>
+              <input id="bz-text" class="form-input" style="flex:1" placeholder="e.g. Monarchs on the milkweed by the depot this morning!">
+            </div>
+            <input id="bz-img" class="form-input" placeholder="Photo URL (optional)" style="margin-bottom:10px">
+            <div style="text-align:right">
+              <button class="btn btn-red" onclick="submitBuzz()">Share the Buzz</button>
+            </div>
+          </div>
+
+          <div id="buzz-feed"><div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">Loading the buzz…</div></div>
+        </div>
+      </div>
+
+      <!-- ══════ LOCAL BUSINESSES ══════ -->
+      <div class="screen" id="screen-biz">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 16px">
+            <h2>🏪 Local Businesses</h2>
+            <p>Shop small, shop Bell Buckle</p>
+          </div>
+
+          <div class="card" style="padding:16px 18px;margin-bottom:16px">
+            <p style="font-size:13px;color:#44321e;line-height:1.6">
+              Every dollar spent downtown keeps a porch light on in Bell Buckle. Here's who's keeping
+              our little town humming — and if you run a business, add yourself below so the
+              neighbors can find you. 🛎️
+            </p>
+          </div>
+
+          <h3 class="serif" style="font-size:16px;color:var(--ink);margin-bottom:10px">Downtown Favorites</h3>
+          <div class="biz-grid" style="margin-bottom:20px">
+            <div class="biz-card">
+              <div class="biz-emoji">☕</div>
+              <div><span class="gd-badge bc-eat">Eat &amp; Drink</span></div>
+              <div class="biz-name">Bell Buckle Café</div>
+              <div class="biz-desc">Live music on the porch, Southern plates done right, and the unofficial town hall. If you're looking for somebody, start here.</div>
+            </div>
+            <div class="biz-card">
+              <div class="biz-emoji">🛍️</div>
+              <div><span class="gd-badge bc-shop">Shops &amp; Antiques</span></div>
+              <div class="biz-name">Phillips General Store</div>
+              <div class="biz-desc">Victorian-era goods in a real Victorian storefront on Railroad Square — antiques, oddities, and a time machine with a cash register.</div>
+            </div>
+            <div class="biz-card">
+              <div class="biz-emoji">✂️</div>
+              <div><span class="gd-badge bc-serv">Services</span></div>
+              <div class="biz-name">Jason's Barber Shop</div>
+              <div class="biz-desc">A proper small-town barber shop — walk in a shaggy stranger, walk out a fresh-cut neighbor.</div>
+            </div>
+            <div class="biz-card">
+              <div class="biz-emoji">🎨</div>
+              <div><span class="gd-badge bc-art">Artists &amp; Makers</span></div>
+              <div class="biz-name">Russ Faxon Sculpture Studio</div>
+              <div class="biz-desc">World-renowned bronze sculptor working out of the old saloon across the tracks — the only building to survive the great fire.</div>
+            </div>
+          </div>
+
+          <h3 class="serif" style="font-size:16px;color:var(--ink);margin-bottom:4px">Added by Neighbors</h3>
+          <p style="font-size:12px;color:var(--ink-lt);margin-bottom:10px">
+            Run a shop, a service, or a side hustle? Put yourself on the map. Shop news belongs in the
+            <strong>#local-biz</strong> channel at the Depot, too.
+          </p>
+
+          <div class="compose-box" style="margin-bottom:14px">
+            <div style="display:flex;gap:8px;margin-bottom:10px">
+              <input id="biz-name" class="form-input" style="flex:1" placeholder="Business name">
+              <select id="biz-cat" class="form-input" style="flex:0 0 175px">
+                <option value="eat">☕ Eat &amp; Drink</option>
+                <option value="shop">🛍️ Shops &amp; Antiques</option>
+                <option value="serv">🧰 Services</option>
+                <option value="art">🎨 Artists &amp; Makers</option>
+                <option value="comm">🏛️ Community</option>
+              </select>
+            </div>
+            <textarea id="biz-desc" class="form-textarea" rows="2" placeholder="What do you do? What makes it special?" style="margin-bottom:10px"></textarea>
+            <input id="biz-contact" class="form-input" placeholder="Hours, phone, or where to find you (optional)" style="margin-bottom:10px">
+            <div style="text-align:right">
+              <button class="btn btn-red" onclick="submitBiz()">Add My Business</button>
+            </div>
+          </div>
+
+          <div id="biz-feed"><div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">Loading the directory…</div></div>
+        </div>
+      </div>
+
+      <!-- ══════ KIDS CORNER ══════ -->
+      <div class="screen" id="screen-kids">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 14px">
+            <h2>🖍️ Kids Corner</h2>
+            <p>Bell Buckle coloring pages — pick a crayon and tap to color!</p>
+          </div>
+
+          <div class="card" style="padding:16px 18px">
+            <div class="season-tabs">
+              <button class="season-btn active" data-cpage="mural" onclick="switchColoring('mural')">🗺️ Mural Map</button>
+              <button class="season-btn" data-cpage="muralwall" onclick="switchColoring('muralwall')">🖼️ The Mural</button>
+              <button class="season-btn" data-cpage="downtown" onclick="switchColoring('downtown')">🏪 Downtown</button>
+              <button class="season-btn" data-cpage="store" onclick="switchColoring('store')">🛍️ The Store</button>
+              <button class="season-btn" data-cpage="caboose" onclick="switchColoring('caboose')">🚃 Caboose</button>
+              <button class="season-btn" data-cpage="bell" onclick="switchColoring('bell')">🔔 Bell &amp; Buckle</button>
+              <button class="season-btn" data-cpage="bee" onclick="switchColoring('bee')">🐝 Busy Bee</button>
+            </div>
+
+            <div class="crayon-box" id="crayon-box"></div>
+
+            <!-- Paint-bucket pages — tap inside the lines to fill with color -->
+            <div class="cpage-wrap active" id="cpage-mural">
+              <canvas class="ccanvas" data-img="cb-mural-map.png"></canvas>
+            </div>
+            <div class="cpage-wrap" id="cpage-muralwall">
+              <canvas class="ccanvas" data-img="cb-mural.png"></canvas>
+            </div>
+            <div class="cpage-wrap" id="cpage-downtown">
+              <canvas class="ccanvas" data-img="cb-downtown.png"></canvas>
+            </div>
+            <div class="cpage-wrap" id="cpage-store">
+              <canvas class="ccanvas" data-img="cb-store.png"></canvas>
+            </div>
+
+            <!-- Page 1: The Caboose -->
+            <div class="cpage-wrap" id="cpage-caboose">
+              <svg viewBox="0 0 360 270" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#fff" stroke="#2a1f10" stroke-width="2.5" stroke-linejoin="round">
+                  <circle class="cregion" onclick="paintRegion(this)" cx="312" cy="42" r="24"/>
+                  <g fill="none"><line x1="312" y1="6" x2="312" y2="13"/><line x1="312" y1="71" x2="312" y2="78"/><line x1="276" y1="42" x2="283" y2="42"/><line x1="341" y1="42" x2="348" y2="42"/><line x1="287" y1="17" x2="292" y2="22"/><line x1="332" y1="62" x2="337" y2="67"/><line x1="337" y1="17" x2="332" y2="22"/><line x1="292" y1="62" x2="287" y2="67"/></g>
+                  <path class="cregion" onclick="paintRegion(this)" d="M48 56 a14 14 0 0 1 14 -14 a16 16 0 0 1 30 -3 a13 13 0 0 1 12 17 Z"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="2" y="225" width="356" height="42" rx="4"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="2" y="216" width="356" height="9"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="92" y="60" width="14" height="28"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="122" y="40" width="78" height="12" rx="5"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="132" y="52" width="58" height="34"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="143" y="60" width="14" height="14" rx="2"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="165" y="60" width="14" height="14" rx="2"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="58" y="86" width="204" height="13" rx="5"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="68" y="99" width="184" height="82"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="88" y="116" width="30" height="26" rx="3"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="202" y="116" width="30" height="26" rx="3"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="68" y="161" width="184" height="9"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="108" cy="198" r="17"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="108" cy="198" r="6"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="212" cy="198" r="17"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="212" cy="198" r="6"/>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Page 2: Bell & Buckle -->
+            <div class="cpage-wrap" id="cpage-bell">
+              <svg viewBox="0 0 360 270" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#fff" stroke="#2a1f10" stroke-width="2.5" stroke-linejoin="round">
+                  <path class="cregion" onclick="paintRegion(this)" d="M0 26 Q180 10 360 30 L360 44 Q180 26 0 42 Z"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="60" cy="54" rx="20" ry="9" transform="rotate(28 60 54)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="130" cy="46" rx="20" ry="9" transform="rotate(-20 130 46)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="240" cy="50" rx="20" ry="9" transform="rotate(22 240 50)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="318" cy="58" rx="20" ry="9" transform="rotate(-15 318 58)"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="164" y="36" width="28" height="36" rx="4"/>
+                  <path class="cregion" onclick="paintRegion(this)" fill-rule="evenodd" d="M146 70 h64 a14 14 0 0 1 14 14 v14 a14 14 0 0 1 -14 14 h-64 a14 14 0 0 1 -14 -14 v-14 a14 14 0 0 1 14 -14 Z M150 82 h56 a6 6 0 0 1 6 6 v6 a6 6 0 0 1 -6 6 h-56 a6 6 0 0 1 -6 -6 v-6 a6 6 0 0 1 6 -6 Z"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="164" y="112" width="28" height="16" rx="3"/>
+                  <path class="cregion" onclick="paintRegion(this)" d="M178 128 C136 136 128 166 127 192 L112 212 Q178 234 244 212 L229 192 C228 166 220 136 178 128 Z"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="178" cy="222" r="9"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="296" cy="120" rx="20" ry="16" transform="rotate(-18 296 120)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="330" cy="118" rx="18" ry="14" transform="rotate(14 330 118)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="300" cy="148" rx="14" ry="11"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="326" cy="146" rx="13" ry="10"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="309" y="112" width="7" height="46" rx="3.5"/>
+                  <path class="cregion" onclick="paintRegion(this)" d="M56 268 C56 240 58 224 60 206 L66 208 C64 226 62 240 62 268 Z"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="42" cy="240" rx="6" ry="22" transform="rotate(16 42 240)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="62" cy="164" rx="9" ry="16"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="62" cy="164" rx="9" ry="16" transform="rotate(60 62 186)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="62" cy="164" rx="9" ry="16" transform="rotate(120 62 186)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="62" cy="164" rx="9" ry="16" transform="rotate(180 62 186)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="62" cy="164" rx="9" ry="16" transform="rotate(240 62 186)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="62" cy="164" rx="9" ry="16" transform="rotate(300 62 186)"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="62" cy="186" r="12"/>
+                  <path class="cregion" onclick="paintRegion(this)" d="M298 268 C298 248 298 236 300 224 L306 226 C304 238 304 248 304 268 Z"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="300" cy="188" rx="9" ry="16"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="300" cy="188" rx="9" ry="16" transform="rotate(60 300 210)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="300" cy="188" rx="9" ry="16" transform="rotate(120 300 210)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="300" cy="188" rx="9" ry="16" transform="rotate(180 300 210)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="300" cy="188" rx="9" ry="16" transform="rotate(240 300 210)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="300" cy="188" rx="9" ry="16" transform="rotate(300 300 210)"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="300" cy="210" r="12"/>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Page 3: Busy Bee -->
+            <div class="cpage-wrap" id="cpage-bee">
+              <svg viewBox="0 0 360 270" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#fff" stroke="#2a1f10" stroke-width="2.5" stroke-linejoin="round">
+                  <circle class="cregion" onclick="paintRegion(this)" cx="40" cy="40" r="22"/>
+                  <path class="cregion" onclick="paintRegion(this)" d="M250 48 a13 13 0 0 1 13 -13 a15 15 0 0 1 28 -2 a12 12 0 0 1 13 15 Z"/>
+                  <rect class="cregion" onclick="paintRegion(this)" x="2" y="234" width="356" height="33" rx="4"/>
+                  <path class="cregion" onclick="paintRegion(this)" d="M92 236 C92 214 92 200 94 182 L102 184 C100 202 100 214 100 236 Z"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="72" cy="216" rx="8" ry="26" transform="rotate(20 72 216)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="96" cy="126" rx="14" ry="26"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="96" cy="126" rx="14" ry="26" transform="rotate(60 96 160)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="96" cy="126" rx="14" ry="26" transform="rotate(120 96 160)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="96" cy="126" rx="14" ry="26" transform="rotate(180 96 160)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="96" cy="126" rx="14" ry="26" transform="rotate(240 96 160)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="96" cy="126" rx="14" ry="26" transform="rotate(300 96 160)"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="96" cy="160" r="19"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="96" cy="160" r="8"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="240" cy="74" rx="36" ry="19" transform="rotate(-22 240 74)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="280" cy="82" rx="29" ry="15" transform="rotate(-10 280 82)"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="258" cy="138" rx="54" ry="38"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="242" cy="138" rx="10" ry="36"/>
+                  <ellipse class="cregion" onclick="paintRegion(this)" cx="272" cy="138" rx="10" ry="34"/>
+                  <path class="cregion" onclick="paintRegion(this)" d="M310 132 L334 126 L334 148 Z"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="196" cy="138" r="25"/>
+                  <circle class="cregion" onclick="paintRegion(this)" cx="188" cy="131" r="5"/>
+                  <g fill="none"><path d="M184 148 q8 7 16 2"/><path d="M186 116 Q178 102 168 98"/><path d="M198 114 Q196 100 202 92"/><circle cx="166" cy="96" r="3"/><circle cx="203" cy="89" r="3"/><path d="M232 172 q-4 10 -12 14 M252 176 q0 10 -6 16 M272 174 q4 10 12 13"/></g>
+                </g>
+              </svg>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px;flex-wrap:wrap">
+              <span style="font-size:11px;color:var(--ink-lt)">Tap a shape to color it in — the white crayon erases. 🖍️</span>
+              <button class="btn btn-outline" onclick="resetColoring()">↺ Start Over</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ══════ NEW POST ══════ -->
       <div class="screen" id="screen-post">
         <div class="p20 max-w" style="max-width:520px">
@@ -1249,7 +1958,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
             <select class="form-input" style="margin-bottom:14px">
               <option>Community Board</option>
               <option>Lost &amp; Found</option>
-              <option>Marketplace</option>
+              <option>Trading Post</option>
               <option>Events</option>
               <option>Announcements</option>
             </select>
@@ -1288,6 +1997,7 @@ const db   = firebase.firestore();
 let currentUser    = null;
 let currentChannel = 'general';
 let chatUnsub      = null;
+let isGuest        = false;
 
 const CHANNELS = [
   { id:'general',       emoji:'#️⃣', label:'general',       desc:'Community chat' },
@@ -1305,37 +2015,93 @@ const SCREEN_META = {
   community:   { t:'📋 Community Board',   c:'Bell Buckle Connect › Community' },
   events:      { t:'🗓️ Events',            c:'Bell Buckle Connect › Events' },
   lostfound:   { t:'🔍 Lost & Found',      c:'Bell Buckle Connect › Lost & Found' },
-  marketplace: { t:'🛍️ Marketplace',       c:'Bell Buckle Connect › Marketplace' },
+  marketplace: { t:'🛍️ Trading Post',      c:'Bell Buckle Connect › Trading Post' },
   history:     { t:'📜 Our History',       c:'Bell Buckle Connect › History Vault' },
+  garden:      { t:'🌱 Community Garden',  c:'Bell Buckle Connect › Community Garden' },
+  beecity:     { t:'🐝 Bee City',          c:'Bell Buckle Connect › Bee City Bell Buckle' },
+  biz:         { t:'🏪 Local Businesses',  c:'Bell Buckle Connect › Shop Local' },
   giveback:    { t:'❤️ Give Back',         c:'Bell Buckle Connect › Give Back' },
+  kids:        { t:'🖍️ Kids Corner',       c:'Bell Buckle Connect › Kids Corner' },
   post:        { t:'✏️ New Post',           c:'Bell Buckle Connect › Post' },
-  chat:        { t:'💬 Chat',              c:'Bell Buckle Connect › Chat' },
+  chat:        { t:'💬 The Depot',         c:'Bell Buckle Connect › Depot Chat' },
 };
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 auth.onAuthStateChanged(user => {
   currentUser = user;
   if (user) {
+    isGuest = false;
+    document.body.classList.remove('guest');
     document.getElementById('auth-overlay').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
+    document.getElementById('sb-signout').textContent = 'Sign out';
     const name = user.displayName || user.email?.split('@')[0] || 'Neighbor';
     const ini  = name[0].toUpperCase();
     document.getElementById('sb-initial').textContent  = ini;
     document.getElementById('sb-email').textContent    = user.email || name;
     document.getElementById('compose-initial').textContent = ini;
     document.getElementById('topbar-user').textContent = name;
+    // Front-porch greeting
+    const hr = new Date().getHours();
+    const howdy = hr < 12 ? "Mornin'" : hr < 17 ? "Afternoon" : "Evenin'";
+    const greet = document.getElementById('hero-greet');
+    if (greet) greet.textContent = `${howdy}, ${name} — your community, connected.`;
     // Load data
     listenHomePosts();
     listenCommunityPosts();
     listenLostFound();
     listenHistory();
+    listenGarden();
+    listenBuzz();
+    listenBiz();
     buildChannelLists();
-    switchChan('general');
-  } else {
+    switchChan('general', false); // prep chat without leaving Home
+  } else if (!isGuest) {
     document.getElementById('auth-overlay').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
   }
 });
+
+// ─── Guest mode ───────────────────────────────────────────────────────────────
+function enterGuestMode() {
+  isGuest = true;
+  document.body.classList.add('guest');
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('sb-initial').textContent  = '👋';
+  document.getElementById('sb-email').textContent    = 'Just visiting';
+  document.getElementById('sb-signout').textContent  = 'Sign in';
+  document.getElementById('compose-initial').textContent = '👋';
+  document.getElementById('topbar-user').textContent = 'Visitor';
+  const greet = document.getElementById('hero-greet');
+  if (greet) greet.textContent = 'Howdy, visitor — welcome to Bell Buckle.';
+  listenHomePosts();
+  listenCommunityPosts();
+  listenLostFound();
+  listenHistory();
+  listenGarden();
+  listenBuzz();
+  listenBiz();
+  buildChannelLists();
+  switchChan('general', false);
+  nav('home');
+}
+
+function leaveApp() {
+  if (isGuest) {
+    isGuest = false;
+    document.body.classList.remove('guest');
+    document.getElementById('auth-overlay').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('sb-signout').textContent = 'Sign out';
+  } else {
+    auth.signOut();
+  }
+}
+
+function guestNudge() {
+  alert("Howdy! Sign in or create an account to join in, neighbor.");
+}
 
 function doSignIn() {
   const e = document.getElementById('auth-email').value.trim();
@@ -1372,6 +2138,7 @@ function nav(id) {
   if (btn) btn.classList.add('active');
 
   if (id === 'chat') setTimeout(scrollChat, 80);
+  if (id === 'kids') initCanvasPage(document.querySelector('.cpage-wrap.active'));
 }
 
 // ─── Chat channels ────────────────────────────────────────────────────────────
@@ -1387,7 +2154,7 @@ function buildChannelLists() {
   });
 }
 
-function switchChan(id) {
+function switchChan(id, go = true) {
   currentChannel = id;
   const ch = CHANNELS.find(c => c.id === id) || { label: id, desc: '' };
   document.getElementById('chat-ch-name').textContent = '# ' + ch.label;
@@ -1397,7 +2164,7 @@ function switchChan(id) {
   document.querySelectorAll('#channel-list button, #channel-list-chat button').forEach(b => {
     b.classList.toggle('active', b.dataset.ch === id);
   });
-  nav('chat');
+  if (go) nav('chat');
   listenChat(id);
 }
 
@@ -1432,7 +2199,8 @@ function listenChat(channelId) {
 function sendMsg() {
   const inp = document.getElementById('chat-input');
   const txt = inp.value.trim();
-  if (!txt || !currentUser) return;
+  if (!txt) return;
+  if (!currentUser) { guestNudge(); return; }
   inp.value = '';
   const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
   db.collection('channels').doc(currentChannel).collection('messages').add({
@@ -1451,12 +2219,11 @@ function listenHomePosts() {
   db.collection('community_posts').orderBy('ts','desc').limit(3)
     .onSnapshot(snap => {
       const el = document.getElementById('home-posts');
-      // Update stat
-      const statEl = document.getElementById('stat-posts');
-      if (statEl) statEl.textContent = snap.size;
       if (snap.empty) { el.innerHTML='<div style="color:var(--ink-lt);font-size:13px">No posts yet — be the first!</div>'; return; }
       el.innerHTML = '';
       snap.forEach(doc => { el.innerHTML += postHTML(doc.data(), true); });
+    }, () => {
+      document.getElementById('home-posts').innerHTML = '<div style="color:var(--ink-lt);font-size:13px">Sign in to see what neighbors are sharing.</div>';
     });
 }
 
@@ -1464,9 +2231,19 @@ function listenCommunityPosts() {
   db.collection('community_posts').orderBy('ts','desc').limit(40)
     .onSnapshot(snap => {
       const feed = document.getElementById('community-feed');
+      // "Posts Today" stat — count only posts actually from today
+      const statEl = document.getElementById('stat-posts');
+      if (statEl) {
+        const dayStart = new Date(); dayStart.setHours(0,0,0,0);
+        let todayCount = 0;
+        snap.forEach(doc => { const t = doc.data().ts?.toDate?.(); if (t && t >= dayStart) todayCount++; });
+        statEl.textContent = todayCount;
+      }
       if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">No posts yet. Share something with your neighbors!</div>'; return; }
       feed.innerHTML = '';
       snap.forEach(doc => { feed.innerHTML += postHTML(doc.data(), false); });
+    }, () => {
+      document.getElementById('community-feed').innerHTML = '<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">Sign in to read the community board, neighbor.</div>';
     });
 }
 
@@ -1485,7 +2262,8 @@ function postHTML(d, compact) {
 
 function submitPost() {
   const txt = document.getElementById('community-text').value.trim();
-  if (!txt || !currentUser) return;
+  if (!txt) return;
+  if (!currentUser) { guestNudge(); return; }
   const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
   db.collection('community_posts').add({ text:txt, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
     .then(()=>{ document.getElementById('community-text').value=''; });
@@ -1493,7 +2271,8 @@ function submitPost() {
 
 function submitNewPost() {
   const txt = document.getElementById('post-text-area').value.trim();
-  if (!txt || !currentUser) return;
+  if (!txt) return;
+  if (!currentUser) { guestNudge(); return; }
   const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
   db.collection('community_posts').add({ text:txt, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
     .then(()=>{ document.getElementById('post-text-area').value=''; nav('community'); });
@@ -1521,6 +2300,8 @@ function listenLostFound() {
           </div>
         </div>`;
       });
+    }, () => {
+      document.getElementById('lf-feed').innerHTML = '<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">Sign in to see lost &amp; found listings.</div>';
     });
 }
 
@@ -1528,10 +2309,140 @@ function submitLF() {
   const type  = document.getElementById('lf-type').value;
   const title = document.getElementById('lf-title').value.trim();
   const desc  = document.getElementById('lf-desc').value.trim();
-  if (!title || !currentUser) return;
+  if (!title) return;
+  if (!currentUser) { guestNudge(); return; }
   const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
   db.collection('lost_found').add({ type, title, desc, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
     .then(()=>{ document.getElementById('lf-title').value=''; document.getElementById('lf-desc').value=''; });
+}
+
+// ─── Community Garden ─────────────────────────────────────────────────────────
+const GD_TYPES = {
+  ripe: { e:'🍅', l:'Ripe & Ready',    c:'gd-ripe' },
+  soon: { e:'🌱', l:'Coming Soon',     c:'gd-soon' },
+  care: { e:'💧', l:'Needs Some Love', c:'gd-care' },
+};
+
+function listenGarden() {
+  db.collection('garden_updates').orderBy('ts','desc').limit(40)
+    .onSnapshot(snap => {
+      const feed = document.getElementById('garden-feed');
+      if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">No updates yet — first volunteer to the board gets bragging rights! 🥕</div>'; return; }
+      feed.innerHTML = '';
+      snap.forEach(doc => {
+        const d  = doc.data();
+        const t  = GD_TYPES[d.type] || GD_TYPES.ripe;
+        const nm = d.displayName || 'A neighbor';
+        const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+        feed.innerHTML += `<div class="post-card">
+          <div><span class="gd-badge ${t.c}">${t.e} ${t.l}</span></div>
+          <div class="post-text">${esc(d.text||'')}</div>
+          ${d.img ? `<img class="feed-photo" src="${esc(d.img)}" onerror="this.style.display='none'">` : ''}
+          <div style="font-size:11px;color:var(--ink-lt);margin-top:6px">Posted by ${esc(nm)} · ${dt}</div>
+        </div>`;
+      });
+    }, () => {
+      document.getElementById('garden-feed').innerHTML = '<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">Couldn\'t load garden updates right now.</div>';
+    });
+}
+
+function submitGarden() {
+  const type = document.getElementById('gd-type').value;
+  const text = document.getElementById('gd-text').value.trim();
+  const img  = document.getElementById('gd-img').value.trim();
+  if (!text) return;
+  if (!currentUser) { guestNudge(); return; }
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('garden_updates').add({ type, text, img, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
+    .then(()=>{ document.getElementById('gd-text').value=''; document.getElementById('gd-img').value=''; });
+}
+
+// ─── Bee City Buzz Board ──────────────────────────────────────────────────────
+const BZ_TYPES = {
+  sighting: { e:'🐝', l:'Pollinator Sighting', c:'bz-sighting' },
+  photo:    { e:'📸', l:'Garden Photo',        c:'bz-photo' },
+  tip:      { e:'🌸', l:'Plant Tip',           c:'bz-tip' },
+};
+
+function listenBuzz() {
+  db.collection('pollinator_posts').orderBy('ts','desc').limit(40)
+    .onSnapshot(snap => {
+      const feed = document.getElementById('buzz-feed');
+      if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">No buzz yet — be the first to share a sighting! 🦋</div>'; return; }
+      feed.innerHTML = '';
+      snap.forEach(doc => {
+        const d  = doc.data();
+        const t  = BZ_TYPES[d.type] || BZ_TYPES.sighting;
+        const nm = d.displayName || 'A neighbor';
+        const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+        feed.innerHTML += `<div class="post-card">
+          <div><span class="gd-badge ${t.c}">${t.e} ${t.l}</span></div>
+          <div class="post-text">${esc(d.text||'')}</div>
+          ${d.img ? `<img class="feed-photo" src="${esc(d.img)}" onerror="this.style.display='none'">` : ''}
+          <div style="font-size:11px;color:var(--ink-lt);margin-top:6px">Shared by ${esc(nm)} · ${dt}</div>
+        </div>`;
+      });
+    }, () => {
+      document.getElementById('buzz-feed').innerHTML = '<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">Couldn\'t load the buzz right now.</div>';
+    });
+}
+
+function submitBuzz() {
+  const type = document.getElementById('bz-type').value;
+  const text = document.getElementById('bz-text').value.trim();
+  const img  = document.getElementById('bz-img').value.trim();
+  if (!text) return;
+  if (!currentUser) { guestNudge(); return; }
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('pollinator_posts').add({ type, text, img, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
+    .then(()=>{ document.getElementById('bz-text').value=''; document.getElementById('bz-img').value=''; });
+}
+
+// ─── Local Businesses ─────────────────────────────────────────────────────────
+const BIZ_CATS = {
+  eat:  { e:'☕', l:'Eat & Drink',       c:'bc-eat'  },
+  shop: { e:'🛍️', l:'Shops & Antiques',  c:'bc-shop' },
+  serv: { e:'🧰', l:'Services',          c:'bc-serv' },
+  art:  { e:'🎨', l:'Artists & Makers',  c:'bc-art'  },
+  comm: { e:'🏛️', l:'Community',         c:'bc-comm' },
+};
+
+function listenBiz() {
+  db.collection('local_biz').orderBy('ts','desc').limit(60)
+    .onSnapshot(snap => {
+      const feed = document.getElementById('biz-feed');
+      if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">No neighbor listings yet — be the first on the map! 🗺️</div>'; return; }
+      feed.innerHTML = '<div class="biz-grid">' + Array.from(snap.docs).map(doc => {
+        const d = doc.data();
+        const c = BIZ_CATS[d.cat] || BIZ_CATS.comm;
+        return `<div class="biz-card">
+          <div class="biz-emoji">${c.e}</div>
+          <div><span class="gd-badge ${c.c}">${c.l}</span></div>
+          <div class="biz-name">${esc(d.name||'')}</div>
+          <div class="biz-desc">${esc(d.desc||'')}</div>
+          ${d.contact ? `<div class="biz-contact">📍 ${esc(d.contact)}</div>` : ''}
+        </div>`;
+      }).join('') + '</div>';
+    }, () => {
+      document.getElementById('biz-feed').innerHTML = '<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:24px 0">Couldn\'t load the directory right now.</div>';
+    });
+}
+
+function submitBiz() {
+  const name    = document.getElementById('biz-name').value.trim();
+  const cat     = document.getElementById('biz-cat').value;
+  const desc    = document.getElementById('biz-desc').value.trim();
+  const contact = document.getElementById('biz-contact').value.trim();
+  if (!name || !desc) { alert('Please fill in the business name and a short description.'); return; }
+  if (!currentUser) { guestNudge(); return; }
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('local_biz').add({ name, cat, desc, contact, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
+    .then(()=>{ document.getElementById('biz-name').value=''; document.getElementById('biz-desc').value=''; document.getElementById('biz-contact').value=''; });
+}
+
+function switchSeason(s) {
+  document.querySelectorAll('.season-btn').forEach(b => b.classList.toggle('active', b.dataset.season === s));
+  document.querySelectorAll('.season-panel').forEach(p => p.classList.toggle('active', p.id === 'season-' + s));
 }
 
 // ─── History Vault ────────────────────────────────────────────────────────────
@@ -1622,6 +2533,9 @@ function listenHistory() {
           </div>
         </div>
       `).join('');
+    }, () => {
+      const el = document.getElementById('vault-community-entries');
+      if (el) el.innerHTML = '<div style="color:var(--ink-lt);font-size:13px;padding:12px;border:1px dashed var(--wire);border-radius:8px;text-align:center">Sign in to browse community history entries.</div>';
     });
 }
 
@@ -1643,10 +2557,11 @@ function submitHistory() {
   const title = document.getElementById('h-title').value.trim();
   const desc  = document.getElementById('h-desc').value.trim();
   const img   = document.getElementById('h-img').value.trim();
-  if (!year || !title || !desc || !currentUser) {
+  if (!year || !title || !desc) {
     alert('Please fill in the year, title, and description.');
     return;
   }
+  if (!currentUser) { guestNudge(); return; }
   const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
   db.collection('history_vault').add({
     year, title, desc, img, seed: false,
@@ -1659,6 +2574,131 @@ function submitHistory() {
     document.getElementById('h-img').value   = '';
   });
 }
+
+// ─── Festival countdown ───────────────────────────────────────────────────────
+(function(){
+  const el = document.getElementById('fest-countdown');
+  if (!el) return;
+  const fest = new Date(2026, 5, 20); // RC Cola & Moon Pie Festival
+  const today = new Date(); today.setHours(0,0,0,0);
+  const days = Math.round((fest - today) / 86400000);
+  if (days > 1)        el.textContent = `🥧 ${days} days 'til Moon Pie magic!`;
+  else if (days === 1) el.textContent = "🥧 Tomorrow! Y'all ready?";
+  else if (days === 0) el.textContent = "🥧 It's festival day, y'all!";
+  else return;
+  el.style.display = 'inline-flex';
+})();
+
+// ─── Kids Corner coloring pages ───────────────────────────────────────────────
+const CRAYONS = ['#a63220','#c8702a','#e8b830','#f5d33f','#3d6b3a','#7fb069','#3a6e9e','#8ecae6','#8e7cc3','#e29ab5','#7c4a22','#2a1f10','#ffffff'];
+let crayon = CRAYONS[0];
+
+(function buildCrayons(){
+  const box = document.getElementById('crayon-box');
+  if (!box) return;
+  box.innerHTML = CRAYONS.map((c,i) =>
+    `<div class="crayon${i===0?' active':''}" style="background:${c}${c==='#ffffff'?';border-style:dashed':''}"
+          title="${c==='#ffffff'?'Eraser':'Crayon'}" onclick="pickCrayon(this,'${c}')"></div>`
+  ).join('');
+})();
+
+function pickCrayon(el, c) {
+  crayon = c;
+  document.querySelectorAll('.crayon').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function paintRegion(el) { el.style.fill = crayon; }
+
+function switchColoring(p) {
+  document.querySelectorAll('.season-btn[data-cpage]').forEach(b => b.classList.toggle('active', b.dataset.cpage === p));
+  document.querySelectorAll('.cpage-wrap').forEach(w => w.classList.toggle('active', w.id === 'cpage-' + p));
+  initCanvasPage(document.querySelector('.cpage-wrap.active'));
+}
+
+function resetColoring() {
+  const active = document.querySelector('.cpage-wrap.active');
+  const cv = active && active.querySelector('canvas.ccanvas');
+  if (cv && cv.dataset.loaded) {
+    const img = new Image();
+    img.onload = () => { cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); };
+    img.src = cv.dataset.img;
+    return;
+  }
+  document.querySelectorAll('.cpage-wrap.active .cregion').forEach(r => { r.style.fill = ''; });
+}
+
+// Paint-bucket pages: load the line art once, then tap-to-flood-fill
+function initCanvasPage(wrap) {
+  const cv = wrap && wrap.querySelector('canvas.ccanvas');
+  if (!cv || cv.dataset.ready) return;
+  cv.dataset.ready = '1';
+  const img = new Image();
+  img.onload = () => {
+    cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+    cv.getContext('2d', { willReadFrequently: true }).drawImage(img, 0, 0);
+    cv.dataset.loaded = '1';
+  };
+  img.src = cv.dataset.img;
+  cv.addEventListener('click', e => {
+    if (!cv.dataset.loaded) return;
+    const r = cv.getBoundingClientRect();
+    const x = Math.floor((e.clientX - r.left) * cv.width / r.width);
+    const y = Math.floor((e.clientY - r.top) * cv.height / r.height);
+    floodFill(cv, x, y, crayon);
+  });
+}
+
+function floodFill(cv, sx, sy, hex) {
+  const ctx = cv.getContext('2d', { willReadFrequently: true });
+  const w = cv.width, h = cv.height;
+  if (sx < 0 || sy < 0 || sx >= w || sy >= h) return;
+  const im = ctx.getImageData(0, 0, w, h), d = im.data;
+  const lum = i => d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
+  const s4 = (sy * w + sx) * 4;
+  if (lum(s4) < 110) return;
+  const tr = d[s4], tg = d[s4+1], tb = d[s4+2];
+  const m = /^#(..)(..)(..)$/.exec(hex);
+  const fr = parseInt(m[1],16), fg = parseInt(m[2],16), fb = parseInt(m[3],16);
+  if (Math.abs(tr-fr) + Math.abs(tg-fg) + Math.abs(tb-fb) < 12) return;
+  const tol = 55;
+  const ok = i => lum(i) >= 110 && Math.abs(d[i]-tr) <= tol && Math.abs(d[i+1]-tg) <= tol && Math.abs(d[i+2]-tb) <= tol;
+  const seen = new Uint8Array(w * h);
+  const stack = [[sx, sy]];
+  while (stack.length) {
+    const [px, py] = stack.pop();
+    let x = px, i = py * w + px;
+    while (x >= 0 && !seen[i] && ok(i*4)) { x--; i--; }
+    x++; i++;
+    let up = false, down = false;
+    while (x < w && !seen[i] && ok(i*4)) {
+      seen[i] = 1;
+      d[i*4] = fr; d[i*4+1] = fg; d[i*4+2] = fb; d[i*4+3] = 255;
+      if (py > 0)     { const c = !seen[i-w] && ok((i-w)*4); if (c && !up) stack.push([x, py-1]); up = c; }
+      if (py < h - 1) { const c = !seen[i+w] && ok((i+w)*4); if (c && !down) stack.push([x, py+1]); down = c; }
+      x++; i++;
+    }
+  }
+  ctx.putImageData(im, 0, 0);
+}
+
+// ─── Train conductor — continual roll, a few trips east then back west ───────
+(function(){
+  const t = document.querySelector('.train-ride');
+  if (!t) return;
+  const SCHEDULE = ['east','east','east','west','west'];
+  let trip = 0;
+  function depart(){
+    t.classList.remove('go-east','go-west');
+    void t.offsetWidth; // flush so the next run restarts cleanly
+    t.classList.add('go-' + SCHEDULE[trip % SCHEDULE.length]);
+    trip++;
+  }
+  t.addEventListener('animationend', e => {
+    if (e.target === t) setTimeout(depart, 1400);
+  });
+  depart();
+})();
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
 function esc(s) {
