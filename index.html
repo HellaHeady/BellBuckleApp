@@ -101,7 +101,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 }
 .sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .sb-avatar span{color:#fff;font-size:11px;font-weight:700;}
-.sb-user-email{color:rgba(255,255,255,.55);font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-user-info{display:flex;flex-direction:column;flex:1;overflow:hidden;min-width:0;}
+.sb-user-name{color:#fff;font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-user-email{color:rgba(255,255,255,.4);font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-settings-btn{background:none;border:none;cursor:pointer;padding:2px;color:rgba(255,255,255,.45);transition:color .15s, transform .2s;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-settings-btn:hover{color:#fff;transform:rotate(45deg);}
 .sb-signout{color:rgba(255,255,255,.28);font-size:10px;background:none;border:none;cursor:pointer;padding:0;white-space:nowrap;}
 .sb-signout:hover{color:rgba(255,255,255,.55);}
 .sb-nav{flex:1;overflow-y:auto;padding:8px 8px 0;}
@@ -691,7 +695,11 @@ body.guest .guest-veil{
 
     <div class="sb-user">
       <div class="sb-avatar"><span id="sb-initial">?</span></div>
-      <div class="sb-user-email" id="sb-email">Loading…</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="sb-user-name">Loading…</div>
+        <div class="sb-user-email" id="sb-email">...</div>
+      </div>
+      <button class="sb-settings-btn" id="sb-settings-btn" onclick="openSettingsModal()" title="Resident Settings" style="display: none;">⚙️</button>
       <button class="sb-signout" id="sb-signout" onclick="leaveApp()">Sign out</button>
     </div>
 
@@ -2086,6 +2094,19 @@ body.guest .guest-veil{
             <h3 class="serif" style="font-size:16px;color:var(--ink);margin-bottom:8px">📅 This Month in Bell Buckle</h3>
             <div id="adm-season" style="font-size:12.5px;color:#44321e;line-height:1.85"></div>
           </div>
+
+          <!-- Database Controls Card -->
+          <div class="card" style="padding:16px 18px; border-left: 4px solid var(--red); margin-top: 10px;">
+            <h3 class="serif" style="font-size: 16px; color: var(--ink); margin-bottom: 4px;">🎛️ Database Controls</h3>
+            <p style="font-size: 12px; color: var(--ink-lt); margin-bottom: 14px; line-height: 1.5;">
+              Manage the live Firestore database. Seeding will populate the app with realistic local Bell Buckle content.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button class="btn btn-red" id="btn-seed-data" style="padding: 8px 12px; font-size: 12px; font-weight: 600;" onclick="seedDemoData()">🌱 Seed Demo Data</button>
+              <button class="btn btn-outline" id="btn-clear-db" style="padding: 8px 12px; font-size: 12px; font-weight: 600; border-color: var(--red); color: var(--red);" onclick="clearLiveDatabase()">⚠️ Clear Live Database</button>
+              <button class="btn btn-outline" id="btn-make-admin" style="padding: 8px 12px; font-size: 12px; font-weight: 600;" onclick="grantLiveAdmin()">🔑 Make Me Live Admin</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2145,7 +2166,28 @@ body.guest .guest-veil{
       <input id="gate-email" class="auth-input" type="email" placeholder="Email" autocomplete="username">
       <input id="gate-pw" class="auth-input" type="password" placeholder="Password" style="margin-bottom:12px" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminReauth()">
       <button class="auth-btn auth-btn-primary" onclick="adminReauth()">Enter Town Hall</button>
+      <button class="auth-btn auth-btn-outline" style="margin-top:8px" id="btn-bootstrap-admin" onclick="grantLiveAdmin()">🔑 Make Me Admin</button>
       <button class="auth-btn auth-btn-outline" style="margin-top:8px" onclick="closeAdminGate()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Resident Settings Modal -->
+<div id="settings-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(42,31,16,0.72); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div class="card" style="max-width:400px; width:100%; padding:28px; background:var(--paper); border:2px solid var(--red); box-shadow:var(--shadow); position:relative; border-radius:14px; text-align:left;">
+    <h3 class="serif" style="color:var(--red); font-size:22px; margin-top:0; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+      ⚙️ Resident Settings
+    </h3>
+    <p style="font-size:13.5px; color:var(--ink-lt); line-height:1.6; margin-bottom:16px;">
+      Update your profile name for the Bell Buckle community.
+    </p>
+    <div style="margin-bottom:20px;">
+      <label for="settings-display-name" style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; color:var(--ink); margin-bottom:6px; letter-spacing:0.05em;">Display Name</label>
+      <input type="text" id="settings-display-name" placeholder="Neighbor Name" style="width:100%; padding:10px 12px; border:1.5px solid var(--wire); border-radius:8px; font-size:14px; outline:none; background:#fff; font-family:'Inter', sans-serif;" />
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeSettingsModal()">Cancel</button>
+      <button class="btn btn-red" id="btn-save-settings" onclick="saveSettings()">Save Changes</button>
     </div>
   </div>
 </div>
@@ -2217,7 +2259,10 @@ auth.onAuthStateChanged(user => {
     const name = user.displayName || user.email?.split('@')[0] || 'Neighbor';
     const ini  = name[0].toUpperCase();
     document.getElementById('sb-initial').textContent  = ini;
-    document.getElementById('sb-email').textContent    = user.email || name;
+    document.getElementById('sb-user-name').textContent = name;
+    document.getElementById('sb-email').textContent    = user.email || '';
+    const settingsBtn = document.getElementById('sb-settings-btn');
+    if (settingsBtn) settingsBtn.style.display = 'flex';
     document.getElementById('compose-initial').textContent = ini;
     document.getElementById('topbar-user').textContent = name;
     // Front-porch greeting
@@ -2248,7 +2293,10 @@ function enterGuestMode() {
   document.getElementById('auth-overlay').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
   document.getElementById('sb-initial').textContent  = '👋';
+  document.getElementById('sb-user-name').textContent = 'Visitor';
   document.getElementById('sb-email').textContent    = 'Just visiting';
+  const settingsBtn = document.getElementById('sb-settings-btn');
+  if (settingsBtn) settingsBtn.style.display = 'none';
   document.getElementById('sb-signout').textContent  = 'Sign in';
   document.getElementById('compose-initial').textContent = '👋';
   document.getElementById('topbar-user').textContent = 'Visitor';
@@ -3295,6 +3343,259 @@ function aiPostToBoard() {
 // ─── Utility ──────────────────────────────────────────────────────────────────
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Resident Settings & DB Controls ──────────────────────────────────────────
+
+function openSettingsModal() {
+  if (isGuest) {
+    alert("Guests cannot change settings. Please sign in!");
+    return;
+  }
+  const modal = document.getElementById('settings-modal');
+  const input = document.getElementById('settings-display-name');
+  if (modal && input && currentUser) {
+    input.value = currentUser.displayName || '';
+    modal.style.display = 'flex';
+  }
+}
+
+function closeSettingsModal() {
+  const modal = document.getElementById('settings-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveSettings() {
+  if (!currentUser || isGuest) return;
+  const input = document.getElementById('settings-display-name');
+  if (!input) return;
+  const newName = input.value.trim();
+  if (!newName) {
+    alert("Display name cannot be empty.");
+    return;
+  }
+  
+  const btn = document.getElementById('btn-save-settings');
+  const oldText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+  
+  currentUser.updateProfile({
+    displayName: newName
+  }).then(() => {
+    const ini = newName[0].toUpperCase();
+    const nameEl = document.getElementById('sb-user-name');
+    if (nameEl) nameEl.textContent = newName;
+    const initialEl = document.getElementById('sb-initial');
+    if (initialEl) initialEl.textContent = ini;
+    const compEl = document.getElementById('compose-initial');
+    if (compEl) compEl.textContent = ini;
+    const topEl = document.getElementById('topbar-user');
+    if (topEl) topEl.textContent = newName;
+    
+    const greet = document.getElementById('hero-greet');
+    if (greet) {
+      const hr = new Date().getHours();
+      const howdy = hr < 12 ? "Mornin'" : hr < 17 ? "Afternoon" : "Evenin'";
+      greet.textContent = `${howdy}, ${newName} — your community, connected.`;
+    }
+    
+    closeSettingsModal();
+    alert("Display name updated successfully!");
+  }).catch((err) => {
+    console.error("Error updating profile:", err);
+    alert("Failed to update display name: " + err.message);
+  }).finally(() => {
+    btn.disabled = false;
+    btn.textContent = oldText;
+  });
+}
+
+function grantLiveAdmin() {
+  if (!currentUser) {
+    alert("Please sign in first!");
+    return;
+  }
+  const code = prompt("Enter the Town Hall admin passcode to authorize this device:");
+  if (code === null) return;
+  if (!code.trim()) {
+    alert("Passcode is required.");
+    return;
+  }
+  
+  const btn = document.getElementById('btn-make-admin') || document.getElementById('btn-bootstrap-admin');
+  const oldText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Authorizing...";
+  }
+  
+  db.collection('admins').doc(currentUser.uid).set({
+    email: currentUser.email || 'N/A',
+    role: 'admin',
+    secret: code.trim(),
+    grantedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    isAdminUser = true;
+    updateAdminVisibility();
+    closeAdminGate();
+    alert("Success! You are now registered as a live administrator.");
+  }).catch((err) => {
+    console.error("Error setting admin doc:", err);
+    alert("Failed to grant admin privileges: " + err.message + "\n\n(Verify that the passcode is correct and rules are deployed.)");
+  }).finally(() => {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = oldText;
+    }
+  });
+}
+
+async function deleteCollection(collectionName) {
+  const snapshot = await db.collection(collectionName).get();
+  const batch = db.batch();
+  snapshot.docs.forEach(doc => {
+    batch.delete(doc.ref);
+  });
+  await batch.commit();
+}
+
+async function deleteChannelMessages(channelId) {
+  const snapshot = await db.collection('channels').doc(channelId).collection('messages').get();
+  const batch = db.batch();
+  snapshot.docs.forEach(doc => {
+    batch.delete(doc.ref);
+  });
+  await batch.commit();
+}
+
+async function clearLiveDatabase() {
+  if (!confirm("⚠️ WARNING: This will permanently DELETE all community posts, business directory listings, garden updates, lost & found entries, and chat messages on the live database. Are you absolutely sure you want to proceed?")) {
+    return;
+  }
+  
+  const btn = document.getElementById('btn-clear-db');
+  const oldText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Clearing...";
+  
+  try {
+    const collections = ['community_posts', 'lost_found', 'garden_updates', 'pollinator_posts', 'local_biz', 'history_vault'];
+    for (const coll of collections) {
+      await deleteCollection(coll);
+    }
+    
+    const channels = ['general', 'announcements', 'lost-found', 'buy-sell', 'events', 'help-needed', 'local-biz', 'weather'];
+    for (const chan of channels) {
+      await deleteChannelMessages(chan);
+    }
+    
+    alert("Database successfully cleared! All public collections are now empty and ready for launch.");
+  } catch (err) {
+    console.error("Error clearing database:", err);
+    alert("Failed to clear database: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = oldText;
+  }
+}
+
+async function seedDemoData() {
+  if (!currentUser) {
+    alert("Please sign in first.");
+    return;
+  }
+  
+  if (!confirm("🌱 This will seed realistic Bell Buckle themed sample posts, listings, and updates to Firestore. Proceed?")) {
+    return;
+  }
+  
+  const btn = document.getElementById('btn-seed-data');
+  const oldText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Seeding...";
+  
+  const uid = currentUser.uid;
+  const email = currentUser.email;
+  const displayName = currentUser.displayName || "Neighbor";
+  
+  try {
+    const posts = [
+      { text: "Bell Buckle Cafe special today: Southern fried chicken, collard greens, creamed corn, and a slice of warm peach cobbler! Come on down.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { text: "Volunteers needed for the RC Cola & MoonPie Festival next weekend! We need folks to help with the 10K run water stations and the MoonPie toss games. Sign up at the Town Hall!", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { text: "Webb School is hosting its annual art show this Friday night. Beautiful paintings and pottery by our talented students. Open to all residents!", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { text: "Did anyone see a sweet golden retriever wandering near the train tracks? She answers to Daisy and has a red collar. Please call Mary if found.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const post of posts) {
+      await db.collection('community_posts').add(post);
+    }
+    
+    const bizList = [
+      { name: "Bell Buckle Cafe", cat: "eat", desc: "Famous Southern cooking in the heart of historic Bell Buckle. Join us for our fried chicken, country ham, and world-class peach cobbler.", contact: "16 Railroad Square, Bell Buckle", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { name: "Phillips General Store", cat: "shop", desc: "Antiques, collectibles, and local gifts housed in a historic 1890s brick building. Come browse our treasures!", contact: "22 Railroad Square, Bell Buckle", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { name: "Bluebird Bookshop", cat: "shop", desc: "A cozy nook for book lovers. Specializing in Southern history, local authors, and children's stories.", contact: "8 Maple Street, Bell Buckle", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { name: "Bell Buckle Banquet Hall", cat: "comm", desc: "Historic venue available for weddings, family reunions, and town gatherings.", contact: "Main Street, Bell Buckle", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const biz of bizList) {
+      await db.collection('local_biz').add(biz);
+    }
+    
+    const lfList = [
+      { type: "lost", title: "Brass Pocket Watch", desc: "Lost near the Webb School library. Has engraving 'To Sawney from Class of 1888'. Extremely sentimental value. Reward if returned!", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "found", title: "Set of Keys on Leather Keychain", desc: "Found on a bench at the Bell Buckle Park near the walking path. Has a small bronze train charm. Claim at the Cafe.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const lf of lfList) {
+      await db.collection('lost_found').add(lf);
+    }
+    
+    const gardenUpdates = [
+      { type: "ripe", text: "The heirloom tomatoes and sweet bell peppers in Row 4 are ripe and ready for picking! Help yourselves, but leave some for your neighbors.", img: "https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?w=500&auto=format&fit=crop", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "soon", text: "The summer squash and zucchini are blossoming beautifully. We should have a bumper crop in about two weeks!", img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "care", text: "Row 2 (pole beans) is looking dry. If anyone has 10 minutes this evening, please give them a good soak. The hose is connected by the shed.", img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const gu of gardenUpdates) {
+      await db.collection('garden_updates').add(gu);
+    }
+    
+    const buzzPosts = [
+      { type: "sighting", text: "Spotted a gorgeous Eastern Tiger Swallowtail butterfly visiting the purple coneflowers near the library! The native garden is working wonders.", img: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "tip", text: "Did you know? Mountain Mint (Pycnanthemum muticum) is one of the absolute best native nectar sources for Tennessee bees. It blooms all summer and smells incredible!", img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const bp of buzzPosts) {
+      await db.collection('pollinator_posts').add(bp);
+    }
+    
+    const genMessages = [
+      { text: "Howdy neighbors! Anyone going to Shelbyville this afternoon? I need to pick up some chicken feed from Co-op.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { text: "I can run by there for you, Hank! I'm heading out around 2 PM. I'll shoot you a text.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { text: "Bless you, Sarah! You're a lifesaver.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const msg of genMessages) {
+      await db.collection('channels').doc('general').collection('messages').add(msg);
+    }
+    
+    const annMessages = [
+      { text: "Mayor's Notice: The annual street paving will begin on Monday on Maple Street. Please expect minor delays and park on adjacent streets.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const msg of annMessages) {
+      await db.collection('channels').doc('announcements').collection('messages').add(msg);
+    }
+    
+    alert("Database seeded successfully with authentic Bell Buckle demo content!");
+  } catch (err) {
+    console.error("Error seeding database:", err);
+    alert("Failed to seed database: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = oldText;
+  }
 }
 </script>
 </body>
