@@ -1233,6 +1233,8 @@ body.guest .guest-veil{
 .lf-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px;}
 .lf-desc{font-size:12px;color:var(--ink-lt);line-height:1.5;}
 .lf-contact{font-size:11px;color:var(--red);margin-top:5px;font-weight:600;}
+.lf-card-img{width:100%;max-width:240px;height:140px;object-fit:cover;border-radius:6px;margin-top:8px;border:1.5px solid var(--wire-lt);cursor:pointer;display:block;transition:transform 0.15s;}
+.lf-card-img:hover{transform:scale(1.02);}
 
 /* History Timeline */
 .timeline{position:relative;padding:0 0 24px;}
@@ -2637,7 +2639,17 @@ body.guest .guest-veil{
               <input id="lf-title" class="form-input" style="flex:2" placeholder="e.g. Golden Retriever, Blue wallet…">
             </div>
             <textarea id="lf-desc" class="form-textarea" rows="2" placeholder="Description, location last seen, contact info…" style="margin-bottom:10px"></textarea>
-            <div style="text-align:right">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <input type="file" id="lf-file-input" accept="image/*" style="display:none;" onchange="handleLFFileSelect(this)">
+                <button class="btn btn-outline" style="margin:0; padding:6px 12px; font-size:12px; border-radius: var(--radius-sm); display:flex; align-items:center; gap:4px;" onclick="document.getElementById('lf-file-input').click()">
+                  📷 Add Photo
+                </button>
+                <div id="lf-preview-container" style="display:none; align-items:center; gap:6px;">
+                  <img id="lf-img-preview" src="" style="width:36px; height:36px; object-fit:cover; border-radius:4px; border:1px solid var(--wire);">
+                  <button type="button" style="background:none; border:none; color:var(--red); font-size:16px; cursor:pointer; padding:0; line-height:1;" onclick="clearLFImage()" title="Remove photo">×</button>
+                </div>
+              </div>
               <button class="btn btn-red" onclick="submitLF()">Post Listing</button>
             </div>
           </div>
@@ -4225,6 +4237,7 @@ let currentUser    = null;
 let currentChannel = 'general';
 let chatUnsub      = null;
 let isGuest        = false;
+let lfSelectedImageBase64 = "";
 
 const CHANNELS = [
   { id:'general',       emoji:'#️⃣', label:'general',       desc:'Community chat' },
@@ -4627,6 +4640,59 @@ function submitNewPost() {
 }
 
 // ─── Lost & Found ─────────────────────────────────────────────────────────────
+function handleLFFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      let w = img.width;
+      let h = img.height;
+      
+      const MAX_SIZE = 600;
+      if (w > MAX_SIZE || h > MAX_SIZE) {
+        if (w > h) {
+          h = Math.round((h * MAX_SIZE) / w);
+          w = MAX_SIZE;
+        } else {
+          w = Math.round((w * MAX_SIZE) / h);
+          h = MAX_SIZE;
+        }
+      }
+      
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      
+      lfSelectedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      
+      const preview = document.getElementById('lf-img-preview');
+      if (preview) preview.src = lfSelectedImageBase64;
+      
+      const container = document.getElementById('lf-preview-container');
+      if (container) container.style.display = 'flex';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearLFImage() {
+  lfSelectedImageBase64 = "";
+  const preview = document.getElementById('lf-img-preview');
+  if (preview) preview.src = "";
+  
+  const container = document.getElementById('lf-preview-container');
+  if (container) container.style.display = 'none';
+  
+  const fileInput = document.getElementById('lf-file-input');
+  if (fileInput) fileInput.value = "";
+}
+
 function listenLostFound() {
   db.collection('lost_found').orderBy('ts','desc').limit(40)
     .onSnapshot(snap => {
@@ -4639,12 +4705,14 @@ function listenLostFound() {
         const nm = d.displayName || d.email?.split('@')[0] || 'Neighbor';
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
         const isLost = d.type === 'lost';
+        const imgHtml = d.img ? `<img src="${d.img}" class="lf-card-img" alt="${esc(d.title||'')}" onclick="openImageLightbox('${d.img}')">` : '';
         feed.innerHTML += `<div class="lf-card">
           <div class="lf-emoji">${isLost?'😢':'🎉'}</div>
           <div>
             <div><span class="lf-badge ${isLost?'lf-lost':'lf-found'}">${isLost?'Lost':'Found'}</span></div>
             <div class="lf-title">${esc(d.title||'')}</div>
             <div class="lf-desc">${esc(d.desc||'')}</div>
+            ${imgHtml}
             <div class="lf-contact">Posted by ${esc(nm)} · ${dt}</div>
           </div>
         </div>`;
@@ -4661,8 +4729,20 @@ function submitLF() {
   if (!title) return;
   if (!currentUser) { guestNudge(); return; }
   const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
-  db.collection('lost_found').add({ type, title, desc, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
-    .then(()=>{ document.getElementById('lf-title').value=''; document.getElementById('lf-desc').value=''; });
+  const itemData = { type, title, desc, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() };
+  if (lfSelectedImageBase64) {
+    itemData.img = lfSelectedImageBase64;
+  }
+  db.collection('lost_found').add(itemData)
+    .then(()=>{ 
+      document.getElementById('lf-title').value=''; 
+      document.getElementById('lf-desc').value=''; 
+      clearLFImage();
+    })
+    .catch(err => {
+      console.error("Error posting lost/found:", err);
+      alert("Error posting: " + err.message);
+    });
 }
 
 // ─── Trading Post ─────────────────────────────────────────────────────────────
