@@ -1410,6 +1410,105 @@ body.guest .guest-veil{
   pointer-events: none;
   animation: confettiFall 1.5s linear forwards;
 }
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+}
+.sidebar-overlay.active {
+  display: block;
+}
+.menu-toggle-btn {
+  display: none;
+  background: var(--sidebar);
+  border: 2px solid var(--wire);
+  border-radius: 8px;
+  color: #ffe9a8;
+  font-size: 20px;
+  padding: 4px 10px;
+  cursor: pointer;
+  margin-left: 15px;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  width: 44px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.menu-toggle-btn:hover {
+  background: var(--sidebar2);
+}
+
+@media (max-width: 768px) {
+  .menu-toggle-btn {
+    display: flex;
+  }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -224px;
+    z-index: 10000;
+    box-shadow: 0 0 24px rgba(0,0,0,0.6);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sidebar.open {
+    transform: translateX(224px);
+  }
+  .topbar-left {
+    display: none !important;
+  }
+  .topbar {
+    min-height: 64px;
+    padding-left: 0;
+  }
+  .topbar-right {
+    padding-left: 10px;
+    padding-right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .topbar-page-sign {
+    margin-left: 10px;
+    margin-right: 10px;
+    min-width: auto;
+    flex: 1;
+  }
+  .topbar-actions span {
+    display: none !important;
+  }
+  .timeline::before {
+    left: 20px;
+  }
+  .tl-entry {
+    flex-direction: row !important;
+  }
+  .tl-card {
+    width: calc(100% - 50px);
+    margin-left: 10px;
+  }
+  .tl-dot {
+    margin: 16px 4px 0;
+  }
+  .biz-grid, .market-grid, .guide-grid, .building-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .home-layout-container {
+    padding: 0 10px;
+  }
+  .stats-row {
+    flex-wrap: wrap;
+  }
+  .action-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1626,11 +1725,15 @@ body.guest .guest-veil{
     </div>
   </aside>
 
+  <!-- Sidebar Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
   <!-- ── MAIN PANEL ── -->
   <div class="main">
 
     <!-- TOPBAR -->
     <div class="topbar">
+      <button class="menu-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Navigation Menu">☰</button>
 
       <!-- Left dark panel with brand -->
       <div class="topbar-left">
@@ -3831,6 +3934,7 @@ function doSignUp() {
 
 // ─── Screen nav ───────────────────────────────────────────────────────────────
 function nav(id) {
+  closeSidebar();
   // Hide all screens (both .screen and .screen-dark)
   document.querySelectorAll('.screen, .screen-dark').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('screen-' + id);
@@ -5079,6 +5183,26 @@ function rejectEvent(id) {
   });
 }
 
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sb) {
+    sb.classList.toggle('open');
+    const isOpen = sb.classList.contains('open');
+    if (overlay) {
+      if (isOpen) overlay.classList.add('active');
+      else overlay.classList.remove('active');
+    }
+  }
+}
+
+function closeSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sb) sb.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+}
+
 let onlineNeighborsUnsub = null;
 function initOnlineNeighborsListener() {
   const listEl = document.getElementById('online-neighbors-list');
@@ -6111,6 +6235,7 @@ function endGame(isWin) {
 // ─── Resident Settings & DB Controls ──────────────────────────────────────────
 
 function openSettingsModal() {
+  closeSidebar();
   if (isGuest) {
     alert("Guests cannot change settings. Please sign in!");
     return;
