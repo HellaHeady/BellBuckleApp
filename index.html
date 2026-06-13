@@ -4185,6 +4185,27 @@ body.guest .guest-veil{
      JAVASCRIPT
 ════════════════════════════════ -->
 <script>
+// Global error logging for mobile debugging
+window.addEventListener('error', function(e) {
+  const errEl = document.getElementById('auth-error');
+  if (errEl) {
+    errEl.textContent = "Error: " + e.message + " (" + (e.filename ? e.filename.split('/').pop() : 'inline') + ":" + e.lineno + ")";
+    errEl.style.display = 'block';
+  } else {
+    alert("Error: " + e.message + "\nLine: " + e.lineno + "\nFile: " + e.filename);
+  }
+});
+window.addEventListener('unhandledrejection', function(e) {
+  const errEl = document.getElementById('auth-error');
+  const msg = e.reason && e.reason.message ? e.reason.message : String(e.reason);
+  if (errEl) {
+    errEl.textContent = "Promise Rejection: " + msg;
+    errEl.style.display = 'block';
+  } else {
+    alert("Unhandled Promise Rejection: " + msg);
+  }
+});
+
 // ─── Firebase ────────────────────────────────────────────────────────────────
 const firebaseConfig = {
   apiKey: "AIzaSyDa9RPP82t2GPsJZ06vyAc7rgloo5dYO6c",
@@ -4393,22 +4414,56 @@ function guestNudge() {
 }
 
 function doSignIn() {
-  const e = document.getElementById('auth-email').value.trim();
-  const p = document.getElementById('auth-pw').value;
   const err = document.getElementById('auth-error');
-  err.style.display = 'none';
-  auth.signInWithEmailAndPassword(e, p).catch(ex => {
-    err.textContent = ex.message; err.style.display = 'block';
-  });
+  try {
+    const e = document.getElementById('auth-email').value.trim();
+    const p = document.getElementById('auth-pw').value;
+    err.style.display = 'none';
+    
+    if (!e || !p) {
+      err.textContent = "Please enter both email and password.";
+      err.style.display = 'block';
+      return;
+    }
+    
+    if (typeof auth === 'undefined' || !auth) {
+      throw new Error("Firebase Auth is not initialized properly. Please check your network/connection.");
+    }
+    
+    auth.signInWithEmailAndPassword(e, p).catch(ex => {
+      err.textContent = ex.message;
+      err.style.display = 'block';
+    });
+  } catch (ex) {
+    err.textContent = "Sign In Error: " + ex.message;
+    err.style.display = 'block';
+  }
 }
 function doSignUp() {
-  const e = document.getElementById('auth-email').value.trim();
-  const p = document.getElementById('auth-pw').value;
   const err = document.getElementById('auth-error');
-  err.style.display = 'none';
-  auth.createUserWithEmailAndPassword(e, p).catch(ex => {
-    err.textContent = ex.message; err.style.display = 'block';
-  });
+  try {
+    const e = document.getElementById('auth-email').value.trim();
+    const p = document.getElementById('auth-pw').value;
+    err.style.display = 'none';
+    
+    if (!e || !p) {
+      err.textContent = "Please enter both email and password.";
+      err.style.display = 'block';
+      return;
+    }
+    
+    if (typeof auth === 'undefined' || !auth) {
+      throw new Error("Firebase Auth is not initialized properly. Please check your network/connection.");
+    }
+    
+    auth.createUserWithEmailAndPassword(e, p).catch(ex => {
+      err.textContent = ex.message;
+      err.style.display = 'block';
+    });
+  } catch (ex) {
+    err.textContent = "Sign Up Error: " + ex.message;
+    err.style.display = 'block';
+  }
 }
 
 // ─── Screen nav ───────────────────────────────────────────────────────────────
