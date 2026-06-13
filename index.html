@@ -1812,6 +1812,11 @@ body.guest .guest-veil{
   height: 100%;
   object-fit: cover;
 }
+/* Spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 /* Toast confirmation */
 #bb-toast{
   position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
@@ -1957,14 +1962,22 @@ body.guest .guest-veil{
       <small>Bell Buckle, Tennessee · Est. 1852</small>
     </div>
     <div id="auth-error"></div>
-    <input id="auth-email" class="auth-input" type="email" placeholder="Email address"
-           onkeydown="if(event.key==='Enter')doSignIn()">
-    <input id="auth-pw" class="auth-input" type="password" placeholder="Password"
-           style="margin-bottom:14px" onkeydown="if(event.key==='Enter')doSignIn()">
-    <button class="auth-btn auth-btn-primary" onclick="doSignIn()">Sign In</button>
-    <button class="auth-btn auth-btn-outline" onclick="doSignUp()">Create Account</button>
-    <button class="auth-guest" onclick="enterGuestMode()">👀 Just visiting? Take a look around →</button>
-    <p style="text-align:center;color:var(--ink-lt);font-size:11px;margin-top:12px">Community members only · Bell Buckle, TN</p>
+    
+    <div id="auth-loading" style="text-align:center; padding: 24px 0 12px; color:var(--ink-lt); font-size:13.5px; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:10px;">
+      <div style="border: 3px solid var(--wire-lt); border-top: 3px solid var(--red); border-radius: 50%; width: 28px; height: 28px; animation: spin 1s linear infinite;"></div>
+      <span>Connecting to Bell Buckle Desk...</span>
+    </div>
+    
+    <div id="auth-form" style="display:none; width:100%;">
+      <input id="auth-email" class="auth-input" type="email" placeholder="Email address"
+             onkeydown="if(event.key==='Enter')doSignIn()">
+      <input id="auth-pw" class="auth-input" type="password" placeholder="Password"
+             style="margin-bottom:14px" onkeydown="if(event.key==='Enter')doSignIn()">
+      <button class="auth-btn auth-btn-primary" onclick="doSignIn()">Sign In</button>
+      <button class="auth-btn auth-btn-outline" onclick="doSignUp()">Create Account</button>
+      <button class="auth-guest" onclick="enterGuestMode()">👀 Just visiting? Take a look around →</button>
+      <p style="text-align:center;color:var(--ink-lt);font-size:11px;margin-top:12px">Community members only · Bell Buckle, TN</p>
+    </div>
   </div>
 </div>
 
@@ -4401,6 +4414,13 @@ auth.onAuthStateChanged(user => {
   } else if (!isGuest) {
     isAdminUser = false;
     updateAdminVisibility();
+    
+    // Hide spinner and show login form if user is verified to be logged out
+    const loader = document.getElementById('auth-loading');
+    if (loader) loader.style.display = 'none';
+    const form = document.getElementById('auth-form');
+    if (form) form.style.display = 'block';
+    
     document.getElementById('auth-overlay').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
     initOnlineNeighborsListener();
@@ -4457,10 +4477,23 @@ function leaveApp() {
   if (isGuest) {
     isGuest = false;
     document.body.classList.remove('guest');
+    
+    // Hide spinner and show login form
+    const loader = document.getElementById('auth-loading');
+    if (loader) loader.style.display = 'none';
+    const form = document.getElementById('auth-form');
+    if (form) form.style.display = 'block';
+    
     document.getElementById('auth-overlay').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
     document.getElementById('sb-signout').textContent = 'Sign out';
   } else {
+    // Show spinner again on transition
+    const loader = document.getElementById('auth-loading');
+    if (loader) loader.style.display = 'flex';
+    const form = document.getElementById('auth-form');
+    if (form) form.style.display = 'none';
+    
     auth.signOut();
   }
 }
