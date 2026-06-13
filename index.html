@@ -4462,11 +4462,15 @@ function linkifyTags(s) {
 // admins/{uid} collection; this UI only appears for accounts listed there.
 let isAdminUser = false;
 
-// Keep admin/sign-in-dependent UI in sync. Town Hall stays behind the secret bell;
-// this also guards grantLiveAdmin() from calling an undefined function.
 function updateAdminVisibility() {
   const settingsBtn = document.getElementById('sb-settings-btn');
-  if (settingsBtn) settingsBtn.style.display = (currentUser && !isGuest) ? 'flex' : 'none';
+  if (settingsBtn) {
+    settingsBtn.style.display = (currentUser && !isGuest) ? 'flex' : 'none';
+  }
+  const adminSec = document.getElementById('sb-admin-section');
+  if (adminSec) {
+    adminSec.style.display = isAdminUser ? 'block' : 'none';
+  }
 }
 
 const ADMIN_COLLS = {
@@ -4481,13 +4485,6 @@ function admColl(val) {
   return val.startsWith('chat:')
     ? db.collection('channels').doc(val.slice(5)).collection('messages')
     : db.collection(val);
-}
-
-function updateAdminVisibility() {
-  const adminSec = document.getElementById('sb-admin-section');
-  if (adminSec) {
-    adminSec.style.display = isAdminUser ? 'block' : 'none';
-  }
 }
 
 function showAdminDeniedModal() {
