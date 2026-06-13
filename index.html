@@ -4731,8 +4731,6 @@ function applyTPFilters() {
 }
 
 function openTradingPostPostModal() {
-  if (!currentUser) { guestNudge(); return; }
-  
   // Reset fields
   document.getElementById('tp-post-modal-id').value = '';
   document.getElementById('tp-name-input').value = '';
@@ -4894,9 +4892,12 @@ function flagTradingPostContent(title, desc) {
 }
 
 function saveTradingPostItem() {
-  if (!currentUser) { guestNudge(); return; }
-  
   const id = document.getElementById('tp-post-modal-id').value;
+  if (id && !currentUser) {
+    alert("You must be signed in to edit an existing listing.");
+    return;
+  }
+  
   const title = document.getElementById('tp-name-input').value.trim();
   const category = document.getElementById('tp-cat-input').value;
   const condition = document.getElementById('tp-cond-input').value;
@@ -4918,7 +4919,7 @@ function saveTradingPostItem() {
     alert(`⚠️ Warning: ${safetyCheck.reason}\n\nYour listing contains sensitive keywords. It will be flagged for Town Hall moderation and might require approval before going live.`);
   }
 
-  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  const nm = currentUser ? (currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor') : 'Visitor';
   const itemData = {
     title,
     category,
@@ -4927,8 +4928,8 @@ function saveTradingPostItem() {
     price: isTrade ? 'Trade Only' : price.replace('$', ''),
     desc,
     contact,
-    uid: currentUser.uid,
-    email: currentUser.email,
+    uid: currentUser ? currentUser.uid : 'guest',
+    email: currentUser ? currentUser.email : 'guest@bellbuckle.connect',
     displayName: nm,
     status: 'active',
     featured: false,
