@@ -90,5 +90,12 @@ service cloud.firestore {
       allow create: if request.auth != null && (request.resource.data.approved == false || isAdmin());
       allow update, delete: if isAdmin();
     }
+
+    // 12. Trading Post listings
+    match /trading_post/{itemId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (isOwner(resource.data.uid) || isAdmin());
+    }
   }
 }

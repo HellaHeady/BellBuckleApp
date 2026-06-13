@@ -1512,6 +1512,249 @@ body.guest .guest-veil{
     grid-template-columns: 1fr !important;
   }
 }
+
+/* 🌲 TRADING POST FOREST & RUSTIC THEME */
+:root {
+  --tp-forest: #2e5a36;
+  --tp-forest-light: #447c4e;
+  --tp-parchment: #fdfaf4;
+  --tp-parchment-dark: #f5eedf;
+  --tp-wood: #4d3319;
+  --tp-wood-light: #805b36;
+  --tp-moss: #5f8565;
+  --tp-earth: #2c1a0c;
+}
+
+.tp-banner {
+  background: linear-gradient(rgba(34, 66, 41, 0.85), rgba(34, 66, 41, 0.95)), url('cb-store.png') center/cover;
+  border: 3px solid var(--tp-wood);
+  border-radius: 12px;
+  padding: 24px;
+  color: var(--tp-parchment);
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  margin-bottom: 20px;
+}
+.tp-banner h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: #f7d584;
+  text-shadow: 1px 2px 4px rgba(0,0,0,0.6);
+  margin-bottom: 6px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.tp-banner p {
+  font-size: 13.5px;
+  color: var(--tp-parchment-dark);
+  font-style: italic;
+  margin: 0;
+}
+
+.tp-sticky-filters {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--tp-parchment-dark);
+  border: 2px solid var(--tp-wood-light);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.tp-filter-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tp-select {
+  background: var(--tp-parchment);
+  border: 1.5px solid var(--tp-wood-light);
+  border-radius: 6px;
+  color: var(--tp-earth);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  outline: none;
+}
+.tp-select:focus {
+  border-color: var(--tp-forest-light);
+}
+.tp-post-btn {
+  background: var(--tp-forest);
+  color: #fff;
+  border: 2px solid var(--tp-wood);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.2s, transform 0.1s;
+}
+.tp-post-btn:hover {
+  background: var(--tp-forest-light);
+  transform: translateY(-1px);
+}
+
+.tp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+.tp-card {
+  background: var(--tp-parchment);
+  border: 2px solid var(--tp-parchment-dark);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(44,26,12,0.08);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.tp-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(44,26,12,0.15);
+  border-color: var(--tp-wood-light);
+}
+.tp-card-img-wrapper {
+  height: 160px;
+  background: #eae3d2;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid var(--tp-parchment-dark);
+}
+.tp-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tp-badge-trade {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--tp-wood);
+  color: #fff;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--tp-wood-light);
+}
+.tp-badge-price {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--tp-forest);
+  color: #ffe9a8;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1.5px solid var(--tp-wood);
+}
+.tp-badge-status {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 3px 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+.tp-badge-featured {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #f1c40f;
+  color: #000;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 3px 6px;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+}
+.tp-card-body {
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.tp-card-meta {
+  font-size: 9.5px;
+  color: var(--tp-moss);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.tp-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tp-earth);
+  line-height: 1.25;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.tp-card-footer {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(44,26,12,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5px;
+  color: var(--ink-lt);
+}
+
+.tp-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 600px) {
+  .tp-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.tp-detail-img-wrapper {
+  background: var(--tp-parchment-dark);
+  border: 2px solid var(--tp-wood);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 300px;
+  position: relative;
+}
+.tp-detail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
 </head>
 <body>
@@ -2794,22 +3037,57 @@ body.guest .guest-veil{
       </div>
 
       <!-- ══════ MARKETPLACE ══════ -->
+      <!-- ══════ TRADING POST ══════ -->
       <div class="screen" id="screen-marketplace">
-        <div class="p20 max-w">
-          <div class="page-header" style="padding:0 0 16px">
-            <h2>Trading Post</h2>
-            <p>Buy, sell &amp; trade with your neighbors — general store style</p>
+        <div class="p20 max-w" style="max-width: 1000px; margin: 0 auto;">
+          
+          <!-- Forest/Rustic Wood Banner -->
+          <div class="tp-banner">
+            <h2>🌲 Bell Buckle Trading Post</h2>
+            <p>A neighborly space to buy, sell, or swap wares in the heart of Bedford County</p>
           </div>
 
-          <div class="market-grid">
-            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#f5ead2,#ede0c4)">🪑</div><div class="market-body"><div class="market-title">Vintage Rocking Chair</div><div class="market-price">$85</div><div class="market-who">Sarah M. · 2 days ago</div></div></div>
-            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)">🥫</div><div class="market-body"><div class="market-title">Home-Canned Tomatoes</div><div class="market-price">$5 / jar</div><div class="market-who">Jim T. · 3 days ago</div></div></div>
-            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">🚜</div><div class="market-body"><div class="market-title">Lawn Mowing Service</div><div class="market-price">$40 / visit</div><div class="market-who">Tyler K. · yesterday</div></div></div>
-            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8)">📚</div><div class="market-body"><div class="market-title">Local History Books</div><div class="market-price">$20 lot</div><div class="market-who">Martha L. · 5 days ago</div></div></div>
-            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#fef9c3,#fef08a)">🍯</div><div class="market-body"><div class="market-title">Raw Tennessee Honey</div><div class="market-price">$12 / lb</div><div class="market-who">Bee Happy Farm · 1 day ago</div></div></div>
-            <div class="market-card"><div class="market-img" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)">🪴</div><div class="market-body"><div class="market-title">Heirloom Tomato Plants</div><div class="market-price">$3 each</div><div class="market-who">Carol B. · 4 days ago</div></div></div>
+          <!-- Parchment Sticky Filters & Action Bar -->
+          <div class="tp-sticky-filters">
+            <div class="tp-filter-group">
+              <select id="tp-filter-cat" class="tp-select" onchange="applyTPFilters()">
+                <option value="all">📦 All Categories</option>
+                <option value="Furniture">🪑 Furniture</option>
+                <option value="Food & Pantry">🥫 Food & Pantry</option>
+                <option value="Garden & Farm">🌱 Garden & Farm</option>
+                <option value="Crafts & Antiques">🪵 Crafts & Antiques</option>
+                <option value="Services">🚜 Services</option>
+                <option value="Tools">🔧 Tools</option>
+                <option value="Clothing">👕 Clothing</option>
+                <option value="Miscellaneous">🏺 Miscellaneous</option>
+              </select>
+              <select id="tp-filter-deal" class="tp-select" onchange="applyTPFilters()">
+                <option value="all">🤝 All Deals</option>
+                <option value="sale">💰 For Sale</option>
+                <option value="trade">🔄 Trade Only</option>
+              </select>
+              <select id="tp-filter-sort" class="tp-select" onchange="applyTPFilters()">
+                <option value="newest">🕒 Newest First</option>
+                <option value="price-low">📈 Price: Low to High</option>
+                <option value="price-high">📉 Price: High to Low</option>
+              </select>
+            </div>
+            <div class="tp-filter-group">
+              <label style="font-size: 11.5px; font-weight: bold; color: var(--tp-earth); display: flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; user-select: none;">
+                <input type="checkbox" id="tp-show-inactive" onchange="applyTPFilters()" style="margin: 0; cursor: pointer; width: auto;">
+                Show Sold/Pending
+              </label>
+              <button class="tp-post-btn" onclick="openTradingPostPostModal()">+ Post Item</button>
+            </div>
           </div>
-          <button class="dashed-add" style="margin-top:14px">+ Post a listing</button>
+
+          <!-- Dynamic Feed Grid -->
+          <div id="tp-feed" class="tp-grid">
+            <div style="grid-column: 1/-1; text-align: center; color: var(--tp-moss); padding: 40px; font-size: 14px;">
+              Loading trading post listings…
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -3298,6 +3576,13 @@ body.guest .guest-veil{
               </div>
               <span style="font-size: 28px;">🔍</span>
             </div>
+            <div class="card" style="padding: 16px; border-left: 4px solid var(--tp-forest); display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; letter-spacing: 0.5px;">Trading Post Listings</div>
+                <div id="stat-trading" style="font-size: 26px; font-weight: 700; color: var(--ink); margin-top: 4px;">...</div>
+              </div>
+              <span style="font-size: 28px;">🛍️</span>
+            </div>
           </div>
 
           <!-- Two-column responsive dashboard -->
@@ -3326,6 +3611,7 @@ body.guest .guest-veil{
                       <option value="pollinator_posts">🐝 Buzz Board</option>
                       <option value="lost_found">🔍 Lost &amp; Found</option>
                       <option value="local_biz">🏪 Businesses</option>
+                      <option value="trading_post">🛍️ Trading Post</option>
                       <option value="chat:general"># general</option>
                       <option value="chat:announcements"># announcements</option>
                       <option value="chat:lost-found"># lost-found</option>
@@ -3516,6 +3802,171 @@ body.guest .guest-veil{
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button class="btn btn-outline" onclick="closeSettingsModal()">Cancel</button>
       <button class="btn btn-red" id="btn-save-settings" onclick="saveSettings()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Trading Post Posting Modal -->
+<div id="tp-post-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(42,31,16,0.72); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+  <div class="card" style="max-width:540px; width:100%; padding:24px; background:var(--tp-parchment); border:2px solid var(--tp-wood); box-shadow:var(--shadow); position:relative; border-radius:14px; text-align:left; max-height:90vh; overflow-y:auto; font-family:'Inter', sans-serif;">
+    <h3 class="serif" id="tp-post-modal-title" style="color:var(--tp-forest); font-size:20px; margin-top:0; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+      🌲 Post to the Trading Post
+    </h3>
+    <input type="hidden" id="tp-post-modal-id">
+    
+    <!-- Item Photo Uploader -->
+    <div style="margin-bottom:12px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Photo (Required)</label>
+      <div id="tp-upload-box" style="border: 2px dashed var(--tp-wood-light); border-radius: 8px; padding: 15px; text-align: center; background: var(--tp-parchment-dark); cursor: pointer; position: relative;" onclick="document.getElementById('tp-file-input').click()">
+        <span style="font-size: 24px; display: block; margin-bottom: 4px;">📸</span>
+        <span style="font-size: 12px; color: var(--tp-earth); font-weight: 600;">Tap to upload or take a photo</span>
+        <span style="font-size: 9.5px; display: block; color: var(--ink-lt); margin-top: 2px;">Image will be auto-compressed</span>
+        <img id="tp-upload-preview" style="max-height: 120px; max-width: 100%; display: none; margin: 10px auto 0; border-radius: 6px; border: 1.5px solid var(--tp-wood);" alt="Preview">
+      </div>
+      <input type="file" id="tp-file-input" accept="image/*" style="display: none;" onchange="handleTPFileSelect(this)">
+      <div id="tp-clear-img-btn" style="text-align: right; margin-top: 4px; display: none;">
+        <button class="btn btn-outline" style="padding: 3px 8px; font-size: 10px;" onclick="clearTPImage(); event.stopPropagation();">Remove Photo</button>
+      </div>
+    </div>
+
+    <!-- Fields Grid -->
+    <div style="margin-bottom:12px; display:flex; gap:10px;">
+      <div style="flex:1;">
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Item Name</label>
+        <input type="text" id="tp-name-input" class="form-input" placeholder="e.g. Handmade Basket" style="margin-bottom:0; width:100%;">
+      </div>
+      <div style="flex:1;">
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Category</label>
+        <select id="tp-cat-input" class="form-input" style="margin-bottom:0; width:100%;">
+          <option value="">-- Choose Category --</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Food & Pantry">Food & Pantry</option>
+          <option value="Garden & Farm">Garden & Farm</option>
+          <option value="Crafts & Antiques">Crafts & Antiques</option>
+          <option value="Services">Services</option>
+          <option value="Tools">Tools</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Miscellaneous">Miscellaneous</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px; display:flex; gap:10px;">
+      <div style="flex:1;">
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Condition</label>
+        <select id="tp-cond-input" class="form-input" style="margin-bottom:0; width:100%;">
+          <option value="Gently Used">Gently Used</option>
+          <option value="Brand New">Brand New</option>
+          <option value="Well Loved">Well Loved</option>
+          <option value="Antique / Rustic">Antique / Rustic</option>
+        </select>
+      </div>
+      <div style="flex:1;">
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Pricing Option</label>
+        <div style="display: flex; gap: 8px; align-items: center; height: 38px;">
+          <label style="font-size: 13px; display: flex; align-items: center; gap: 4px; margin-bottom: 0; cursor: pointer;">
+            <input type="checkbox" id="tp-trade-check" onchange="toggleTPPriceField(this.checked)" style="margin-bottom:0; cursor:pointer; width:auto;">
+            Trade Only
+          </label>
+          <input type="text" id="tp-price-input" class="form-input" placeholder="e.g. $15" style="margin-bottom:0; flex:1;">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Description</label>
+      <textarea id="tp-desc-input" class="form-textarea" rows="3" placeholder="Describe your item, trades wanted, etc..." style="margin-bottom:0; font-size:13px; width:100%;"></textarea>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Contact Preference</label>
+      <input type="text" id="tp-contact-input" class="form-input" placeholder="e.g. Call Martha at 555-0123 or message in #buy-sell" style="margin-bottom:0; width:100%;">
+    </div>
+
+    <!-- Live Preview Slot -->
+    <div id="tp-preview-container" style="display: none; background: var(--tp-parchment-dark); border: 1.5px dashed var(--tp-wood-light); border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+      <div style="font-size: 10px; font-weight: bold; color: var(--tp-moss); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px;">Listing Preview</div>
+      <div id="tp-preview-card-placeholder" style="display: flex; justify-content: center;"></div>
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end; align-items: center;">
+      <button class="btn btn-outline" onclick="toggleTPPreview()" id="tp-preview-toggle-btn">Show Preview</button>
+      <div style="flex:1;"></div>
+      <button class="btn btn-outline" onclick="closeTradingPostPostModal()">Cancel</button>
+      <button class="btn btn-red" id="btn-save-tp" onclick="saveTradingPostItem()" style="background: var(--tp-forest); border-color: var(--tp-wood);">Publish Listing</button>
+    </div>
+  </div>
+</div>
+
+<!-- Trading Post Detailed Viewer Modal -->
+<div id="tp-detail-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(42,31,16,0.72); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+  <div class="card" style="max-width:680px; width:100%; padding:24px; background:var(--tp-parchment); border:2px solid var(--tp-wood); box-shadow:var(--shadow); position:relative; border-radius:14px; text-align:left; max-height:90vh; overflow-y:auto; font-family:'Inter', sans-serif;">
+    <button class="btn btn-outline" style="position: absolute; top: 12px; right: 12px; padding: 4px 8px; font-size: 12px;" onclick="closeTradingPostDetailModal()">✕</button>
+    
+    <div class="tp-detail-grid">
+      <!-- Image side -->
+      <div class="tp-detail-img-wrapper">
+        <img id="tp-detail-img" class="tp-detail-img" src="" alt="Item Image">
+        <div id="tp-detail-price-badge" class="tp-badge-price" style="top:12px; right:12px;"></div>
+        <div id="tp-detail-status-badge" class="tp-badge-status" style="bottom:12px; left:12px;"></div>
+      </div>
+      
+      <!-- Content side -->
+      <div style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+            <span id="tp-detail-cat-badge" style="background: var(--tp-forest-light); color:#fff; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px;"></span>
+            <span id="tp-detail-cond-badge" style="background: var(--tp-wood-light); color:#fff; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px;"></span>
+          </div>
+          <h2 id="tp-detail-title" class="serif" style="color: var(--tp-earth); font-size: 22px; font-weight: bold; margin-top: 0; margin-bottom: 8px; line-height: 1.2;"></h2>
+          <div style="font-size: 11px; color: var(--ink-lt); margin-bottom: 12px;">
+            Posted by <strong id="tp-detail-owner"></strong> <span id="tp-detail-time"></span>
+          </div>
+          
+          <div style="border-top: 1px dashed rgba(44,26,12,0.15); padding-top: 10px; margin-bottom: 12px;">
+            <div style="font-size: 11px; font-weight: bold; color: var(--tp-moss); text-transform: uppercase; margin-bottom: 4px;">Description</div>
+            <div id="tp-detail-desc" style="font-size: 13px; color: var(--tp-earth); line-height: 1.6; white-space: pre-line;"></div>
+          </div>
+        </div>
+
+        <div>
+          <div id="tp-detail-contact-box" style="background: var(--tp-parchment-dark); border: 1.5px solid var(--tp-wood-light); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; display: none;">
+            <div style="font-size: 10px; font-weight: bold; color: var(--tp-wood); text-transform: uppercase; margin-bottom: 2px;">How to contact seller:</div>
+            <div id="tp-detail-contact-info" style="font-size: 12.5px; font-weight: 700; color: var(--tp-earth);"></div>
+          </div>
+          
+          <button id="tp-detail-contact-btn" class="tp-post-btn" style="width: 100%; justify-content: center; padding: 10px;" onclick="revealTPContact()">🤝 Contact Seller</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Owner / Admin Controls -->
+    <div id="tp-detail-controls" style="display: none; margin-top: 18px; padding-top: 14px; border-top: 2px solid var(--tp-wood-light); background: rgba(128,91,54,0.05); border-radius: 8px; padding: 12px;">
+      <div style="font-size: 11px; font-weight: bold; color: var(--tp-wood); text-transform: uppercase; margin-bottom: 8px;">Seller &amp; Admin Controls</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+        <label style="font-size: 12px; color: var(--tp-earth); font-weight: 600;">Status:</label>
+        <select id="tp-detail-status-select" class="tp-select" onchange="updateTPItemStatus()">
+          <option value="active">🟢 Active / Available</option>
+          <option value="pending">🟡 Pending Trade / Sale</option>
+          <option value="sold">🔴 Sold / Completed</option>
+        </select>
+        
+        <div style="flex:1;"></div>
+        
+        <!-- Admin Highlight Toggle -->
+        <label id="tp-admin-feat-label" style="font-size: 12px; color: var(--tp-earth); font-weight: 600; display: none; align-items: center; gap: 4px; margin-bottom: 0; cursor: pointer;">
+          <input type="checkbox" id="tp-detail-feat-check" onchange="toggleTPItemFeatured()" style="margin: 0; cursor: pointer; width: auto;">
+          ⭐ Highlight/Feature
+        </label>
+        
+        <button class="btn btn-outline" style="border-color: var(--red); color: var(--red); padding: 6px 12px; font-size: 12px;" onclick="deleteTPItem()">Delete Listing</button>
+      </div>
+    </div>
+
+    <!-- More from this user section -->
+    <div id="tp-detail-more-section" style="margin-top: 20px; padding-top: 14px; border-top: 1px dashed rgba(44,26,12,0.15); display: none;">
+      <div style="font-size: 11px; font-weight: bold; color: var(--tp-moss); text-transform: uppercase; margin-bottom: 8px;">More from this seller</div>
+      <div id="tp-detail-more-grid" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px;"></div>
     </div>
   </div>
 </div>
@@ -3842,6 +4293,7 @@ auth.onAuthStateChanged(user => {
     listenGarden();
     listenBuzz();
     listenBiz();
+    listenTradingPost();
     buildChannelLists();
     switchChan('general', false); // prep chat without leaving Home
     initDashboardWidgets();
@@ -3881,6 +4333,7 @@ function enterGuestMode() {
   listenGarden();
   listenBuzz();
   listenBiz();
+  listenTradingPost();
   buildChannelLists();
   switchChan('general', false);
   initDashboardWidgets();
@@ -3954,6 +4407,7 @@ function nav(id) {
   if (id === 'chat') setTimeout(scrollChat, 80);
   if (id === 'kids') initCanvasPage(document.querySelector('.cpage-wrap.active'));
   if (id === 'community') computeHotTopics(false);
+  if (id === 'marketplace') renderTradingPostFeed();
 }
 
 // ─── Chat channels ────────────────────────────────────────────────────────────
@@ -4131,6 +4585,529 @@ function submitLF() {
   const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
   db.collection('lost_found').add({ type, title, desc, uid:currentUser.uid, email:currentUser.email, displayName:nm, ts:firebase.firestore.FieldValue.serverTimestamp() })
     .then(()=>{ document.getElementById('lf-title').value=''; document.getElementById('lf-desc').value=''; });
+}
+
+// ─── Trading Post ─────────────────────────────────────────────────────────────
+let tpUnsub = null;
+let currentTPListings = [];
+let tpSelectedImageBase64 = "";
+let currentTPItem = null;
+
+function listenTradingPost() {
+  if (tpUnsub) tpUnsub();
+  
+  const feed = document.getElementById('tp-feed');
+  if (feed) {
+    feed.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--tp-moss); padding: 40px; font-size: 14px;">Loading trading post listings…</div>';
+  }
+  
+  tpUnsub = db.collection('trading_post').orderBy('ts', 'desc').limit(150)
+    .onSnapshot(snap => {
+      currentTPListings = [];
+      snap.forEach(doc => {
+        const data = doc.data();
+        currentTPListings.push({ id: doc.id, ...data });
+      });
+      renderTradingPostFeed();
+    }, err => {
+      console.error("Error loading trading post:", err);
+      if (feed) {
+        feed.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--tp-moss); padding: 40px; font-size: 14px;">Sign in to view Trading Post listings.</div>';
+      }
+    });
+}
+
+function renderTradingPostFeed() {
+  const feed = document.getElementById('tp-feed');
+  if (!feed) return;
+  
+  const catFilter = document.getElementById('tp-filter-cat').value;
+  const dealFilter = document.getElementById('tp-filter-deal').value;
+  const sortOption = document.getElementById('tp-filter-sort').value;
+  const showInactive = document.getElementById('tp-show-inactive').checked;
+  
+  let filtered = currentTPListings.filter(item => {
+    if (item.hidden) return false;
+    // Category filter
+    if (catFilter !== 'all' && item.category !== catFilter) return false;
+    // Deal Type filter
+    if (dealFilter === 'sale' && item.dealType !== 'sale') return false;
+    if (dealFilter === 'trade' && item.dealType !== 'trade') return false;
+    // Status filter
+    if (!showInactive && item.status !== 'active') return false;
+    
+    return true;
+  });
+  
+  // Sort
+  filtered.sort((a, b) => {
+    if (sortOption === 'newest') {
+      const tA = a.ts?.seconds || 0;
+      const tB = b.ts?.seconds || 0;
+      return tB - tA;
+    } else if (sortOption === 'price-low') {
+      const pA = a.dealType === 'trade' ? 0 : parseFloat(a.price) || 0;
+      const pB = b.dealType === 'trade' ? 0 : parseFloat(b.price) || 0;
+      return pA - pB;
+    } else if (sortOption === 'price-high') {
+      const pA = a.dealType === 'trade' ? 0 : parseFloat(a.price) || 0;
+      const pB = b.dealType === 'trade' ? 0 : parseFloat(b.price) || 0;
+      return pB - pA;
+    }
+    return 0;
+  });
+  
+  if (filtered.length === 0) {
+    feed.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--tp-moss); padding: 40px; font-size: 14px;">No items match the selected filters.</div>';
+    return;
+  }
+  
+  feed.innerHTML = filtered.map(item => {
+    const isTrade = item.dealType === 'trade';
+    const badgeHtml = isTrade 
+      ? `<div class="tp-badge-trade">🔄 Trade Only</div>` 
+      : `<div class="tp-badge-price">$${item.price}</div>`;
+      
+    let statusBadge = "";
+    if (item.status === 'sold') {
+      statusBadge = `<div class="tp-badge-status" style="background:#e74c3c;">🔴 Sold</div>`;
+    } else if (item.status === 'pending') {
+      statusBadge = `<div class="tp-badge-status" style="background:#f39c12;">🟡 Pending</div>`;
+    }
+    
+    const featBadge = item.featured ? `<div class="tp-badge-featured">⭐ Featured</div>` : '';
+    const dateStr = item.ts?.toDate ? item.ts.toDate().toLocaleDateString('en-US', {month:'short', day:'numeric'}) : 'Just now';
+    const ownerName = item.displayName || 'Neighbor';
+    const imgUrl = item.img || 'cb-store.png';
+
+    return `
+      <div class="tp-card" onclick="openTradingPostDetail('${item.id}')">
+        <div class="tp-card-img-wrapper">
+          <img class="tp-card-img" src="${imgUrl}" alt="${esc(item.title)}">
+          ${badgeHtml}
+          ${statusBadge}
+          ${featBadge}
+        </div>
+        <div class="tp-card-body">
+          <div>
+            <div class="tp-card-meta">${esc(item.category)} · ${esc(item.condition)}</div>
+            <div class="tp-card-title">${esc(item.title)}</div>
+          </div>
+          <div class="tp-card-footer">
+            <span>👤 ${esc(ownerName)}</span>
+            <span>📅 ${dateStr}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function applyTPFilters() {
+  renderTradingPostFeed();
+}
+
+function openTradingPostPostModal() {
+  if (!currentUser) { guestNudge(); return; }
+  
+  // Reset fields
+  document.getElementById('tp-post-modal-id').value = '';
+  document.getElementById('tp-name-input').value = '';
+  document.getElementById('tp-cat-input').value = '';
+  document.getElementById('tp-cond-input').value = 'Gently Used';
+  document.getElementById('tp-price-input').value = '';
+  document.getElementById('tp-price-input').disabled = false;
+  document.getElementById('tp-trade-check').checked = false;
+  document.getElementById('tp-desc-input').value = '';
+  document.getElementById('tp-contact-input').value = '';
+  
+  clearTPImage();
+  
+  // Hide preview
+  document.getElementById('tp-preview-container').style.display = 'none';
+  document.getElementById('tp-preview-toggle-btn').textContent = 'Show Preview';
+  
+  document.getElementById('tp-post-modal-title').textContent = '🌲 Post to the Trading Post';
+  document.getElementById('tp-post-modal').style.display = 'flex';
+}
+
+function toggleTPPriceField(isTradeOnly) {
+  const priceInput = document.getElementById('tp-price-input');
+  if (priceInput) {
+    priceInput.disabled = isTradeOnly;
+    if (isTradeOnly) {
+      priceInput.value = 'Trade Only';
+    } else {
+      priceInput.value = '';
+    }
+  }
+}
+
+function closeTradingPostPostModal() {
+  document.getElementById('tp-post-modal').style.display = 'none';
+}
+
+function handleTPFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      let w = img.width;
+      let h = img.height;
+      
+      const MAX_SIZE = 600;
+      if (w > MAX_SIZE || h > MAX_SIZE) {
+        if (w > h) {
+          h = Math.round((h * MAX_SIZE) / w);
+          w = MAX_SIZE;
+        } else {
+          w = Math.round((w * MAX_SIZE) / h);
+          h = MAX_SIZE;
+        }
+      }
+      
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      
+      tpSelectedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      
+      const preview = document.getElementById('tp-upload-preview');
+      if (preview) {
+        preview.src = tpSelectedImageBase64;
+        preview.style.display = 'block';
+      }
+      const uploader = document.getElementById('tp-upload-box');
+      if (uploader) uploader.style.borderColor = 'var(--tp-forest-light)';
+      
+      const clearBtn = document.getElementById('tp-clear-img-btn');
+      if (clearBtn) clearBtn.style.display = 'block';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearTPImage() {
+  tpSelectedImageBase64 = "";
+  const preview = document.getElementById('tp-upload-preview');
+  if (preview) {
+    preview.src = "";
+    preview.style.display = 'none';
+  }
+  const fileInput = document.getElementById('tp-file-input');
+  if (fileInput) fileInput.value = "";
+  
+  const clearBtn = document.getElementById('tp-clear-img-btn');
+  if (clearBtn) clearBtn.style.display = 'none';
+  
+  const uploader = document.getElementById('tp-upload-box');
+  if (uploader) uploader.style.borderColor = 'var(--tp-wood-light)';
+}
+
+function toggleTPPreview() {
+  const container = document.getElementById('tp-preview-container');
+  const btn = document.getElementById('tp-preview-toggle-btn');
+  
+  if (container.style.display === 'none') {
+    const title = document.getElementById('tp-name-input').value.trim() || 'Item Name';
+    const category = document.getElementById('tp-cat-input').value || 'Category';
+    const condition = document.getElementById('tp-cond-input').value || 'Condition';
+    const isTrade = document.getElementById('tp-trade-check').checked;
+    const priceVal = document.getElementById('tp-price-input').value.trim() || '0';
+    
+    const badgeHtml = isTrade 
+      ? `<div class="tp-badge-trade">🔄 Trade Only</div>` 
+      : `<div class="tp-badge-price">$${priceVal}</div>`;
+      
+    const imgUrl = tpSelectedImageBase64 || 'cb-store.png';
+    
+    const previewHtml = `
+      <div class="tp-card" style="width: 200px; pointer-events: none; margin: 0;">
+        <div class="tp-card-img-wrapper" style="height:120px;">
+          <img class="tp-card-img" src="${imgUrl}" alt="${esc(title)}">
+          ${badgeHtml}
+        </div>
+        <div class="tp-card-body" style="padding:8px;">
+          <div>
+            <div class="tp-card-meta" style="font-size:8px;">${esc(category)} · ${esc(condition)}</div>
+            <div class="tp-card-title" style="font-size:12px; margin-bottom:2px;">${esc(title)}</div>
+          </div>
+          <div class="tp-card-footer" style="margin-top:6px; padding-top:4px; font-size:8.5px;">
+            <span>👤 Preview</span>
+            <span>📅 Today</span>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.getElementById('tp-preview-card-placeholder').innerHTML = previewHtml;
+    container.style.display = 'block';
+    btn.textContent = 'Hide Preview';
+  } else {
+    container.style.display = 'none';
+    btn.textContent = 'Show Preview';
+  }
+}
+
+function flagTradingPostContent(title, desc) {
+  const badWords = [
+    'scam', 'spam', 'drugs', 'weed', 'cannabis', 'marijuana', 'weapon', 'gun', 
+    'pistol', 'rifle', 'ammo', 'ammunition', 'offensive', 'hate', 'fraud', 'pills',
+    'restricted', 'illicit', 'heroin', 'cocaine', 'meth'
+  ];
+  const text = (title + ' ' + desc).toLowerCase();
+  for (const word of badWords) {
+    if (text.includes(word)) {
+      return { flagged: true, reason: `Contains sensitive word: "${word}"` };
+    }
+  }
+  return { flagged: false };
+}
+
+function saveTradingPostItem() {
+  if (!currentUser) { guestNudge(); return; }
+  
+  const id = document.getElementById('tp-post-modal-id').value;
+  const title = document.getElementById('tp-name-input').value.trim();
+  const category = document.getElementById('tp-cat-input').value;
+  const condition = document.getElementById('tp-cond-input').value;
+  const isTrade = document.getElementById('tp-trade-check').checked;
+  const price = document.getElementById('tp-price-input').value.trim();
+  const desc = document.getElementById('tp-desc-input').value.trim();
+  const contact = document.getElementById('tp-contact-input').value.trim();
+  
+  if (!title) { alert("Please enter an item name."); return; }
+  if (!category) { alert("Please select a category."); return; }
+  if (!tpSelectedImageBase64 && !id) { alert("Please upload at least one photo of your item."); return; }
+  if (!isTrade && !price) { alert("Please specify a price or choose 'Trade Only'."); return; }
+  if (!desc) { alert("Please enter a description."); return; }
+  if (!contact) { alert("Please enter your contact information."); return; }
+  
+  const safetyCheck = flagTradingPostContent(title, desc);
+  const isFlagged = safetyCheck.flagged;
+  if (isFlagged) {
+    alert(`⚠️ Warning: ${safetyCheck.reason}\n\nYour listing contains sensitive keywords. It will be flagged for Town Hall moderation and might require approval before going live.`);
+  }
+
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  const itemData = {
+    title,
+    category,
+    condition,
+    dealType: isTrade ? 'trade' : 'sale',
+    price: isTrade ? 'Trade Only' : price.replace('$', ''),
+    desc,
+    contact,
+    uid: currentUser.uid,
+    email: currentUser.email,
+    displayName: nm,
+    status: 'active',
+    featured: false,
+    flagged: isFlagged,
+    approved: !isFlagged,
+  };
+  
+  if (tpSelectedImageBase64) {
+    itemData.img = tpSelectedImageBase64;
+  }
+  
+  const saveBtn = document.getElementById('btn-save-tp');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Publishing...';
+  
+  const p = id 
+    ? db.collection('trading_post').doc(id).update(itemData)
+    : db.collection('trading_post').add({ ...itemData, ts: firebase.firestore.FieldValue.serverTimestamp() });
+    
+  p.then(() => {
+    closeTradingPostPostModal();
+  }).catch(err => {
+    console.error("Error saving listing:", err);
+    alert("Error publishing listing: " + err.message);
+  }).finally(() => {
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Publishing Listing';
+  });
+}
+
+function openTradingPostDetail(id) {
+  const item = currentTPListings.find(i => i.id === id);
+  if (!item) return;
+  
+  currentTPItem = item;
+  
+  document.getElementById('tp-detail-img').src = item.img || 'cb-store.png';
+  document.getElementById('tp-detail-title').textContent = item.title;
+  document.getElementById('tp-detail-cat-badge').textContent = item.category;
+  document.getElementById('tp-detail-cond-badge').textContent = item.condition;
+  document.getElementById('tp-detail-desc').textContent = item.desc;
+  
+  const dateStr = item.ts?.toDate ? item.ts.toDate().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : 'Just now';
+  document.getElementById('tp-detail-time').textContent = 'on ' + dateStr;
+  document.getElementById('tp-detail-owner').textContent = item.displayName || 'Neighbor';
+  
+  // Price Display
+  const isTrade = item.dealType === 'trade';
+  const priceDisplay = isTrade ? '🔄 Trade' : `$${item.price}`;
+  const priceBadge = document.getElementById('tp-detail-price-badge');
+  priceBadge.textContent = priceDisplay;
+  priceBadge.style.background = isTrade ? 'var(--tp-wood)' : 'var(--tp-forest)';
+  priceBadge.style.color = isTrade ? '#fff' : '#ffe9a8';
+  
+  // Status Display
+  const statusBadge = document.getElementById('tp-detail-status-badge');
+  if (item.status === 'sold') {
+    statusBadge.textContent = '🔴 Sold';
+    statusBadge.style.display = 'block';
+  } else if (item.status === 'pending') {
+    statusBadge.textContent = '🟡 Pending Trade/Sale';
+    statusBadge.style.display = 'block';
+  } else {
+    statusBadge.style.display = 'none';
+  }
+  
+  // Hide Contact Info initially
+  document.getElementById('tp-detail-contact-box').style.display = 'none';
+  document.getElementById('tp-detail-contact-info').textContent = item.contact;
+  document.getElementById('tp-detail-contact-btn').style.display = 'block';
+  
+  // Owner & Admin Controls
+  const controls = document.getElementById('tp-detail-controls');
+  const isOwner = currentUser && currentUser.uid === item.uid;
+  const isAdmin = typeof isAdminUser !== 'undefined' && isAdminUser;
+  
+  if (isOwner || isAdmin) {
+    controls.style.display = 'block';
+    document.getElementById('tp-detail-status-select').value = item.status || 'active';
+    
+    const adminFeatLabel = document.getElementById('tp-admin-feat-label');
+    if (isAdmin) {
+      adminFeatLabel.style.display = 'flex';
+      document.getElementById('tp-detail-feat-check').checked = !!item.featured;
+    } else {
+      adminFeatLabel.style.display = 'none';
+    }
+  } else {
+    controls.style.display = 'none';
+  }
+  
+  // Load More from this user
+  loadMoreFromUser(item.uid, item.id);
+  
+  document.getElementById('tp-detail-modal').style.display = 'flex';
+}
+
+function closeTradingPostDetailModal() {
+  document.getElementById('tp-detail-modal').style.display = 'none';
+}
+
+function revealTPContact() {
+  document.getElementById('tp-detail-contact-box').style.display = 'block';
+  document.getElementById('tp-detail-contact-btn').style.display = 'none';
+}
+
+function updateTPItemStatus() {
+  if (!currentTPItem) return;
+  const status = document.getElementById('tp-detail-status-select').value;
+  db.collection('trading_post').doc(currentTPItem.id).update({ status })
+    .then(() => {
+      currentTPItem.status = status;
+      const statusBadge = document.getElementById('tp-detail-status-badge');
+      if (status === 'sold') {
+        statusBadge.textContent = '🔴 Sold';
+        statusBadge.style.display = 'block';
+      } else if (status === 'pending') {
+        statusBadge.textContent = '🟡 Pending Trade/Sale';
+        statusBadge.style.display = 'block';
+      } else {
+        statusBadge.style.display = 'none';
+      }
+    })
+    .catch(err => {
+      console.error("Error updating status:", err);
+      alert("Error updating status: " + err.message);
+    });
+}
+
+function toggleTPItemFeatured() {
+  if (!currentTPItem) return;
+  const featured = document.getElementById('tp-detail-feat-check').checked;
+  db.collection('trading_post').doc(currentTPItem.id).update({ featured })
+    .catch(err => {
+      console.error("Error updating featured:", err);
+      alert("Error updating featured status: " + err.message);
+    });
+}
+
+function deleteTPItem() {
+  if (!currentTPItem) return;
+  if (!confirm("Are you sure you want to permanently delete this listing?")) return;
+  
+  db.collection('trading_post').doc(currentTPItem.id).delete()
+    .then(() => {
+      closeTradingPostDetailModal();
+    })
+    .catch(err => {
+      console.error("Error deleting item:", err);
+      alert("Error deleting listing: " + err.message);
+    });
+}
+
+function loadMoreFromUser(uid, currentItemId) {
+  const moreGrid = document.getElementById('tp-detail-more-grid');
+  const section = document.getElementById('tp-detail-more-section');
+  if (!moreGrid || !section) return;
+  
+  moreGrid.innerHTML = '';
+  
+  db.collection('trading_post')
+    .where('uid', '==', uid)
+    .where('status', '==', 'active')
+    .limit(10)
+    .get()
+    .then(snap => {
+      let count = 0;
+      snap.forEach(doc => {
+        const data = doc.data();
+        if (doc.id === currentItemId || data.hidden || data.flagged) return;
+        count++;
+        
+        const card = document.createElement('div');
+        card.style.cssText = 'width: 100px; flex-shrink: 0; cursor: pointer; text-align: center;';
+        card.onclick = () => {
+          openTradingPostDetail(doc.id);
+        };
+        
+        const isTrade = data.dealType === 'trade';
+        const priceStr = isTrade ? '🔄 Trade' : `$${data.price}`;
+        const imgUrl = data.img || 'cb-store.png';
+        
+        card.innerHTML = `
+          <div style="width: 100px; height: 75px; border-radius: 6px; overflow: hidden; border: 1.5px solid var(--tp-wood-light); box-shadow: var(--shadow-sm); margin-bottom: 4px;">
+            <img src="${imgUrl}" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="font-size: 11px; font-weight: bold; color: var(--tp-earth); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100px;">${esc(data.title)}</div>
+          <div style="font-size: 10px; color: var(--tp-forest-light); font-weight: 700;">${esc(priceStr)}</div>
+        `;
+        moreGrid.appendChild(card);
+      });
+      
+      if (count > 0) {
+        section.style.display = 'block';
+      } else {
+        section.style.display = 'none';
+      }
+    })
+    .catch(err => {
+      console.error("Error loading user's other items:", err);
+      section.style.display = 'none';
+    });
 }
 
 // ─── Community Garden ─────────────────────────────────────────────────────────
@@ -4693,6 +5670,7 @@ const ADMIN_COLLS = {
   pollinator_posts: d => d.text,
   lost_found:       d => (d.title || '') + ' — ' + (d.desc || ''),
   local_biz:        d => (d.name || '') + ' — ' + (d.desc || ''),
+  trading_post:     d => `[${d.category}] ${d.title} — ${d.desc}`,
 };
 
 function admColl(val) {
@@ -4733,7 +5711,8 @@ async function loadAdminStats() {
     { id: 'stat-posts', coll: 'community_posts' },
     { id: 'stat-biz', coll: 'local_biz' },
     { id: 'stat-garden', coll: 'garden_updates' },
-    { id: 'stat-lost', coll: 'lost_found' }
+    { id: 'stat-lost', coll: 'lost_found' },
+    { id: 'stat-trading', coll: 'trading_post' }
   ];
   collections.forEach(item => {
     const el = document.getElementById(item.id);
@@ -6390,7 +7369,7 @@ async function clearLiveDatabase() {
   btn.textContent = "Clearing...";
   
   try {
-    const collections = ['community_posts', 'lost_found', 'garden_updates', 'pollinator_posts', 'local_biz', 'history_vault', 'events'];
+    const collections = ['community_posts', 'lost_found', 'garden_updates', 'pollinator_posts', 'local_biz', 'history_vault', 'events', 'trading_post'];
     for (const coll of collections) {
       await deleteCollection(coll);
     }
@@ -6521,6 +7500,19 @@ async function seedDemoData() {
     
     for (const ev of demoEvents) {
       await db.collection('events').add(ev);
+    }
+
+    const demoListings = [
+      { title: "Vintage Rocking Chair", category: "Furniture", condition: "Antique / Rustic", dealType: "sale", price: "85", desc: "Solid oak rocking chair from the late 19th century. Hand-carved details, very sturdy. Has some normal wear and tear on the arms but adds to its rustic charm.", contact: "Call Sarah M. at 555-0129", status: "active", featured: true, flagged: false, approved: true, img: "cb-store.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Home-Canned Tomatoes", category: "Food & Pantry", condition: "Brand New", dealType: "sale", price: "5", desc: "Freshly canned heirloom Roma tomatoes from our organic community garden plot. Preserved last August, delicious for stews and pasta sauces.", contact: "Call Jim T. at 555-0144", status: "active", flagged: false, approved: true, img: "garden2.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Lawn Mowing & Edging", category: "Services", condition: "Brand New", dealType: "sale", price: "40", desc: "Offering professional lawn care services for residential properties in Bell Buckle. Includes mowing, edging, and blowing clippings. Weekly or bi-weekly slots available.", contact: "Message Tyler K. in #local-biz or call 555-0187", status: "active", flagged: false, approved: true, img: "cb-downtown.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Tennessee Wildflower Honey", category: "Food & Pantry", condition: "Brand New", dealType: "sale", price: "12", desc: "Pure, raw honey harvested directly from our hives on Bee City Road. Golden color, rich floral taste. Support local bees!", contact: "Visit Bee Happy Farm at 122 Main St or call 555-0155", status: "active", featured: true, flagged: false, approved: true, img: "garden1.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Heirloom Squash Plants", category: "Garden & Farm", condition: "Brand New", dealType: "trade", price: "Trade Only", desc: "Have 8 extra summer yellow crookneck squash starters. Looking to trade for cucumber starters or heirloom tomato starts.", contact: "Carol B. at 555-0162", status: "active", flagged: false, approved: true, img: "garden3.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Antique Oak Writing Desk", category: "Furniture", condition: "Antique / Rustic", dealType: "trade", price: "Trade Only", desc: "Beautiful roll-top desk in good structural shape. Looking to swap for a working electric weed eater or a leaf blower.", contact: "Message Martha L. in general chat", status: "active", flagged: false, approved: true, img: "cb-mural.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const listing of demoListings) {
+      await db.collection('trading_post').add(listing);
     }
     
     alert("Database seeded successfully with authentic Bell Buckle demo content!");
