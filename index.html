@@ -2235,74 +2235,16 @@ body.guest .guest-veil{
       <!-- ══════ EVENTS ══════ -->
       <div class="screen" id="screen-events">
         <div class="p20 max-w">
-          <div class="page-header" style="padding:0 0 16px">
-            <h2>Upcoming Events</h2>
-            <p>What's happening in Bell Buckle</p>
+          <div class="page-header" style="padding:0 0 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h2>Upcoming Events</h2>
+              <p>What's happening in Bell Buckle</p>
+            </div>
+            <button class="btn btn-outline" id="btn-add-event-trigger" style="display:none; margin-bottom:0;" onclick="openAddEventModal()">+ Add Event</button>
           </div>
 
-          <div class="event-card">
-            <div class="event-stripe" style="background:var(--red)"></div>
-            <div class="event-body">
-              <div style="display:flex;justify-content:space-between;align-items:flex-start">
-                <div>
-                  <div class="event-date" style="color:var(--red)">June 20, 2026 · Free Admission</div>
-                  <div class="event-title">🎉 RC Cola &amp; Moon Pie Festival</div>
-                  <div class="event-loc">Downtown Bell Buckle</div>
-                </div>
-                <span style="background:#fef2f2;color:var(--red);font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;flex-shrink:0">Featured</span>
-              </div>
-              <div class="event-desc">The South's quirkiest and most beloved festival. Live music, Moon Pie eating contests, local vendors, and more on the streets of historic downtown Bell Buckle.</div>
-            </div>
-          </div>
-
-          <div class="event-card">
-            <div class="event-stripe" style="background:#d97706"></div>
-            <div class="event-body">
-              <div class="event-date" style="color:#d97706">Every Saturday · 7am – 12pm</div>
-              <div class="event-title">🌽 Farmers Market</div>
-              <div class="event-loc">Old Bell Buckle Rd · Weather permitting</div>
-              <div class="event-desc">Fresh produce, local honey, handmade crafts, and the best cinnamon rolls in Bedford County.</div>
-            </div>
-          </div>
-
-          <div class="event-card">
-            <div class="event-stripe" style="background:#2563eb"></div>
-            <div class="event-body">
-              <div class="event-date" style="color:#2563eb">2nd Tuesday Monthly</div>
-              <div class="event-title">🏛️ Town Hall Meeting</div>
-              <div class="event-loc">Bell Buckle Community Center</div>
-              <div class="event-desc">Community discussions, local government updates, and your chance to speak up about what matters in Bell Buckle.</div>
-            </div>
-          </div>
-
-          <div class="event-card">
-            <div class="event-stripe" style="background:var(--green)"></div>
-            <div class="event-body">
-              <div class="event-date" style="color:var(--green)">June – August · Fridays 6pm · Free</div>
-              <div class="event-title">🎵 Summer Music Series</div>
-              <div class="event-loc">Bell Buckle Café Porch</div>
-              <div class="event-desc">Local artists, cold drinks, and warm Tennessee evenings on the historic café porch. Bring a lawn chair.</div>
-            </div>
-          </div>
-
-          <div class="event-card">
-            <div class="event-stripe" style="background:#9333ea"></div>
-            <div class="event-body">
-              <div class="event-date" style="color:#9333ea">September 13–14, 2026</div>
-              <div class="event-title">🎨 Tennessee Crafts Fair</div>
-              <div class="event-loc">Downtown Bell Buckle</div>
-              <div class="event-desc">Juried craft show featuring artisans from across Tennessee — pottery, woodwork, textiles, jewelry, and more.</div>
-            </div>
-          </div>
-
-          <div class="event-card">
-            <div class="event-stripe" style="background:#0891b2"></div>
-            <div class="event-body">
-              <div class="event-date" style="color:#0891b2">October 4, 2026</div>
-              <div class="event-title">🍂 Bell Buckle Fall Festival</div>
-              <div class="event-loc">Downtown Bell Buckle</div>
-              <div class="event-desc">Hayrides, pumpkin painting, live bluegrass, and the annual chili cook-off. Family fun for all ages.</div>
-            </div>
+          <div id="events-feed" style="display:flex; flex-direction:column; gap:16px;">
+            <div style="color:var(--ink-lt); font-size:13px; text-align:center; padding:24px 0;">Loading upcoming events…</div>
           </div>
         </div>
       </div>
@@ -3310,6 +3252,17 @@ body.guest .guest-veil{
                 </div>
               </div>
 
+              <!-- Pending Events Card -->
+              <div class="card" id="adm-pending-events-card" style="padding: 20px; margin-top: 16px; border-left: 4px solid var(--red); display: none;">
+                <h3 class="serif" style="font-size: 17px; color: var(--ink); margin-bottom: 4px;">🔔 Pending Events for Review</h3>
+                <p style="font-size: 12px; color: var(--ink-lt); margin-bottom: 12px; line-height: 1.5;">
+                  The following upcoming events were submitted by residents. Review and approve to publish them on the public board.
+                </p>
+                <div id="adm-pending-events-list" style="font-size: 13px; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                  Loading pending events…
+                </div>
+              </div>
+
             </div>
 
             <!-- Right Column: AI Assistant & Monthly Calendar -->
@@ -3457,6 +3410,71 @@ body.guest .guest-veil{
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button class="btn btn-outline" onclick="closeSettingsModal()">Cancel</button>
       <button class="btn btn-red" id="btn-save-settings" onclick="saveSettings()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Event Modal (Add/Edit) -->
+<div id="event-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(42,31,16,0.72); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div class="card" style="max-width:480px; width:100%; padding:24px; background:var(--paper); border:2px solid var(--red); box-shadow:var(--shadow); position:relative; border-radius:14px; text-align:left;">
+    <h3 class="serif" id="event-modal-title" style="color:var(--red); font-size:20px; margin-top:0; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+      📅 Add Upcoming Event
+    </h3>
+    <input type="hidden" id="event-modal-id">
+    
+    <div style="margin-bottom:12px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">Event Title</label>
+      <input type="text" id="event-title-input" class="form-input" placeholder="e.g. 5K Run & Fun Walk" style="margin-bottom:0; width:100%;">
+    </div>
+    
+    <div style="margin-bottom:12px; display:flex; gap:10px;">
+      <div style="flex:1;">
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">Date &amp; Time</label>
+        <input type="text" id="event-date-input" class="form-input" placeholder="e.g. Oct 18, 2026 · 8:00 AM" style="margin-bottom:0; width:100%;">
+      </div>
+      <div style="flex:1;">
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">Location</label>
+        <input type="text" id="event-loc-input" class="form-input" placeholder="e.g. Bell Buckle Park" style="margin-bottom:0; width:100%;">
+      </div>
+    </div>
+    
+    <div style="margin-bottom:12px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">Description</label>
+      <textarea id="event-desc-input" class="form-textarea" rows="3" placeholder="Tell the town what's happening..." style="margin-bottom:0; font-size:13px; width:100%;"></textarea>
+    </div>
+    
+    <div style="margin-bottom:14px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">Event Picture or Flier</label>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input type="file" id="event-file-input" accept="image/*" style="display:none;" onchange="handleEventFileSelect(this)">
+        <button class="btn btn-outline" style="margin-bottom:0; padding:6px 12px; font-size:12px; border-radius: var(--radius-sm);" onclick="document.getElementById('event-file-input').click()">📁 Choose File</button>
+        <span id="event-file-name" style="font-size:12px; color:var(--ink-lt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">No file chosen</span>
+        <button class="btn btn-outline" id="btn-clear-event-img" style="display:none; margin-bottom:0; padding:4px 8px; font-size:11px; border-color:var(--red); color:var(--red);" onclick="clearEventImage()">Remove</button>
+      </div>
+      <input type="hidden" id="event-img-data">
+    </div>
+    
+    <!-- Admin-only configuration block -->
+    <div id="event-admin-opts" style="margin-bottom:16px; display:flex; gap:15px; align-items:center; flex-wrap:wrap; background:rgba(0,0,0,0.02); padding:10px; border-radius:8px; border:1px solid var(--wire-lt);">
+      <div>
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">Stripe Color</label>
+        <select id="event-color-input" class="form-input" style="width:auto; margin-bottom:0; padding:5px; font-size:12px;">
+          <option value="var(--red)">Red</option>
+          <option value="#d97706">Gold</option>
+          <option value="#2563eb">Blue</option>
+          <option value="var(--green)">Green</option>
+          <option value="#9333ea">Purple</option>
+        </select>
+      </div>
+      <label style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink); cursor:pointer; user-select:none; margin-bottom:0;">
+        <input type="checkbox" id="event-featured-input" style="width:auto; margin-bottom:0; cursor:pointer;">
+        Featured Event
+      </label>
+    </div>
+    
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeEventModal()">Cancel</button>
+      <button class="btn btn-red" id="btn-save-event" onclick="saveEvent()">Save Event</button>
     </div>
   </div>
 </div>
@@ -3712,6 +3730,7 @@ auth.onAuthStateChanged(user => {
     // Load data
     listenHomePosts();
     listenCommunityPosts();
+    listenEvents();
     listenLostFound();
     listenHistory();
     listenGarden();
@@ -3750,6 +3769,7 @@ function enterGuestMode() {
   if (greet) greet.textContent = 'Howdy, visitor — welcome to Bell Buckle.';
   listenHomePosts();
   listenCommunityPosts();
+  listenEvents();
   listenLostFound();
   listenHistory();
   listenGarden();
@@ -4554,6 +4574,10 @@ function updateAdminVisibility() {
   if (adminSec) {
     adminSec.style.display = isAdminUser ? 'block' : 'none';
   }
+  const addEventBtn = document.getElementById('btn-add-event-trigger');
+  if (addEventBtn) {
+    addEventBtn.style.display = (currentUser && !isGuest) ? 'block' : 'none';
+  }
 }
 
 const ADMIN_COLLS = {
@@ -4709,6 +4733,352 @@ function initSiteSettingsListener() {
   });
 }
 
+// ─── Event Management ─────────────────────────────────────────────────────────
+function openImageLightbox(src) {
+  let box = document.getElementById('image-lightbox-overlay');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'image-lightbox-overlay';
+    box.style = 'display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(5px); z-index:10000; align-items:center; justify-content:center; cursor:pointer;';
+    box.onclick = () => box.style.display = 'none';
+    box.innerHTML = `<img id="image-lightbox-img" style="max-width:90%; max-height:90%; border-radius:8px; box-shadow:0 8px 32px rgba(0,0,0,0.5); object-fit:contain;">`;
+    document.body.appendChild(box);
+  }
+  document.getElementById('image-lightbox-img').src = src;
+  box.style.display = 'flex';
+}
+
+function handleEventFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const fileNameSpan = document.getElementById('event-file-name');
+  if (fileNameSpan) fileNameSpan.textContent = file.name;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const imgObj = new Image();
+    imgObj.onload = function() {
+      const canvas = document.createElement('canvas');
+      let width = imgObj.width;
+      let height = imgObj.height;
+      const maxDim = 600;
+
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(imgObj, 0, 0, width, height);
+
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('event-img-data').value = compressedDataUrl;
+      
+      const clearBtn = document.getElementById('btn-clear-event-img');
+      if (clearBtn) clearBtn.style.display = 'inline-block';
+    };
+    imgObj.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearEventImage() {
+  const fileInput = document.getElementById('event-file-input');
+  if (fileInput) fileInput.value = '';
+  
+  const fileNameSpan = document.getElementById('event-file-name');
+  if (fileNameSpan) fileNameSpan.textContent = 'No file chosen';
+  
+  const imgDataInput = document.getElementById('event-img-data');
+  if (imgDataInput) imgDataInput.value = '';
+  
+  const clearBtn = document.getElementById('btn-clear-event-img');
+  if (clearBtn) clearBtn.style.display = 'none';
+}
+
+function openAddEventModal() {
+  document.getElementById('event-modal-id').value = '';
+  document.getElementById('event-title-input').value = '';
+  document.getElementById('event-date-input').value = '';
+  document.getElementById('event-loc-input').value = '';
+  document.getElementById('event-desc-input').value = '';
+  document.getElementById('event-color-input').value = 'var(--red)';
+  document.getElementById('event-featured-input').checked = false;
+  
+  clearEventImage();
+  
+  const adminOpts = document.getElementById('event-admin-opts');
+  if (adminOpts) {
+    adminOpts.style.display = isAdminUser ? 'flex' : 'none';
+  }
+  
+  document.getElementById('event-modal-title').textContent = '📅 Add Upcoming Event';
+  document.getElementById('event-modal').style.display = 'flex';
+}
+
+function openEditEventModal(id) {
+  openAddEventModal(); // clear everything first
+  
+  db.collection('events').doc(id).get().then(doc => {
+    if (!doc.exists) return;
+    const d = doc.data();
+    document.getElementById('event-modal-id').value = id;
+    document.getElementById('event-title-input').value = d.title || '';
+    document.getElementById('event-date-input').value = d.date || '';
+    document.getElementById('event-loc-input').value = d.loc || '';
+    document.getElementById('event-desc-input').value = d.desc || '';
+    document.getElementById('event-color-input').value = d.stripeColor || 'var(--red)';
+    document.getElementById('event-featured-input').checked = !!d.featured;
+    
+    if (d.img) {
+      document.getElementById('event-img-data').value = d.img;
+      const fileNameSpan = document.getElementById('event-file-name');
+      if (fileNameSpan) fileNameSpan.textContent = 'Existing Image';
+      const clearBtn = document.getElementById('btn-clear-event-img');
+      if (clearBtn) clearBtn.style.display = 'inline-block';
+    }
+    
+    document.getElementById('event-modal-title').textContent = '📅 Edit Event';
+    document.getElementById('event-modal').style.display = 'flex';
+  }).catch(err => {
+    console.error("Error loading event for edit:", err);
+    alert("Could not load event data: " + err.message);
+  });
+}
+
+function closeEventModal() {
+  document.getElementById('event-modal').style.display = 'none';
+}
+
+function saveEvent() {
+  const id = document.getElementById('event-modal-id').value;
+  const titleVal = document.getElementById('event-title-input').value.trim();
+  const dateVal = document.getElementById('event-date-input').value.trim();
+  const locVal = document.getElementById('event-loc-input').value.trim();
+  const descVal = document.getElementById('event-desc-input').value.trim();
+  const colorVal = document.getElementById('event-color-input').value;
+  const featuredVal = document.getElementById('event-featured-input').checked;
+  const imgVal = document.getElementById('event-img-data').value;
+
+  if (!titleVal || !dateVal || !locVal || !descVal) {
+    alert("Please fill in the title, date, location, and description.");
+    return;
+  }
+
+  if (!currentUser) {
+    alert("Please sign in to add events.");
+    return;
+  }
+
+  const btn = document.getElementById('btn-save-event');
+  const oldText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  const eventData = {
+    title: titleVal,
+    date: dateVal,
+    loc: locVal,
+    desc: descVal,
+    img: imgVal || "",
+    stripeColor: isAdminUser ? colorVal : "#94a3b8",
+    featured: isAdminUser ? featuredVal : false,
+    approved: isAdminUser ? true : false,
+    uid: currentUser.uid,
+    email: currentUser.email,
+    displayName: currentUser.displayName || currentUser.email.split('@')[0] || 'Neighbor',
+    ts: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  if (id) {
+    db.collection('events').doc(id).update({
+      title: titleVal,
+      date: dateVal,
+      loc: locVal,
+      desc: descVal,
+      img: imgVal || "",
+      stripeColor: colorVal,
+      featured: featuredVal,
+      approved: true
+    }).then(() => {
+      closeEventModal();
+    }).catch(err => {
+      console.error("Error updating event:", err);
+      alert("Failed to update event: " + err.message);
+    }).finally(() => {
+      btn.disabled = false;
+      btn.textContent = oldText;
+    });
+  } else {
+    db.collection('events').add(eventData).then(() => {
+      closeEventModal();
+      if (!isAdminUser) {
+        alert("Thank you! Your event has been submitted and is pending review by a town administrator.");
+      }
+    }).catch(err => {
+      console.error("Error adding event:", err);
+      alert("Failed to save event: " + err.message);
+    }).finally(() => {
+      btn.disabled = false;
+      btn.textContent = oldText;
+    });
+  }
+}
+
+function deleteEvent(id) {
+  if (!confirm("Are you sure you want to delete this event forever?")) return;
+  db.collection('events').doc(id).delete().catch(err => {
+    console.error("Error deleting event:", err);
+    alert("Failed to delete event: " + err.message);
+  });
+}
+
+let eventsUnsub = null;
+function listenEvents() {
+  if (eventsUnsub) {
+    eventsUnsub();
+    eventsUnsub = null;
+  }
+  eventsUnsub = db.collection('events').onSnapshot(snap => {
+    const feed = document.getElementById('events-feed');
+    if (!feed) return;
+    const approvedEvents = [];
+    snap.forEach(doc => {
+      const data = doc.data();
+      if (data.approved) {
+        approvedEvents.push({ id: doc.id, ...data });
+      }
+    });
+
+    approvedEvents.sort((a, b) => {
+      const tsA = a.ts ? (a.ts.seconds || a.ts.toMillis() / 1000) : Date.now() / 1000;
+      const tsB = b.ts ? (b.ts.seconds || b.ts.toMillis() / 1000) : Date.now() / 1000;
+      return tsB - tsA;
+    });
+
+    if (approvedEvents.length === 0) {
+      feed.innerHTML = '<div style="color:var(--ink-lt); font-size:13px; text-align:center; padding:24px 0;">No upcoming events scheduled yet. Check back soon! 📅</div>';
+      return;
+    }
+
+    feed.innerHTML = approvedEvents.map(d => {
+      const isFeatured = d.featured;
+      const borderStyle = isFeatured ? 'border: 2px solid var(--red); box-shadow: 0 4px 12px rgba(166,50,32,0.15);' : '';
+      return `
+        <div class="event-card" style="${borderStyle}">
+          <div class="event-stripe" style="background:${esc(d.stripeColor || 'var(--red)')}"></div>
+          <div class="event-body">
+            <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
+              ${d.img ? `
+                <div style="flex: 0 0 140px; max-width: 140px; width: 140px; aspect-ratio: 4/3; overflow: hidden; border-radius: 8px; border: 1px solid var(--wire-lt); background: #eee;">
+                  <img src="${esc(d.img)}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageLightbox('${esc(d.img)}')" onerror="this.style.display='none'">
+                </div>
+              ` : ''}
+              <div style="flex: 1; min-width: 200px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                  <div class="event-date" style="color:${esc(d.stripeColor || 'var(--red)')}">${esc(d.date || '')}</div>
+                  \${isFeatured ? '<span style="font-size: 10px; font-weight: 700; color: #fff; background: var(--red); padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">Featured</span>' : ''}
+                </div>
+                <div class="event-title" style="font-size: 16px; font-weight: 700; margin-top: 2px;">${esc(d.title || '')}</div>
+                <div class="event-loc" style="font-size: 12.5px; color: var(--ink-lt); margin-bottom: 8px;">📍 ${esc(d.loc || '')}</div>
+                <div class="event-desc" style="font-size: 13px; line-height: 1.5; color: #44321e;">${linkifyTags(esc(d.desc || ''))}</div>
+                <div style="font-size: 11px; color: var(--ink-lt); margin-top: 8px;">Submitted by \${esc(d.displayName || 'Neighbor')}</div>
+              </div>
+            </div>
+            \${isAdminUser ? `
+              <div style="margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px dashed var(--wire-lt); padding-top: 10px;">
+                <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11.5px; margin-bottom: 0;" onclick="openEditEventModal('${d.id}')">✏️ Edit</button>
+                <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11.5px; margin-bottom: 0; border-color: var(--red); color: var(--red);" onclick="deleteEvent('${d.id}')">🗑️ Delete</button>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }, err => {
+    console.error("listenEvents error:", err);
+    const feed = document.getElementById('events-feed');
+    if (feed) feed.innerHTML = '<div style="color:var(--ink-lt); font-size:13px; text-align:center; padding:24px 0;">Couldn\'t load events right now.</div>';
+  });
+}
+
+let pendingEventsUnsub = null;
+function loadPendingEvents() {
+  const card = document.getElementById('adm-pending-events-card');
+  const list = document.getElementById('adm-pending-events-list');
+  if (!list) return;
+
+  if (pendingEventsUnsub) {
+    pendingEventsUnsub();
+    pendingEventsUnsub = null;
+  }
+
+  pendingEventsUnsub = db.collection('events').onSnapshot(snap => {
+    const pending = [];
+    snap.forEach(doc => {
+      const data = doc.data();
+      if (data.approved === false) {
+        pending.push({ id: doc.id, ...data });
+      }
+    });
+
+    if (pending.length === 0) {
+      if (card) card.style.display = 'none';
+      list.innerHTML = '<div style="color:var(--ink-lt); font-style:italic;">No pending events to review.</div>';
+      return;
+    }
+
+    if (card) card.style.display = 'block';
+    list.innerHTML = pending.map(d => `
+      <div class="adm-row" style="align-items: flex-start; gap: 12px; padding: 12px; border: 1px solid var(--wire-lt); border-radius: 8px; background: #fff;">
+        \${d.img ? `
+          <img src="\${esc(d.img)}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid var(--wire-lt); cursor: pointer;" onclick="openImageLightbox('\${esc(d.img)}')">
+        ` : ''}
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-weight: 700; font-size: 13.5px; color: var(--ink);">\${esc(d.title || '')}</div>
+          <div style="font-size: 11px; color: var(--ink-lt); margin: 2px 0;">📅 \${esc(d.date || '')} · 📍 \${esc(d.loc || '')}</div>
+          <div style="font-size: 12px; color: #44321e; margin-top: 4px; line-height: 1.4; word-break: break-word;">\${esc(d.desc || '')}</div>
+          <div style="font-size: 10.5px; color: var(--ink-lt); margin-top: 6px; border-top: 1px dashed var(--wire-lt); padding-top: 4px;">Submitted by: \${esc(d.displayName || 'Neighbor')} (\${esc(d.email || '')})</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0;">
+          <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px; background: #f0fdf4; border-color: #166534; color: #166534; margin-bottom: 0;" onclick="approveEvent('\${d.id}')">👁️ Approve</button>
+          <button class="btn btn-outline danger" style="padding: 4px 8px; font-size: 11px; margin-bottom: 0;" onclick="rejectEvent('\${d.id}')">🗑️ Reject</button>
+        </div>
+      </div>
+    `).join('');
+  }, err => {
+    console.error("loadPendingEvents error:", err);
+    list.innerHTML = '<div style="color:var(--red); font-style:italic;">Failed to load pending events.</div>';
+  });
+}
+
+function approveEvent(id) {
+  db.collection('events').doc(id).update({
+    approved: true,
+    stripeColor: "var(--red)",
+    ts: firebase.firestore.FieldValue.serverTimestamp()
+  }).catch(err => {
+    console.error(err);
+    alert("Failed to approve event: " + err.message);
+  });
+}
+
+function rejectEvent(id) {
+  if (!confirm("Reject and delete this event submission?")) return;
+  db.collection('events').doc(id).delete().catch(err => {
+    console.error(err);
+    alert("Failed to delete submission: " + err.message);
+  });
+}
+
 let onlineNeighborsUnsub = null;
 function initOnlineNeighborsListener() {
   const listEl = document.getElementById('online-neighbors-list');
@@ -4765,7 +5135,7 @@ function openAdmin() {
   nav('admin');
   const k = document.getElementById('ai-key');
   if (k && !k.value) k.value = localStorage.getItem('bb_api_key') || '';
-  renderSeason(); renderAdminFeed(); runOversight(); loadAdminStats(); loadAdminUsers();
+  renderSeason(); renderAdminFeed(); runOversight(); loadAdminStats(); loadAdminUsers(); loadPendingEvents();
 }
 
 // Secret bell: one click → connect-the-bell-to-the-buckle game → re-sign-in
@@ -5882,7 +6252,7 @@ async function deleteChannelMessages(channelId) {
 }
 
 async function clearLiveDatabase() {
-  if (!confirm("⚠️ WARNING: This will permanently DELETE all community posts, business directory listings, garden updates, lost & found entries, and chat messages on the live database. Are you absolutely sure you want to proceed?")) {
+  if (!confirm("⚠️ WARNING: This will permanently DELETE all community posts, business directory listings, garden updates, lost & found entries, events, and chat messages on the live database. Are you absolutely sure you want to proceed?")) {
     return;
   }
   
@@ -5892,7 +6262,7 @@ async function clearLiveDatabase() {
   btn.textContent = "Clearing...";
   
   try {
-    const collections = ['community_posts', 'lost_found', 'garden_updates', 'pollinator_posts', 'local_biz', 'history_vault'];
+    const collections = ['community_posts', 'lost_found', 'garden_updates', 'pollinator_posts', 'local_biz', 'history_vault', 'events'];
     for (const coll of collections) {
       await deleteCollection(coll);
     }
@@ -5919,7 +6289,7 @@ async function seedDemoData() {
     return;
   }
   
-  if (!confirm("🌱 This will seed realistic Bell Buckle themed sample posts, listings, and updates to Firestore. Proceed?")) {
+  if (!confirm("🌱 This will seed realistic Bell Buckle themed sample posts, listings, events, and updates to Firestore. Proceed?")) {
     return;
   }
   
@@ -6011,6 +6381,18 @@ async function seedDemoData() {
     
     for (const msg of annMessages) {
       await db.collection('channels').doc('announcements').collection('messages').add(msg);
+    }
+
+    const demoEvents = [
+      { title: "Farmer's Market", date: "Saturdays 8am – 12pm", loc: "Old Bell Buckle Rd · Weather permitting", desc: "Fresh produce, local honey, handmade crafts, and the best cinnamon rolls in Bedford County.", stripeColor: "#d97706", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Town Hall Meeting", date: "2nd Tuesday Monthly", loc: "Bell Buckle Community Center", desc: "Community discussions, local government updates, and your chance to speak up about what matters in Bell Buckle.", stripeColor: "#2563eb", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Summer Music Series", date: "June – August · Fridays 6pm · Free", loc: "Bell Buckle Café Porch", desc: "Local artists, cold drinks, and warm Tennessee evenings on the historic café porch. Bring a lawn chair.", stripeColor: "var(--green)", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Tennessee Crafts Fair", date: "September 13–14, 2026", loc: "Downtown Bell Buckle", desc: "Juried craft show featuring artisans from across Tennessee — pottery, woodwork, textiles, jewelry, and more.", stripeColor: "#9333ea", featured: true, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Bell Buckle Fall Festival", date: "October 4, 2026", loc: "Downtown Bell Buckle", desc: "Hayrides, pumpkin painting, live bluegrass, and the annual chili cook-off. Family fun for all ages.", stripeColor: "#0891b2", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    for (const ev of demoEvents) {
+      await db.collection('events').add(ev);
     }
     
     alert("Database seeded successfully with authentic Bell Buckle demo content!");
