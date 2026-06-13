@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if the user is a verified administrator
+    function isAdmin() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Helper to check if a document is owned by the request user
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // 1. Admins collection: Only existing admins can add/edit admin lists
+    match /admins/{adminId} {
+      allow read: if true;
+      allow write: if isAdmin() || (request.auth != null && adminId == request.auth.uid && request.resource.data.secret == "BellBuckle2026");
+    }
+
+    // 2. Chat channels & messages
+    match /channels/{channelId} {
+      allow read: if true;
+      allow write: if isAdmin(); // only admins manage channels
+      
+      match /messages/{messageId} {
+        allow read: if true;
+        allow create: if request.auth != null;
+        allow update, delete: if request.auth != null && (isOwner(resource.data.uid) || isAdmin());
+      }
+    }
+
+    // 3. Community posts
+    match /community_posts/{postId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (isOwner(resource.data.uid) || isAdmin());
+    }
+
+    // 4. Lost & Found listings
+    match /lost_found/{itemId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (isOwner(resource.data.uid) || isAdmin());
+    }
+
+    // 5. Garden updates
+    match /garden_updates/{itemId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (isOwner(resource.data.uid) || isAdmin());
+    }
+
+    // 6. Pollinator posts (Bee City)
+    match /pollinator_posts/{itemId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (isOwner(resource.data.uid) || isAdmin());
+    }
+
+    // 7. Local businesses directory
+    match /local_biz/{bizId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (isOwner(resource.data.uid) || isAdmin());
+    }
+
+    // 8. History vault entries
+    match /history_vault/{yearId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
