@@ -3024,9 +3024,16 @@ function linkifyTags(s) {
 }
 
 // ─── Town Hall (admin) ────────────────────────────────────────────────────────
-// Entry: tap the footer bell 5 times. Real security = Firestore rules + the
+// Entry: the secret bell game → re-sign-in. Real security = Firestore rules + the
 // admins/{uid} collection; this UI only appears for accounts listed there.
 let isAdminUser = false;
+
+// Keep admin/sign-in-dependent UI in sync. Town Hall stays behind the secret bell;
+// this also guards grantLiveAdmin() from calling an undefined function.
+function updateAdminVisibility() {
+  const settingsBtn = document.getElementById('sb-settings-btn');
+  if (settingsBtn) settingsBtn.style.display = (currentUser && !isGuest) ? 'flex' : 'none';
+}
 
 const ADMIN_COLLS = {
   community_posts:  d => d.text,
