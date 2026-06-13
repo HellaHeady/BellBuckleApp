@@ -3854,8 +3854,8 @@ body.guest .guest-veil{
       <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Photo (Required)</label>
       <div id="tp-upload-box" style="border: 2px dashed var(--tp-wood-light); border-radius: 8px; padding: 15px; text-align: center; background: var(--tp-parchment-dark); cursor: pointer; position: relative;" onclick="document.getElementById('tp-file-input').click()">
         <span style="font-size: 24px; display: block; margin-bottom: 4px;">📸</span>
-        <span style="font-size: 12px; color: var(--tp-earth); font-weight: 600;">Tap to upload or take a photo</span>
-        <span style="font-size: 9.5px; display: block; color: var(--ink-lt); margin-top: 2px;">Image will be auto-compressed</span>
+        <span style="font-size: 12px; color: var(--tp-earth); font-weight: 600;">Tap to add a photo (optional)</span>
+        <span style="font-size: 9.5px; display: block; color: var(--ink-lt); margin-top: 2px;">No photo? We'll use a friendly default · auto-compressed</span>
         <img id="tp-upload-preview" style="max-height: 120px; max-width: 100%; display: none; margin: 10px auto 0; border-radius: 6px; border: 1.5px solid var(--tp-wood);" alt="Preview">
       </div>
       <input type="file" id="tp-file-input" accept="image/*" style="display: none;" onchange="handleTPFileSelect(this)">
@@ -3871,7 +3871,7 @@ body.guest .guest-veil{
         <input type="text" id="tp-name-input" class="form-input" placeholder="e.g. Handmade Basket" style="margin-bottom:0; width:100%;">
       </div>
       <div style="flex:1;">
-        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Category</label>
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Category <span style="text-transform:none;font-weight:400;color:var(--ink-lt);">(optional)</span></label>
         <select id="tp-cat-input" class="form-input" style="margin-bottom:0; width:100%;">
           <option value="">-- Choose Category --</option>
           <option value="Furniture">Furniture</option>
@@ -3909,12 +3909,12 @@ body.guest .guest-veil{
     </div>
 
     <div style="margin-bottom:12px;">
-      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Description</label>
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Description <span style="text-transform:none;font-weight:400;color:var(--ink-lt);">(optional)</span></label>
       <textarea id="tp-desc-input" class="form-textarea" rows="3" placeholder="Describe your item, trades wanted, etc..." style="margin-bottom:0; font-size:13px; width:100%;"></textarea>
     </div>
 
     <div style="margin-bottom:16px;">
-      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Contact Preference</label>
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--tp-earth); margin-bottom:4px; letter-spacing:0.05em;">Contact Preference <span style="text-transform:none;font-weight:400;color:var(--ink-lt);">(optional)</span></label>
       <input type="text" id="tp-contact-input" class="form-input" placeholder="e.g. Call Martha at 555-0123 or message in #buy-sell" style="margin-bottom:0; width:100%;">
     </div>
 
@@ -4822,9 +4822,10 @@ function renderTradingPostFeed() {
   
   feed.innerHTML = filtered.map(item => {
     const isTrade = item.dealType === 'trade';
-    const badgeHtml = isTrade 
-      ? `<div class="tp-badge-trade">🔄 Trade Only</div>` 
-      : `<div class="tp-badge-price">$${item.price}</div>`;
+    const priceText = /^\s*\d/.test(String(item.price)) ? '$' + esc(item.price) : esc(item.price || 'Make Offer');
+    const badgeHtml = isTrade
+      ? `<div class="tp-badge-trade">🔄 Trade Only</div>`
+      : `<div class="tp-badge-price">${priceText}</div>`;
       
     let statusBadge = "";
     if (item.status === 'sold') {
@@ -5041,12 +5042,8 @@ function saveTradingPostItem() {
   const desc = document.getElementById('tp-desc-input').value.trim();
   const contact = document.getElementById('tp-contact-input').value.trim();
   
-  if (!title) { alert("Please enter an item name."); return; }
-  if (!category) { alert("Please select a category."); return; }
-  if (!tpSelectedImageBase64 && !id) { alert("Please upload at least one photo of your item."); return; }
-  if (!isTrade && !price) { alert("Please specify a price or choose 'Trade Only'."); return; }
-  if (!desc) { alert("Please enter a description."); return; }
-  if (!contact) { alert("Please enter your contact information."); return; }
+  // Easy posting — an item name is all you truly need. Everything else is optional.
+  if (!title) { alert("Just add an item name and tap Publish — that's all you need! 🌲"); return; }
   
   const safetyCheck = flagTradingPostContent(title, desc);
   const isFlagged = safetyCheck.flagged;
@@ -5057,10 +5054,10 @@ function saveTradingPostItem() {
   const nm = currentUser ? (currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor') : 'Visitor';
   const itemData = {
     title,
-    category,
-    condition,
+    category: category || 'General',
+    condition: condition || 'Gently Used',
     dealType: isTrade ? 'trade' : 'sale',
-    price: isTrade ? 'Trade Only' : price.replace('$', ''),
+    price: isTrade ? 'Trade Only' : (price ? price.replace('$', '') : 'Make Offer'),
     desc,
     contact,
     uid: currentUser ? currentUser.uid : 'guest',
@@ -5113,7 +5110,7 @@ function openTradingPostDetail(id) {
   
   // Price Display
   const isTrade = item.dealType === 'trade';
-  const priceDisplay = isTrade ? '🔄 Trade' : `$${item.price}`;
+  const priceDisplay = isTrade ? '🔄 Trade' : (/^\s*\d/.test(String(item.price)) ? '$' + item.price : (item.price || 'Make Offer'));
   const priceBadge = document.getElementById('tp-detail-price-badge');
   priceBadge.textContent = priceDisplay;
   priceBadge.style.background = isTrade ? 'var(--tp-wood)' : 'var(--tp-forest)';
