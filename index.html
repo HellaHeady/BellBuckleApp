@@ -1511,6 +1511,26 @@ body.guest .guest-veil{
   .action-grid {
     grid-template-columns: 1fr !important;
   }
+
+  /* Our History responsive timeline */
+  .h-shell {
+    flex-direction: column;
+  }
+  .h-timeline-panel {
+    width: 100% !important;
+    border-right: none;
+    border-bottom: 2px solid var(--wire-lt);
+    max-height: 220px;
+    transition: max-height 0.3s ease-in-out;
+    flex-shrink: 0;
+  }
+  .h-timeline-panel.collapsed {
+    max-height: 48px;
+    overflow: hidden;
+  }
+  #btn-timeline-toggle {
+    display: inline-block !important;
+  }
 }
 
 /* 🌲 TRADING POST FOREST & RUSTIC THEME */
@@ -2631,8 +2651,11 @@ body.guest .guest-veil{
         <div class="h-shell">
 
           <!-- ── LEFT: Interactive Timeline ── -->
-          <div class="h-timeline-panel">
-            <div class="h-section-label">INTERACTIVE TIMELINE</div>
+          <div class="h-timeline-panel" id="h-timeline-panel">
+            <div class="h-section-label" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>INTERACTIVE TIMELINE</span>
+              <button class="btn btn-outline" id="btn-timeline-toggle" onclick="toggleTimelineCollapse()" style="display: none; padding: 2px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 4px; margin-left: 10px; font-family: 'Inter', sans-serif;">Hide</button>
+            </div>
 
             <div class="htl-entry active" onclick="selectEra(0)">
               <div class="htl-dot-col"><div class="htl-dot filled"></div><div class="htl-line"></div></div>
@@ -5342,6 +5365,16 @@ function switchHistoryTab(tab) {
 
 function selectEra(idx) {
   document.querySelectorAll('.htl-entry').forEach((e, i) => e.classList.toggle('active', i === idx));
+}
+
+function toggleTimelineCollapse() {
+  const panel = document.getElementById('h-timeline-panel');
+  const btn = document.getElementById('btn-timeline-toggle');
+  if (panel && btn) {
+    panel.classList.toggle('collapsed');
+    const isCollapsed = panel.classList.contains('collapsed');
+    btn.textContent = isCollapsed ? 'Show' : 'Hide';
+  }
 }
 
 function expandEntry(el) {
