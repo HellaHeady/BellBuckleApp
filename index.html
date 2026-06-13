@@ -1116,6 +1116,44 @@ body.guest .guest-veil{
 .flag-stale{background:#fef9c3;color:#854d0e;}
 .flag-word{background:#fef2f2;color:#9b1d1d;}
 
+/* Admin gate (secret bell game) */
+#admin-gate{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#18100c,#2c1a0e 55%,#18100c);}
+#admin-gate .gate-card{background:var(--paper);border-radius:18px;padding:26px 24px;width:100%;max-width:360px;
+  box-shadow:0 28px 60px rgba(0,0,0,.5);text-align:center;margin:16px;}
+#admin-gate h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--ink);margin-bottom:6px;}
+#admin-gate p{font-size:13px;color:var(--ink-lt);line-height:1.5;margin-bottom:14px;}
+.gate-play{position:relative;height:230px;border:2px dashed var(--wire);border-radius:12px;background:#fff;
+  overflow:hidden;touch-action:none;user-select:none;margin-bottom:8px;}
+.gate-line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.gate-node{position:absolute;width:54px;height:54px;border-radius:50%;background:var(--bg);
+  border:2px solid var(--wire);display:flex;align-items:center;justify-content:center;}
+.gate-node svg{width:30px;height:30px;pointer-events:none;}
+.gate-node.src{cursor:grab;border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,48,.28);touch-action:none;}
+.gate-node.src:active{cursor:grabbing;}
+.gate-node.solved{border-color:var(--green);box-shadow:0 0 0 3px rgba(61,107,58,.32);}
+.gate-hint{font-size:11px;color:var(--wire);margin-bottom:2px;}
+
+/* Hot Topics */
+.hot-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
+.hot-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.hot-head span{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ink);}
+.hot-list{display:flex;flex-wrap:wrap;gap:8px;}
+.hot-topic{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--wire);border-radius:99px;padding:6px 13px;font-size:12.5px;color:var(--ink);cursor:pointer;transition:all .15s;}
+.hot-topic:hover{border-color:var(--red);color:var(--red);}
+.hot-topic.active{background:var(--red);border-color:var(--red);color:#fff;}
+.hot-flame{font-size:11px;}
+.hot-count{font-size:10px;font-weight:700;background:rgba(166,50,32,.12);color:var(--red);border-radius:99px;padding:1px 7px;}
+.hot-topic.active .hot-count{background:rgba(255,255,255,.25);color:#fff;}
+.hot-rank-1{box-shadow:0 0 0 2px rgba(232,184,48,.4);}
+.hot-detail-card{margin-top:12px;border-top:1px solid var(--wire-lt);padding-top:12px;}
+.hot-snippet{font-size:12.5px;color:#44321e;line-height:1.5;padding:7px 0;border-bottom:1px solid var(--wire-lt);}
+.hot-snippet:last-child{border-bottom:none;}
+.hot-snippet .who{font-size:10.5px;color:var(--ink-lt);}
+.hot-snippet .where{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:var(--wire-lt);color:var(--ink-lt);border-radius:99px;padding:1px 7px;margin-right:6px;}
+.tag-link{color:var(--red);font-weight:600;cursor:pointer;}
+.tag-link:hover{text-decoration:underline;}
+
 /* Town parade — decorative icon strip */
 .parade{
   display:flex;flex-wrap:wrap;gap:10px 13px;justify-content:center;align-items:center;
@@ -2108,6 +2146,16 @@ body.guest .guest-veil{
           <div class="page-header" style="padding:0 0 16px">
             <h2>Community Board</h2>
             <p>Neighbor news, questions &amp; updates</p>
+          </div>
+
+          <!-- Hot Topics -->
+          <div class="hot-card">
+            <div class="hot-head">
+              <span>🔥 What Bell Buckle's Talking About</span>
+              <button class="adm-btn" style="padding:3px 9px" onclick="computeHotTopics()">↻</button>
+            </div>
+            <div id="hot-list" class="hot-list"><span style="font-size:12px;color:var(--ink-lt)">Taking the town's temperature…</span></div>
+            <div id="hot-detail"></div>
           </div>
 
           <!-- Compose -->
@@ -3276,6 +3324,19 @@ body.guest .guest-veil{
             </div>
 
           </div>
+
+          <!-- Database Controls Card -->
+          <div class="card" style="padding:16px 18px; border-left: 4px solid var(--red); margin-top: 10px;">
+            <h3 class="serif" style="font-size: 16px; color: var(--ink); margin-bottom: 4px;">🎛️ Database Controls</h3>
+            <p style="font-size: 12px; color: var(--ink-lt); margin-bottom: 14px; line-height: 1.5;">
+              Manage the live Firestore database. Seeding will populate the app with realistic local Bell Buckle content.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button class="btn btn-red" id="btn-seed-data" style="padding: 8px 12px; font-size: 12px; font-weight: 600;" onclick="seedDemoData()">🌱 Seed Demo Data</button>
+              <button class="btn btn-outline" id="btn-clear-db" style="padding: 8px 12px; font-size: 12px; font-weight: 600; border-color: var(--red); color: var(--red);" onclick="clearLiveDatabase()">⚠️ Clear Live Database</button>
+              <button class="btn btn-outline" id="btn-make-admin" style="padding: 8px 12px; font-size: 12px; font-weight: 600;" onclick="grantLiveAdmin()">🔑 Make Me Live Admin</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -3432,6 +3493,59 @@ body.guest .guest-veil{
         <button class="game-btn game-btn-outline" onclick="closeMoonPieGame()">Close</button>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     ADMIN GATE (secret bell game → re-sign-in)
+════════════════════════════════ -->
+<div id="admin-gate">
+  <div class="gate-card">
+    <!-- Step 1: connect the bell to the buckle -->
+    <div id="gate-game">
+      <h3>🔔 Town Hall</h3>
+      <p>Drag a line from the <strong>bell</strong> to the <strong>buckle</strong> to knock.</p>
+      <div class="gate-play" id="gate-play">
+        <svg class="gate-line" id="gate-line" preserveAspectRatio="none"></svg>
+        <div class="gate-node src" id="gate-bell" style="left:16px;top:88px"><svg><use href="#bbi-bell"/></svg></div>
+        <div class="gate-node tgt" id="gate-buckle" data-role="buckle"><svg><use href="#bbi-buckle"/></svg></div>
+        <div class="gate-node tgt" id="gate-d1" data-role="train"><svg><use href="#bbi-train"/></svg></div>
+        <div class="gate-node tgt" id="gate-d2" data-role="bee"><svg><use href="#bbi-bee"/></svg></div>
+      </div>
+      <div class="gate-hint" id="gate-hint">Tip: press on the bell and drag across.</div>
+      <button class="auth-btn auth-btn-outline" style="margin-top:14px" onclick="closeAdminGate()">Never mind</button>
+    </div>
+    <!-- Step 2: re-sign-in -->
+    <div id="gate-signin" style="display:none">
+      <h3>🛡️ Admins Only</h3>
+      <p>Nice knock! Confirm it's you to enter Town Hall.</p>
+      <div id="gate-error" style="color:#dc2626;font-size:12px;margin-bottom:8px;min-height:14px"></div>
+      <input id="gate-email" class="auth-input" type="email" placeholder="Email" autocomplete="username">
+      <input id="gate-pw" class="auth-input" type="password" placeholder="Password" style="margin-bottom:12px" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminReauth()">
+      <button class="auth-btn auth-btn-primary" onclick="adminReauth()">Enter Town Hall</button>
+      <button class="auth-btn auth-btn-outline" style="margin-top:8px" id="btn-bootstrap-admin" onclick="grantLiveAdmin()">🔑 Make Me Admin</button>
+      <button class="auth-btn auth-btn-outline" style="margin-top:8px" onclick="closeAdminGate()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Resident Settings Modal -->
+<div id="settings-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(42,31,16,0.72); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div class="card" style="max-width:400px; width:100%; padding:28px; background:var(--paper); border:2px solid var(--red); box-shadow:var(--shadow); position:relative; border-radius:14px; text-align:left;">
+    <h3 class="serif" style="color:var(--red); font-size:22px; margin-top:0; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+      ⚙️ Resident Settings
+    </h3>
+    <p style="font-size:13.5px; color:var(--ink-lt); line-height:1.6; margin-bottom:16px;">
+      Update your profile name for the Bell Buckle community.
+    </p>
+    <div style="margin-bottom:20px;">
+      <label for="settings-display-name" style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; color:var(--ink); margin-bottom:6px; letter-spacing:0.05em;">Display Name</label>
+      <input type="text" id="settings-display-name" placeholder="Neighbor Name" style="width:100%; padding:10px 12px; border:1.5px solid var(--wire); border-radius:8px; font-size:14px; outline:none; background:#fff; font-family:'Inter', sans-serif;" />
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeSettingsModal()">Cancel</button>
+      <button class="btn btn-red" id="btn-save-settings" onclick="saveSettings()">Save Changes</button>
     </div>
   </div>
 </div>
@@ -3629,6 +3743,7 @@ function nav(id) {
 
   if (id === 'chat') setTimeout(scrollChat, 80);
   if (id === 'kids') initCanvasPage(document.querySelector('.cpage-wrap.active'));
+  if (id === 'community') computeHotTopics(false);
 }
 
 // ─── Chat channels ────────────────────────────────────────────────────────────
@@ -3746,7 +3861,7 @@ function postHTML(d, compact) {
       <div class="post-avatar"><span>${esc(nm[0].toUpperCase())}</span></div>
       <div><div class="post-name">${esc(nm)}</div><div class="post-time">${dt}</div></div>
     </div>
-    <div class="post-text">${esc(d.text||'')}</div>
+    <div class="post-text">${linkifyTags(esc(d.text||''))}</div>
     ${!compact?`<div class="post-actions"><button class="post-action-btn">👍 Like</button><button class="post-action-btn">💬 Reply</button></div>`:''}
   </div>`;
 }
@@ -3829,7 +3944,7 @@ function listenGarden() {
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
         feed.innerHTML += `<div class="post-card">
           <div><span class="gd-badge ${t.c}">${t.e} ${t.l}</span></div>
-          <div class="post-text">${esc(d.text||'')}</div>
+          <div class="post-text">${linkifyTags(esc(d.text||''))}</div>
           ${d.img ? `<img class="feed-photo" src="${esc(d.img)}" onerror="this.style.display='none'">` : ''}
           <div style="font-size:11px;color:var(--ink-lt);margin-top:6px">Posted by ${esc(nm)} · ${dt}</div>
         </div>`;
@@ -3871,7 +3986,7 @@ function listenBuzz() {
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
         feed.innerHTML += `<div class="post-card">
           <div><span class="gd-badge ${t.c}">${t.e} ${t.l}</span></div>
-          <div class="post-text">${esc(d.text||'')}</div>
+          <div class="post-text">${linkifyTags(esc(d.text||''))}</div>
           ${d.img ? `<img class="feed-photo" src="${esc(d.img)}" onerror="this.style.display='none'">` : ''}
           <div style="font-size:11px;color:var(--ink-lt);margin-top:6px">Shared by ${esc(nm)} · ${dt}</div>
         </div>`;
@@ -4233,6 +4348,115 @@ function floodFill(cv, sx, sy, hex) {
   ctx.putImageData(im, 0, 0);
 }
 
+// ─── Hot Topics — what the town is talking about ──────────────────────────────
+const HOT_STOP = new Set('the and but for with from this that these those have has had will would could should about into your you our their there here what when where which who how why all any can did does else been being then than them they out off over under just like more most some such only also even much many well your yours need needs want wants get got going gonna really thing things stuff today tomorrow yesterday morning night week weekend bell buckle neighbor neighbors folks yall everyone someone anybody please thanks thank hello howdy good great nice love come came back down good'.split(' '));
+const HOT_SOURCES = [
+  { coll:'community_posts',  where:'Board',      text:d=>d.text },
+  { coll:'lost_found',       where:'Lost&Found', text:d=>(d.title||'')+' '+(d.desc||'') },
+  { coll:'garden_updates',   where:'Garden',     text:d=>d.text },
+  { coll:'pollinator_posts', where:'Bee City',   text:d=>d.text },
+  { coll:'local_biz',        where:'Biz',        text:d=>(d.name||'')+' '+(d.desc||'') },
+];
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+let hotCorpus = [], hotRanked = [], hotLastRun = 0;
+
+async function gatherHotCorpus() {
+  const corpus = [];
+  for (const s of HOT_SOURCES) {
+    try {
+      const snap = await db.collection(s.coll).orderBy('ts','desc').limit(s.coll==='community_posts'?60:25).get();
+      snap.forEach(doc => { const d = doc.data(); if (!d.hidden) corpus.push({ where:s.where, who:d.displayName||'a neighbor', text:(s.text(d)||'') }); });
+    } catch (e) {}
+  }
+  for (const ch of CHANNELS.map(c => c.id)) {
+    try {
+      const snap = await db.collection('channels').doc(ch).collection('messages').orderBy('ts','desc').limit(25).get();
+      snap.forEach(doc => { const d = doc.data(); corpus.push({ where:'#'+ch, who:d.displayName||'a neighbor', text:(d.text||'') }); });
+    } catch (e) {}
+  }
+  hotCorpus = corpus; return corpus;
+}
+
+async function computeHotTopics(force) {
+  const listEl = document.getElementById('hot-list');
+  if (!listEl) return;
+  if (!currentUser) { listEl.innerHTML = '<span style="font-size:12px;color:var(--ink-lt)">Sign in to see what\'s buzzing.</span>'; return; }
+  if (!force && hotRanked.length && Date.now() - hotLastRun < 120000) return;
+  listEl.innerHTML = '<span style="font-size:12px;color:var(--ink-lt)">Taking the town\'s temperature…</span>';
+  document.getElementById('hot-detail').innerHTML = '';
+  await gatherHotCorpus();
+  hotLastRun = Date.now();
+  const score = {};
+  const bump = (key, label, w) => { (score[key] || (score[key] = { count:0, label })).count += w; };
+  hotCorpus.forEach(item => {
+    const raw = item.text || '';
+    (raw.match(/#(\w{2,})/g) || []).forEach(h => bump('#'+h.slice(1).toLowerCase(), h, 3));
+    (raw.match(/\b([A-Z][a-z]{2,})\s([A-Z][a-z]{2,})\b/g) || []).forEach(p => {
+      if (!HOT_STOP.has(p.split(' ')[0].toLowerCase())) bump('p:'+p.toLowerCase(), p, 2);
+    });
+    // strip hashtags before word pass so a #tag isn't also counted as a plain word
+    (raw.replace(/#\w+/g,'').toLowerCase().match(/[a-z][a-z'-]{4,}/g) || []).forEach(w => { if (!HOT_STOP.has(w)) bump('w:'+w, w, 1); });
+  });
+  // rank, then drop topics already represented by a higher-ranked one
+  const sorted = Object.entries(score).filter(([k,v]) => v.count >= 2)
+    .map(([k,v]) => ({ key:k, ...v })).sort((a,b) => b.count - a.count);
+  const covered = new Set(), ranked = [];
+  for (const t of sorted) {
+    const words = t.key.startsWith('#') ? [t.key.slice(1)]
+                : t.key.startsWith('p:') ? t.key.slice(2).split(' ')
+                : [t.key.slice(2)];
+    if (words.every(w => covered.has(w))) continue;
+    words.forEach(w => covered.add(w));
+    ranked.push(t);
+    if (ranked.length >= 8) break;
+  }
+  if (!ranked.length) {
+    listEl.innerHTML = '<span style="font-size:12px;color:var(--ink-lt)">Quiet on the square right now. Add a <strong style="color:var(--red)">#hashtag</strong> to a post and it\'ll bubble up here!</span>';
+    hotRanked = []; return;
+  }
+  hotRanked = ranked.map(t => {
+    let rx;
+    if (t.key.startsWith('#'))       rx = new RegExp('#' + reEsc(t.key.slice(1)), 'i');
+    else if (t.key.startsWith('w:')) rx = new RegExp('\\b' + reEsc(t.key.slice(2)) + '\\b', 'i');
+    else                              rx = new RegExp(reEsc(t.key.slice(2)), 'i');
+    return { label:t.label, count:t.count, rx };
+  });
+  listEl.innerHTML = hotRanked.map((t,i) =>
+    `<span class="hot-topic${i===0?' hot-rank-1':''}" onclick="openTopic(${i})">
+       <span class="hot-flame">${i===0?'🔥':i<3?'✨':'•'}</span>${esc(t.label)}<span class="hot-count">${t.count}</span></span>`
+  ).join('');
+}
+
+function renderHotHits(rx) {
+  const hits = hotCorpus.filter(c => rx.test(c.text)).slice(0, 8);
+  document.getElementById('hot-detail').innerHTML = hits.length
+    ? '<div class="hot-detail-card">' + hits.map(h =>
+        `<div class="hot-snippet"><span class="where">${esc(h.where)}</span>${esc((h.text||'').slice(0,180))}<div class="who">— ${esc(h.who)}</div></div>`
+      ).join('') + '</div>'
+    : '<div class="hot-detail-card" style="font-size:12px;color:var(--ink-lt)">Nothing else on that one yet.</div>';
+}
+
+function openTopic(i) {
+  const chips = document.querySelectorAll('.hot-topic');
+  const wasActive = chips[i] && chips[i].classList.contains('active');
+  chips.forEach(c => c.classList.remove('active'));
+  if (wasActive) { document.getElementById('hot-detail').innerHTML = ''; return; }
+  if (chips[i]) chips[i].classList.add('active');
+  renderHotHits(hotRanked[i].rx);
+}
+
+async function searchTopic(term) {
+  nav('community');
+  if (!hotCorpus.length) await gatherHotCorpus();
+  document.querySelectorAll('.hot-topic').forEach(c => c.classList.remove('active'));
+  renderHotHits(new RegExp(reEsc(term), 'i'));
+  document.querySelector('.hot-card')?.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function linkifyTags(s) {
+  return s.replace(/#(\w{2,})/g, (m,w) => `<span class="tag-link" onclick="searchTopic('${w.toLowerCase()}')">#${w}</span>`);
+}
+
 // ─── Town Hall (admin) ────────────────────────────────────────────────────────
 // Entry: tap the footer bell 5 times. Real security = Firestore rules + the
 // admins/{uid} collection; this UI only appears for accounts listed there.
@@ -4317,15 +4541,105 @@ function openAdmin() {
   renderSeason(); renderAdminFeed(); runOversight(); loadAdminStats();
 }
 
+// Secret bell: one click → connect-the-bell-to-the-buckle game → re-sign-in
+function openAdminGate() {
+  document.getElementById('gate-game').style.display = 'block';
+  document.getElementById('gate-signin').style.display = 'none';
+  document.getElementById('gate-error').textContent = '';
+  document.getElementById('gate-line').innerHTML = '';
+  document.getElementById('gate-bell').classList.remove('solved');
+  document.querySelectorAll('.gate-node.tgt').forEach(n => n.classList.remove('solved'));
+  layoutGateGame();
+  document.getElementById('admin-gate').style.display = 'flex';
+}
+function closeAdminGate() {
+  document.getElementById('admin-gate').style.display = 'none';
+}
+
+// Scatter the buckle + decoys down the right side in a random order each time
+function layoutGateGame() {
+  const slots = [30, 100, 170];
+  const nodes = ['gate-buckle','gate-d1','gate-d2'].sort(() => Math.random() - 0.5);
+  nodes.forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.style.left = '244px';
+    el.style.top  = slots[i] + 'px';
+  });
+}
+
+function gateSolved() {
+  const ln = document.querySelector('#gate-line line');
+  if (ln) { ln.setAttribute('stroke', '#3d6b3a'); ln.removeAttribute('stroke-dasharray'); }
+  document.getElementById('gate-bell').classList.add('solved');
+  document.getElementById('gate-buckle').classList.add('solved');
+  document.getElementById('gate-hint').textContent = 'Got it! 🔔🔩';
+  setTimeout(() => {
+    document.getElementById('gate-game').style.display = 'none';
+    document.getElementById('gate-signin').style.display = 'block';
+    const em = document.getElementById('gate-email');
+    if (currentUser && currentUser.email) em.value = currentUser.email;
+    em.focus();
+  }, 550);
+}
+
+async function adminReauth() {
+  const e   = document.getElementById('gate-email').value.trim();
+  const p   = document.getElementById('gate-pw').value;
+  const err = document.getElementById('gate-error');
+  err.textContent = 'Checking…';
+  try {
+    const cred = await auth.signInWithEmailAndPassword(e, p);
+    const s = await db.collection('admins').doc(cred.user.uid).get();
+    if (!s.exists) { err.textContent = "That account isn't a town admin."; return; }
+    isAdminUser = true;
+    updateAdminVisibility();
+    document.getElementById('gate-pw').value = '';
+    closeAdminGate();
+    nav('admin');
+    const k = document.getElementById('ai-key');
+    if (k && !k.value) k.value = localStorage.getItem('bb_api_key') || '';
+    renderSeason(); renderAdminFeed(); runOversight(); loadAdminStats();
+  } catch (ex) {
+    err.textContent = ex.message;
+  }
+}
+
 (function secretBell(){
   const bell = document.querySelector('.sb-footer svg');
-  if (!bell) return;
+  const play = document.getElementById('gate-play');
+  const bellNode = document.getElementById('gate-bell');
+  const line = document.getElementById('gate-line');
+  if (!bell || !play || !bellNode) return;
+
   bell.style.cursor = 'pointer';
-  let taps = 0, timer = null;
-  bell.addEventListener('click', () => {
-    taps++; clearTimeout(timer);
-    timer = setTimeout(() => { taps = 0; }, 2500);
-    if (taps >= 5) { taps = 0; openAdmin(); }
+  bell.addEventListener('click', openAdminGate);
+
+  let dragging = false;
+  const bellCenter = () => {
+    const r = bellNode.getBoundingClientRect(), p = play.getBoundingClientRect();
+    return { x: r.left + r.width/2 - p.left, y: r.top + r.height/2 - p.top };
+  };
+  bellNode.addEventListener('pointerdown', e => {
+    dragging = true;
+    const c = bellCenter();
+    line.innerHTML = `<line x1="${c.x}" y1="${c.y}" x2="${c.x}" y2="${c.y}" stroke="#a63220" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 8"/>`;
+    e.preventDefault();
+  });
+  window.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const p = play.getBoundingClientRect();
+    const ln = line.querySelector('line');
+    if (ln) { ln.setAttribute('x2', e.clientX - p.left); ln.setAttribute('y2', e.clientY - p.top); }
+  });
+  window.addEventListener('pointerup', e => {
+    if (!dragging) return;
+    dragging = false;
+    const r = document.getElementById('gate-buckle').getBoundingClientRect();
+    const pad = 18; // forgiving — release on or near the buckle counts
+    const hit = e.clientX >= r.left - pad && e.clientX <= r.right + pad &&
+                e.clientY >= r.top  - pad && e.clientY <= r.bottom + pad;
+    if (hit) gateSolved();
+    else line.innerHTML = '';
   });
 })();
 
@@ -5131,6 +5445,7 @@ function bindGameControls() {
   isControlsBound = true;
 }
 
+// Scatter the buckle + decoys down the right side in a random order each time
 function unbindGameControls() {
   if (!isControlsBound) return;
   const canvasEl = document.getElementById('game-canvas');
@@ -5196,6 +5511,8 @@ function endGame(isWin) {
   }
 }
 
+=======
+>>>>>>> main
 // ─── Resident Settings & DB Controls ──────────────────────────────────────────
 
 function openSettingsModal() {
@@ -5289,8 +5606,9 @@ function grantLiveAdmin() {
   }).then(() => {
     isAdminUser = true;
     updateAdminVisibility();
+    closeAdminGate();
     closeAdminDenied();
-    alert("Success! You are now registered as a live administrator. Tapping the bell will now let you in.");
+    alert("Success! You are now registered as a live administrator.");
   }).catch((err) => {
     console.error("Error setting admin doc:", err);
     alert("Failed to grant admin privileges: " + err.message + "\n\n(Verify that the passcode is correct and rules are deployed.)");
