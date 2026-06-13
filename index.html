@@ -1777,6 +1777,14 @@ body.guest .guest-veil{
   height: 100%;
   object-fit: cover;
 }
+/* Toast confirmation */
+#bb-toast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+  background:var(--tp-forest,#3d6b3a);color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+  padding:12px 22px;border-radius:99px;box-shadow:0 8px 28px rgba(42,31,16,.35);
+  z-index:10000;opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;max-width:90vw;text-align:center;
+}
+#bb-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
@@ -5083,6 +5091,7 @@ function saveTradingPostItem() {
     
   p.then(() => {
     closeTradingPostPostModal();
+    showToast(id ? '✓ Listing updated!' : '✓ Posted! Your listing is live in the Trading Post.');
   }).catch(err => {
     console.error("Error saving listing:", err);
     alert("Error publishing listing: " + err.message);
@@ -6710,6 +6719,20 @@ function aiPostToBoard() {
 })();
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  let t = document.getElementById('bb-toast');
+  if (!t) { t = document.createElement('div'); t.id = 'bb-toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  void t.offsetWidth;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2800);
+}
+
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
