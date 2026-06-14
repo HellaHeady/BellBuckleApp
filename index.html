@@ -2012,7 +2012,7 @@ body.guest .guest-veil{
       </div>
     </div>
 
-    <div class="sb-user">
+    <div class="sb-user" style="position: relative;">
       <div class="sb-avatar"><span id="sb-initial">?</span></div>
       <div class="sb-user-info">
         <div class="sb-user-name" id="sb-user-name">Loading…</div>
@@ -2020,6 +2020,16 @@ body.guest .guest-veil{
       </div>
       <button class="sb-settings-btn" id="sb-settings-btn" onclick="openSettingsModal()" title="Resident Settings" style="display: none;">⚙️</button>
       <button class="sb-signout" id="sb-signout" onclick="leaveApp()">Sign out</button>
+
+      <!-- Pop up name nudge window -->
+      <div id="settings-name-nudge" style="display: none; position: absolute; top: 48px; right: 10px; background: var(--tp-forest); border: 1.5px solid var(--tp-wood); color: #ffe9a8; padding: 8px 10px; border-radius: 8px; font-size: 10.5px; z-index: 99999; width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); font-family: 'Inter', sans-serif; pointer-events: auto;">
+        <div style="position: absolute; right: 28px; bottom: 100%; border: 6px solid transparent; border-bottom-color: var(--tp-wood); width: 0; height: 0;"></div>
+        <div style="font-weight: 700; margin-bottom: 2px; display: flex; justify-content: space-between; align-items: center;">
+          <span>Custom Name! 📝</span>
+          <span onclick="dismissNameNudge(event)" style="cursor: pointer; font-size: 11px; opacity: 0.8; padding-left: 6px; font-weight: bold;">✕</span>
+        </div>
+        <div style="font-size: 9.5px; line-height: 1.35; color: #fff;">Tap the gear icon ⚙️ to set your display name!</div>
+      </div>
     </div>
 
     <nav class="sb-nav">
@@ -4583,6 +4593,18 @@ auth.onAuthStateChanged(user => {
     document.getElementById('sb-email').textContent    = user.email || '';
     const settingsBtn = document.getElementById('sb-settings-btn');
     if (settingsBtn) settingsBtn.style.display = 'flex';
+    
+    // Check if user has a display name set
+    const hasCustomName = !!user.displayName;
+    const dismissed = localStorage.getItem('dismissed_name_nudge') === 'true';
+    const nudge = document.getElementById('settings-name-nudge');
+    if (nudge) {
+      if (!hasCustomName && !dismissed) {
+        nudge.style.display = 'block';
+      } else {
+        nudge.style.display = 'none';
+      }
+    }
     document.getElementById('compose-initial').textContent = ini;
     document.getElementById('topbar-user').textContent = name;
     // Front-porch greeting
@@ -4633,6 +4655,8 @@ function enterGuestMode() {
   document.getElementById('sb-email').textContent    = 'Just visiting';
   const settingsBtn = document.getElementById('sb-settings-btn');
   if (settingsBtn) settingsBtn.style.display = 'none';
+  const nudge = document.getElementById('settings-name-nudge');
+  if (nudge) nudge.style.display = 'none';
   document.getElementById('sb-signout').textContent  = 'Sign in';
   document.getElementById('compose-initial').textContent = '👋';
   document.getElementById('topbar-user').textContent = 'Visitor';
@@ -7693,12 +7717,21 @@ function endGame(isWin) {
 
 // ─── Resident Settings & DB Controls ──────────────────────────────────────────
 
+function dismissNameNudge(e) {
+  if (e) e.stopPropagation();
+  const nudge = document.getElementById('settings-name-nudge');
+  if (nudge) nudge.style.display = 'none';
+  localStorage.setItem('dismissed_name_nudge', 'true');
+}
+
 function openSettingsModal() {
   closeSidebar();
   if (isGuest) {
     alert("Guests cannot change settings. Please sign in!");
     return;
   }
+  // Dismiss name nudge on open
+  dismissNameNudge();
   const modal = document.getElementById('settings-modal');
   const input = document.getElementById('settings-display-name');
   const chk = document.getElementById('settings-online-status');
