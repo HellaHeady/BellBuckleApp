@@ -8024,58 +8024,7 @@ async function seedDemoData() {
       { text: "I can run by there for you, Hank! I'm heading out around 2 PM. I'll shoot you a text.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
       { text: "Bless you, Sarah! You're a lifesaver.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
       { text: "Anyone reading the debate on the community board about the #flock camera systems? Sounds like there is going to be a big turnout at the council meeting on Tuesday.", uid, email, displayName: "Tommy", ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { text: "I'll be there. We need answers on how much this #flock system costs the town and where the data is stored.", uid, email, displayName: "Sarah", ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { text: "I think the safety aspect is worth it, but transparency is key. Let's make sure the council explains it all.", uid, email, displayName: "Hank", ts: firebase.firestore.FieldValue.serverTimestamp() }
-    ];
-    
-    for (const msg of genMessages) {
-      await db.collection('channels').doc('general').collection('messages').add(msg);
-    }
-    
-    const annMessages = [
-      { text: "Mayor's Notice: The annual street paving will begin on Monday on Maple Street. Please expect minor delays and park on adjacent streets.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
-    ];
-    
-    for (const msg of annMessages) {
-      await db.collection('channels').doc('announcements').collection('messages').add(msg);
-    }
-
-    const demoEvents = [
-      { title: "Farmer's Market", date: "Saturdays 8am – 12pm", loc: "Old Bell Buckle Rd · Weather permitting", desc: "Fresh produce, local honey, handmade crafts, and the best cinnamon rolls in Bedford County.", stripeColor: "#d97706", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Town Hall Meeting", date: "2nd Tuesday Monthly", loc: "Bell Buckle Community Center", desc: "Community discussions, local government updates, and your chance to speak up about what matters in Bell Buckle.", stripeColor: "#2563eb", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Summer Music Series", date: "June – August · Fridays 6pm · Free", loc: "Bell Buckle Café Porch", desc: "Local artists, cold drinks, and warm Tennessee evenings on the historic café porch. Bring a lawn chair.", stripeColor: "var(--green)", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Tennessee Crafts Fair", date: "September 13–14, 2026", loc: "Downtown Bell Buckle", desc: "Juried craft show featuring artisans from across Tennessee — pottery, woodwork, textiles, jewelry, and more.", stripeColor: "#9333ea", featured: true, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Bell Buckle Fall Festival", date: "October 4, 2026", loc: "Downtown Bell Buckle", desc: "Hayrides, pumpkin painting, live bluegrass, and the annual chili cook-off. Family fun for all ages.", stripeColor: "#0891b2", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
-    ];
-    
-    for (const ev of demoEvents) {
-      await db.collection('events').add(ev);
-    }
-
-    const demoListings = [
-      { title: "Vintage Rocking Chair", category: "Furniture", condition: "Antique / Rustic", dealType: "sale", price: "85", desc: "Solid oak rocking chair from the late 19th century. Hand-carved details, very sturdy. Has some normal wear and tear on the arms but adds to its rustic charm.", contact: "Call Sarah M. at 555-0129", status: "active", featured: true, flagged: false, approved: true, img: "cb-store.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Home-Canned Tomatoes", category: "Food & Pantry", condition: "Brand New", dealType: "sale", price: "5", desc: "Freshly canned heirloom Roma tomatoes from our organic community garden plot. Preserved last August, delicious for stews and pasta sauces.", contact: "Call Jim T. at 555-0144", status: "active", flagged: false, approved: true, img: "garden2.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Lawn Mowing & Edging", category: "Services", condition: "Brand New", dealType: "sale", price: "40", desc: "Offering professional lawn care services for residential properties in Bell Buckle. Includes mowing, edging, and blowing clippings. Weekly or bi-weekly slots available.", contact: "Message Tyler K. in #local-biz or call 555-0187", status: "active", flagged: false, approved: true, img: "cb-downtown.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Tennessee Wildflower Honey", category: "Food & Pantry", condition: "Brand New", dealType: "sale", price: "12", desc: "Pure, raw honey harvested directly from our hives on Bee City Road. Golden color, rich floral taste. Support local bees!", contact: "Visit Bee Happy Farm at 122 Main St or call 555-0155", status: "active", featured: true, flagged: false, approved: true, img: "garden1.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Heirloom Squash Plants", category: "Garden & Farm", condition: "Brand New", dealType: "trade", price: "Trade Only", desc: "Have 8 extra summer yellow crookneck squash starters. Looking to trade for cucumber starters or heirloom tomato starts.", contact: "Carol B. at 555-0162", status: "active", flagged: false, approved: true, img: "garden3.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { title: "Antique Oak Writing Desk", category: "Furniture", condition: "Antique / Rustic", dealType: "trade", price: "Trade Only", desc: "Beautiful roll-top desk in good structural shape. Looking to swap for a working electric weed eater or a leaf blower.", contact: "Message Martha L. in general chat", status: "active", flagged: false, approved: true, img: "cb-mural.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
-    ];
-    
-    for (const listing of demoListings) {
-      await db.collection('trading_post').add(listing);
-    }
-    
-    alert("Database seeded successfully with authentic Bell Buckle demo content!");
-  } catch (err) {
-    console.error("Error seeding database:", err);
-    alert("Failed to seed database: " + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = oldText;
-    loadAdminStats();
-  }
-}
-// ==========================================
+      { text: "I'll be there. We need answers on how much this #flock system costs the town and where the data is stored.", uid, email, displayName: "Sarah", ts: firebase.firestore.Fie// ==========================================
 // BELL BUCKLE TRAIN PAC-MAN GAME ENGINE
 // ==========================================
 
@@ -8083,33 +8032,100 @@ let tgCanvas, tgCtx;
 let tgScore = 0;
 let tgLives = 3;
 let tgLoopId = null;
+let tgIsNight = true;
+
+// Power-up indicators
 let tgWhistleReady = true;
 let tgWhistleCooldownTimer = 0;
-let tgMegaModeTimer = 0; 
-let tgStunTimer = 0; 
+let tgStunTimer = 0;
 
-const TG_MAP_ORIGINAL = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
-  [1,0,1,1,0,1,0,1,0,1,0,1,1,0,1],
-  [1,0,1,1,0,1,0,0,0,1,0,1,1,0,1],
-  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
-  [1,0,1,1,0,1,1,1,1,1,0,1,1,0,1],
-  [1,0,0,0,0,0,0,2,0,0,0,0,0,0,1],
-  [1,1,1,0,1,1,2,2,2,1,1,0,1,1,1],
-  [1,0,0,0,0,0,0,2,0,0,0,0,0,0,1],
-  [1,0,1,1,0,1,1,1,1,1,0,1,1,0,1],
-  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
-  [1,0,1,1,0,1,0,0,0,1,0,1,1,0,1],
-  [1,0,1,1,0,1,0,1,0,1,0,1,1,0,1],
-  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+let tgCoalReady = true;
+let tgCoalCooldownTimer = 0;
+let tgCoalBoostTimer = 0;
+
+let tgGhostReady = true;
+let tgGhostCooldownTimer = 0;
+let tgGhostModeTimer = 0;
+
+let tgMegaModeTimer = 0; 
+
+// Combo scoring
+let tgComboMultiplier = 1;
+let tgComboTimer = 0;
+
+// Train Whistle Blast ring expand radius
+let tgWhistleRipple = 0;
+
+// Vector Map Nodes (Normalized coordinates matching downtown Bell Buckle street map)
+const TG_NODES = {
+  main_webb:       { x: 35,  y: 260, label: "Bell Buckle Cafe" },
+  high_webb:       { x: 115, y: 265 },
+  maple_webb:      { x: 195, y: 270 },
+  follin_webb:     { x: 280, y: 278 },
+  main_church:     { x: 45,  y: 190 },
+  high_church:     { x: 120, y: 195 },
+  main_cumberland: { x: 55,  y: 110, label: "Town Hall" },
+  high_cumberland: { x: 125, y: 115 },
+  maple_cumberland:{ x: 195, y: 120 },
+  follin_maple:    { x: 195, y: 195 },
+  follin_top:      { x: 265, y: 70,  label: "Webb School" },
+  follin_mid:      { x: 275, y: 165 }
+};
+
+const TG_EDGES = [
+  { u: 'main_webb', v: 'high_webb' },
+  { u: 'high_webb', v: 'maple_webb' },
+  { u: 'maple_webb', v: 'follin_webb' },
+  { u: 'main_church', v: 'high_church' },
+  { u: 'high_church', v: 'follin_maple' },
+  { u: 'main_cumberland', v: 'high_cumberland' },
+  { u: 'high_cumberland', v: 'maple_cumberland' },
+  { u: 'main_webb', v: 'main_church' },
+  { u: 'main_church', v: 'main_cumberland' },
+  { u: 'high_webb', v: 'high_church' },
+  { u: 'high_church', v: 'high_cumberland' },
+  { u: 'maple_webb', v: 'follin_maple' },
+  { u: 'follin_maple', v: 'maple_cumberland' },
+  { u: 'follin_webb', v: 'follin_mid' },
+  { u: 'follin_mid', v: 'follin_top' },
+  { u: 'follin_top', v: 'maple_cumberland' }
 ];
 
-let tgMap = [];
-const CELL_SIZE = 21;
-let tgTrain = { x: 7, y: 10, dx: 0, dy: 0, nextDx: 0, nextDy: 0, speed: 0.08, animFrame: 0, cellX: 7, cellY: 10, progress: 0 };
+let tgPellets = [];
+let tgTrain = { edgeIndex: 0, t: 0.5, dir: 1, nextDx: 0, nextDy: 0, speed: 1.3, trail: [] };
 let tgEnemies = [];
+
+function getEdgeLength(edge) {
+  const u = TG_NODES[edge.u];
+  const v = TG_NODES[edge.v];
+  return Math.sqrt((u.x - v.x)**2 + (u.y - v.y)**2);
+}
+
+function getEdgePoint(edgeIndex, t) {
+  const edge = TG_EDGES[edgeIndex];
+  const u = TG_NODES[edge.u];
+  const v = TG_NODES[edge.v];
+  return {
+    x: u.x + (v.x - u.x) * t,
+    y: u.y + (v.y - u.y) * t
+  };
+}
+
+function generateTgPellets() {
+  tgPellets = [];
+  TG_EDGES.forEach((edge, index) => {
+    const len = getEdgeLength(edge);
+    const step = 16 / len;
+    for (let t = 0.12; t <= 0.88; t += step) {
+      tgPellets.push({
+        edgeIndex: index,
+        t: t,
+        eaten: false,
+        isMoonPie: Math.random() < 0.1
+      });
+    }
+  });
+}
 
 function playTgTone(freq, type, duration, slideToFreq) {
   try {
@@ -8140,6 +8156,29 @@ function playTgTone(freq, type, duration, slideToFreq) {
   }
 }
 
+function getEdgeForDir(nodeKey, dirX, dirY) {
+  let bestEdgeIndex = -1;
+  let bestDot = 0.55; 
+  
+  TG_EDGES.forEach((edge, index) => {
+    if (edge.u === nodeKey || edge.v === nodeKey) {
+      const neighborKey = edge.u === nodeKey ? edge.v : edge.u;
+      const neighbor = TG_NODES[neighborKey];
+      const dx = neighbor.x - TG_NODES[nodeKey].x;
+      const dy = neighbor.y - TG_NODES[nodeKey].y;
+      const len = Math.sqrt(dx*dx + dy*dy);
+      if (len > 0) {
+        const dot = (dx / len) * dirX + (dy / len) * dirY;
+        if (dot > bestDot) {
+          bestDot = dot;
+          bestEdgeIndex = index;
+        }
+      }
+    }
+  });
+  return bestEdgeIndex;
+}
+
 function unlockTrainGame() {
   closeSidebar();
   document.getElementById('train-game-modal').style.display = 'flex';
@@ -8148,6 +8187,8 @@ function unlockTrainGame() {
   document.getElementById('tg-over-screen').style.display = 'none';
   tgScore = 0;
   tgLives = 3;
+  tgComboMultiplier = 1;
+  tgComboTimer = 0;
   updateTgHUD();
   
   window.addEventListener('keydown', handleTgKeydown);
@@ -8165,29 +8206,61 @@ function closeTrainGame() {
   window.removeEventListener('keydown', handleTgKeydown);
 }
 
+function toggleTgDayNight() {
+  tgIsNight = !tgIsNight;
+}
+
 function updateTgHUD() {
   document.getElementById('tg-score').textContent = String(tgScore).padStart(4, '0');
-  document.getElementById('tg-lives').textContent = '❤'.repeat(Math.max(0, tgLives));
+  document.getElementById('tg-lives').textContent = '❤'.repeat(Math.max(0, tgLives)) + '•'.repeat(Math.max(0, 3 - tgLives));
   
   const wBtn = document.getElementById('tg-whistle-btn');
-  if (wBtn) {
-    wBtn.disabled = !tgWhistleReady;
-  }
+  if (wBtn) wBtn.disabled = !tgWhistleReady;
+  const cBtn = document.getElementById('tg-coal-btn');
+  if (cBtn) cBtn.disabled = !tgCoalReady;
+  const gBtn = document.getElementById('tg-ghost-btn');
+  if (gBtn) gBtn.disabled = !tgGhostReady;
 }
 
 function handleTgKeydown(e) {
-  if (['ArrowUp', 'KeyW'].includes(e.code)) { tgTrain.nextDx = 0; tgTrain.nextDy = -1; e.preventDefault(); }
-  if (['ArrowDown', 'KeyS'].includes(e.code)) { tgTrain.nextDx = 0; tgTrain.nextDy = 1; e.preventDefault(); }
-  if (['ArrowLeft', 'KeyA'].includes(e.code)) { tgTrain.nextDx = -1; tgTrain.nextDy = 0; e.preventDefault(); }
-  if (['ArrowRight', 'KeyD'].includes(e.code)) { tgTrain.nextDx = 1; tgTrain.nextDy = 0; e.preventDefault(); }
-  if (e.code === 'Space') { triggerTgWhistle(); e.preventDefault(); }
+  let dx = 0, dy = 0;
+  if (['ArrowUp', 'KeyW'].includes(e.code)) { dy = -1; e.preventDefault(); }
+  if (['ArrowDown', 'KeyS'].includes(e.code)) { dy = 1; e.preventDefault(); }
+  if (['ArrowLeft', 'KeyA'].includes(e.code)) { dx = -1; e.preventDefault(); }
+  if (['ArrowRight', 'KeyD'].includes(e.code)) { dx = 1; e.preventDefault(); }
+  
+  if (dx !== 0 || dy !== 0) {
+    tgTrain.nextDx = dx;
+    tgTrain.nextDy = dy;
+    
+    // Check instant reverse
+    const targetNodeKey = tgTrain.dir === 1 ? TG_EDGES[tgTrain.edgeIndex].v : TG_EDGES[tgTrain.edgeIndex].u;
+    const revEdgeIndex = getEdgeForDir(targetNodeKey, dx, dy);
+    if (revEdgeIndex === tgTrain.edgeIndex) {
+      tgTrain.dir = -tgTrain.dir;
+      tgTrain.nextDx = 0;
+      tgTrain.nextDy = 0;
+    }
+  }
 }
 
 function handleTgDpad(dir) {
-  if (dir === 'up') { tgTrain.nextDx = 0; tgTrain.nextDy = -1; }
-  if (dir === 'down') { tgTrain.nextDx = 0; tgTrain.nextDy = 1; }
-  if (dir === 'left') { tgTrain.nextDx = -1; tgTrain.nextDy = 0; }
-  if (dir === 'right') { tgTrain.nextDx = 1; tgTrain.nextDy = 0; }
+  let dx = 0, dy = 0;
+  if (dir === 'up') dy = -1;
+  if (dir === 'down') dy = 1;
+  if (dir === 'left') dx = -1;
+  if (dir === 'right') dx = 1;
+  
+  tgTrain.nextDx = dx;
+  tgTrain.nextDy = dy;
+  
+  const targetNodeKey = tgTrain.dir === 1 ? TG_EDGES[tgTrain.edgeIndex].v : TG_EDGES[tgTrain.edgeIndex].u;
+  const revEdgeIndex = getEdgeForDir(targetNodeKey, dx, dy);
+  if (revEdgeIndex === tgTrain.edgeIndex) {
+    tgTrain.dir = -tgTrain.dir;
+    tgTrain.nextDx = 0;
+    tgTrain.nextDy = 0;
+  }
 }
 
 function initTgTouchControls() {
@@ -8202,13 +8275,12 @@ function initTgTouchControls() {
   canvas.addEventListener('touchend', e => {
     const diffX = e.changedTouches[0].clientX - startX;
     const diffY = e.changedTouches[0].clientY - startY;
-    
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-      if (diffX > 30) { tgTrain.nextDx = 1; tgTrain.nextDy = 0; }
-      else if (diffX < -30) { tgTrain.nextDx = -1; tgTrain.nextDy = 0; }
-    } else {
-      if (diffY > 30) { tgTrain.nextDx = 0; tgTrain.nextDy = 1; }
-      else if (diffY < -30) { tgTrain.nextDx = 0; tgTrain.nextDy = -1; }
+    if (Math.abs(diffX) > 15 || Math.abs(diffY) > 15) {
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        handleTgDpad(diffX > 0 ? 'right' : 'left');
+      } else {
+        handleTgDpad(diffY > 0 ? 'down' : 'up');
+      }
     }
   }, { passive: true });
 }
@@ -8220,19 +8292,25 @@ function startTrainGame() {
   tgCanvas.style.display = 'block';
   tgCtx = tgCanvas.getContext('2d');
   
-  tgMap = TG_MAP_ORIGINAL.map(row => [...row]);
-  
-  tgMap[1][1] = 3; 
-  tgMap[1][13] = 3;
-  tgMap[13][1] = 3;
-  tgMap[13][13] = 3;
+  generateTgPellets();
   
   tgScore = 0;
   tgLives = 3;
+  tgComboMultiplier = 1;
+  tgComboTimer = 0;
+  
   tgWhistleReady = true;
   tgWhistleCooldownTimer = 0;
-  tgMegaModeTimer = 0;
   tgStunTimer = 0;
+  
+  tgCoalReady = true;
+  tgCoalCooldownTimer = 0;
+  tgCoalBoostTimer = 0;
+  
+  tgGhostReady = true;
+  tgGhostCooldownTimer = 0;
+  tgGhostModeTimer = 0;
+  tgMegaModeTimer = 0;
   
   resetTgPositions();
   updateTgHUD();
@@ -8246,43 +8324,47 @@ function startTrainGame() {
 }
 
 function resetTgPositions() {
-  tgTrain.x = 7;
-  tgTrain.y = 10;
-  tgTrain.dx = 0;
-  tgTrain.dy = 0;
+  tgTrain.edgeIndex = 0; // starts on Webb Road
+  tgTrain.t = 0.5;
+  tgTrain.dir = 1;
   tgTrain.nextDx = 0;
   tgTrain.nextDy = 0;
-  tgTrain.cellX = 7;
-  tgTrain.cellY = 10;
-  tgTrain.progress = 0;
+  tgTrain.trail = [];
   
   tgEnemies = [
-    { name: 'Cow', emoji: '🐄', x: 6, y: 7, dx: 0, dy: 0, color: '#f5d33f', ai: 'patrol' },
-    { name: 'Tractor', emoji: '🚜', x: 7, y: 7, dx: 0, dy: 0, color: '#a63220', ai: 'chase' },
-    { name: 'Volunteer', emoji: '🙋', x: 8, y: 7, dx: 0, dy: 0, color: '#3d6b3a', ai: 'random' },
-    { name: 'Goat', emoji: '🐐', x: 7, y: 6, dx: 0, dy: 0, color: '#cfe8f7', ai: 'patrol' }
+    { name: 'Cow', emoji: '🐄', edgeIndex: 5, t: 0.1, dir: 1, color: '#f5d33f', ai: 'patrol' },
+    { name: 'Tractor', emoji: '🚜', edgeIndex: 10, t: 0.5, dir: -1, color: '#a63220', ai: 'chase' },
+    { name: 'Volunteer', emoji: '🙋', edgeIndex: 12, t: 0.2, dir: 1, color: '#3d6b3a', ai: 'random' },
+    { name: 'Goat', emoji: '🐐', edgeIndex: 14, t: 0.8, dir: 1, color: '#cfe8f7', ai: 'chase' }
   ];
-  
-  tgEnemies.forEach(g => {
-    g.cellX = g.x;
-    g.cellY = g.y;
-    g.progress = 0;
-  });
 }
 
 function triggerTgWhistle() {
   if (!tgWhistleReady) return;
   tgWhistleReady = false;
-  tgWhistleCooldownTimer = 300; 
-  tgStunTimer = 180; 
-  
-  playTgTone(880, 'square', 0.4, 220);
+  tgWhistleCooldownTimer = 480; // 8s
+  tgStunTimer = 210; // 3.5s
+  tgWhistleRipple = 10;
+  playTgTone(880, 'square', 0.45, 220);
   updateTgHUD();
 }
 
-function isTgWall(x, y) {
-  if (x < 0 || x >= 15 || y < 0 || y >= 15) return true;
-  return tgMap[y][x] === 1;
+function triggerTgCoal() {
+  if (!tgCoalReady) return;
+  tgCoalReady = false;
+  tgCoalCooldownTimer = 360; // 6s
+  tgCoalBoostTimer = 180; // 3s
+  playTgTone(350, 'sawtooth', 0.3, 700);
+  updateTgHUD();
+}
+
+function triggerTgGhost() {
+  if (!tgGhostReady) return;
+  tgGhostReady = false;
+  tgGhostCooldownTimer = 600; // 10s
+  tgGhostModeTimer = 180; // 3s
+  playTgTone(600, 'sine', 0.4, 300);
+  updateTgHUD();
 }
 
 function tgGameLoop() {
@@ -8297,136 +8379,169 @@ function tgGameLoop() {
 }
 
 function tgPelletsLeft() {
-  let count = 0;
-  for (let r = 0; r < 15; r++) {
-    for (let c = 0; c < 15; c++) {
-      if (tgMap[r][c] === 0 || tgMap[r][c] === 3) count++;
-    }
-  }
-  return count;
+  return tgPellets.filter(p => !p.eaten).length;
 }
 
 function updateTgGame() {
+  // Update timers
   if (tgMegaModeTimer > 0) tgMegaModeTimer--;
-  if (tgStunTimer > 0) tgStunTimer--;
+  if (tgStunTimer > 0) {
+    tgStunTimer--;
+    tgWhistleRipple += 2.5;
+  }
+  if (tgCoalBoostTimer > 0) tgCoalBoostTimer--;
+  if (tgGhostModeTimer > 0) tgGhostModeTimer--;
+  if (tgComboTimer > 0) {
+    tgComboTimer--;
+    if (tgComboTimer === 0) tgComboMultiplier = 1;
+  }
   
+  // Cooldowns
   if (tgWhistleCooldownTimer > 0) {
     tgWhistleCooldownTimer--;
-    if (tgWhistleCooldownTimer === 0) {
-      tgWhistleReady = true;
-      playTgTone(880, 'sine', 0.05);
-      updateTgHUD();
-    }
+    if (tgWhistleCooldownTimer === 0) { tgWhistleReady = true; updateTgHUD(); }
+  }
+  if (tgCoalCooldownTimer > 0) {
+    tgCoalCooldownTimer--;
+    if (tgCoalCooldownTimer === 0) { tgCoalReady = true; updateTgHUD(); }
+  }
+  if (tgGhostCooldownTimer > 0) {
+    tgGhostCooldownTimer--;
+    if (tgGhostCooldownTimer === 0) { tgGhostReady = true; updateTgHUD(); }
   }
   
-  if (tgTrain.progress <= 0) {
+  // 1. Player movement
+  const currentSpeed = tgCoalBoostTimer > 0 ? tgTrain.speed * 1.8 : tgTrain.speed;
+  const edgeLen = getEdgeLength(TG_EDGES[tgTrain.edgeIndex]);
+  const dt = currentSpeed / edgeLen;
+  
+  tgTrain.t += tgTrain.dir * dt;
+  
+  // Handle trail
+  const pt = getEdgePoint(tgTrain.edgeIndex, tgTrain.t);
+  tgTrain.trail.push(pt);
+  if (tgTrain.trail.length > (tgCoalBoostTimer > 0 ? 15 : 6)) {
+    tgTrain.trail.shift();
+  }
+  
+  // Node transition check
+  if (tgTrain.t >= 1.0 || tgTrain.t <= 0.0) {
+    const nodeKey = tgTrain.t >= 1.0 ? TG_EDGES[tgTrain.edgeIndex].v : TG_EDGES[tgTrain.edgeIndex].u;
+    tgTrain.t = tgTrain.t >= 1.0 ? 1.0 : 0.0;
+    
+    // Choose next edge
+    let nextEdge = -1;
     if (tgTrain.nextDx !== 0 || tgTrain.nextDy !== 0) {
-      if (!isTgWall(tgTrain.cellX + tgTrain.nextDx, tgTrain.cellY + tgTrain.nextDy)) {
-        tgTrain.dx = tgTrain.nextDx;
-        tgTrain.dy = tgTrain.nextDy;
-      }
+      nextEdge = getEdgeForDir(nodeKey, tgTrain.nextDx, tgTrain.nextDy);
     }
     
-    if (!isTgWall(tgTrain.cellX + tgTrain.dx, tgTrain.cellY + tgTrain.dy)) {
-      tgTrain.progress = 1;
+    if (nextEdge !== -1) {
+      tgTrain.edgeIndex = nextEdge;
+      tgTrain.t = TG_EDGES[nextEdge].u === nodeKey ? 0.0 : 1.0;
+      tgTrain.dir = TG_EDGES[nextEdge].u === nodeKey ? 1 : -1;
+      tgTrain.nextDx = 0;
+      tgTrain.nextDy = 0;
     } else {
-      tgTrain.dx = 0;
-      tgTrain.dy = 0;
-    }
-  }
-  
-  if (tgTrain.progress > 0) {
-    tgTrain.progress -= tgTrain.speed;
-    if (tgTrain.progress <= 0) {
-      tgTrain.cellX += tgTrain.dx;
-      tgTrain.cellY += tgTrain.dy;
-      tgTrain.progress = 0;
-      
-      const cellVal = tgMap[tgTrain.cellY][tgTrain.cellX];
-      if (cellVal === 0) { 
-        tgMap[tgTrain.cellY][tgTrain.cellX] = 2; 
-        tgScore += 10;
-        playTgTone(587.33, 'triangle', 0.03);
-        updateTgHUD();
-      } else if (cellVal === 3) { 
-        tgMap[tgTrain.cellY][tgTrain.cellX] = 2;
-        tgScore += 50;
-        tgMegaModeTimer = 360; 
-        playTgTone(329.63, 'square', 0.15, 659.25);
-        updateTgHUD();
+      // Find default continue edge
+      const branches = TG_EDGES.filter((e, idx) => idx !== tgTrain.edgeIndex && (e.u === nodeKey || e.v === nodeKey));
+      if (branches.length > 0) {
+        // Choose first valid branch
+        const nextEdgeObj = branches[0];
+        const nextIdx = TG_EDGES.indexOf(nextEdgeObj);
+        tgTrain.edgeIndex = nextIdx;
+        tgTrain.t = nextEdgeObj.u === nodeKey ? 0.0 : 1.0;
+        tgTrain.dir = nextEdgeObj.u === nodeKey ? 1 : -1;
+      } else {
+        // Bounce back if dead-end
+        tgTrain.dir = -tgTrain.dir;
       }
     }
   }
   
-  tgTrain.x = tgTrain.cellX;
-  tgTrain.y = tgTrain.cellY;
-  if (tgTrain.progress > 0) {
-    tgTrain.x += tgTrain.dx * (1 - tgTrain.progress);
-    tgTrain.y += tgTrain.dy * (1 - tgTrain.progress);
-  }
+  // Check pellet eating
+  tgPellets.forEach(p => {
+    if (!p.eaten && p.edgeIndex === tgTrain.edgeIndex) {
+      if (Math.abs(p.t - tgTrain.t) < 0.08) {
+        p.eaten = true;
+        const baseScore = p.isMoonPie ? 50 : 10;
+        tgScore += baseScore * tgComboMultiplier;
+        tgComboMultiplier = Math.min(5, tgComboMultiplier + 1);
+        tgComboTimer = 90; // 1.5s combo window
+        
+        if (p.isMoonPie) {
+          tgMegaModeTimer = 360; // 6s
+          playTgTone(329.63, 'square', 0.15, 659.25);
+        } else {
+          playTgTone(659.25, 'triangle', 0.035);
+        }
+        updateTgHUD();
+      }
+    }
+  });
   
+  // 2. Move Enemies
   tgEnemies.forEach(g => {
-    if (tgStunTimer > 0) return; 
+    if (tgStunTimer > 0) return;
     
-    if (g.progress <= 0) {
-      const possibleDirs = [];
-      const dirs = [{dx:0, dy:-1}, {dx:0, dy:1}, {dx:-1, dy:0}, {dx:1, dy:0}];
+    const enemyBaseSpeed = tgMegaModeTimer > 0 ? 0.7 : 1.0;
+    const gEdgeLen = getEdgeLength(TG_EDGES[g.edgeIndex]);
+    const gDt = enemyBaseSpeed / gEdgeLen;
+    
+    g.t += g.dir * gDt;
+    
+    if (g.t >= 1.0 || g.t <= 0.0) {
+      const nodeKey = g.t >= 1.0 ? TG_EDGES[g.edgeIndex].v : TG_EDGES[g.edgeIndex].u;
+      g.t = g.t >= 1.0 ? 1.0 : 0.0;
       
-      dirs.forEach(d => {
-        const nextX = g.cellX + d.dx;
-        const nextY = g.cellY + d.dy;
-        if (!isTgWall(nextX, nextY) && (d.dx !== -g.dx || d.dy !== -g.dy)) {
-          possibleDirs.push(d);
+      const branches = [];
+      TG_EDGES.forEach((e, idx) => {
+        if (idx !== g.edgeIndex && (e.u === nodeKey || e.v === nodeKey)) {
+          branches.push(idx);
         }
       });
       
-      if (possibleDirs.length === 0) {
-        dirs.forEach(d => {
-          if (!isTgWall(g.cellX + d.dx, g.cellY + d.dy)) possibleDirs.push(d);
-        });
-      }
-      
-      let chosen = {dx:0, dy:0};
-      if (possibleDirs.length > 0) {
-        if (g.ai === 'chase' && tgMegaModeTimer <= 0 && Math.random() < 0.6) {
-          let minD = 999;
-          possibleDirs.forEach(d => {
-            const dist = Math.abs((g.cellX + d.dx) - tgTrain.cellX) + Math.abs((g.cellY + d.dy) - tgTrain.cellY);
-            if (dist < minD) { minD = dist; chosen = d; }
+      let nextEdge = -1;
+      if (branches.length > 0) {
+        if (g.ai === 'chase' && tgMegaModeTimer <= 0) {
+          // Path chase towards player node
+          const trainNode = TG_EDGES[tgTrain.edgeIndex].u;
+          const targetNode = TG_NODES[trainNode];
+          let bestDist = 9999;
+          branches.forEach(idx => {
+            const nextNodeKey = TG_EDGES[idx].u === nodeKey ? TG_EDGES[idx].v : TG_EDGES[idx].u;
+            const dist = Math.hypot(TG_NODES[nextNodeKey].x - targetNode.x, TG_NODES[nextNodeKey].y - targetNode.y);
+            if (dist < bestDist) {
+              bestDist = dist;
+              nextEdge = idx;
+            }
           });
         } else {
-          chosen = possibleDirs[Math.floor(Math.random() * possibleDirs.length)];
+          // Random
+          nextEdge = branches[Math.floor(Math.random() * branches.length)];
         }
       }
       
-      g.dx = chosen.dx;
-      g.dy = chosen.dy;
-      g.progress = 1;
+      if (nextEdge !== -1) {
+        g.edgeIndex = nextEdge;
+        g.t = TG_EDGES[nextEdge].u === nodeKey ? 0.0 : 1.0;
+        g.dir = TG_EDGES[nextEdge].u === nodeKey ? 1 : -1;
+      } else {
+        g.dir = -g.dir;
+      }
     }
     
-    const enemySpeed = tgMegaModeTimer > 0 ? 0.04 : 0.07;
-    g.progress -= enemySpeed;
-    if (g.progress <= 0) {
-      g.cellX += g.dx;
-      g.cellY += g.dy;
-      g.progress = 0;
-    }
-    
-    g.x = g.cellX;
-    g.y = g.cellY;
-    if (g.progress > 0) {
-      g.x += g.dx * (1 - g.progress);
-      g.y += g.dy * (1 - g.progress);
-    }
-    
-    const dist = Math.abs(g.x - tgTrain.x) + Math.abs(g.y - tgTrain.y);
-    if (dist < 0.6) {
+    // Collision detection
+    const gPos = getEdgePoint(g.edgeIndex, g.t);
+    const trainPos = getEdgePoint(tgTrain.edgeIndex, tgTrain.t);
+    const dist = Math.hypot(gPos.x - trainPos.x, gPos.y - trainPos.y);
+    if (dist < 12) {
+      if (tgGhostModeTimer > 0) return; // Immune in ghost mode
+      
       if (tgMegaModeTimer > 0) {
-        g.cellX = 7;
-        g.cellY = 7;
-        g.x = 7;
-        g.y = 7;
-        g.progress = 0;
+        // Eat enemy
+        g.edgeIndex = 5;
+        g.t = 0.5;
+        g.dir = 1;
         tgScore += 100;
         playTgTone(220, 'square', 0.25, 440);
         updateTgHUD();
@@ -8444,51 +8559,144 @@ function updateTgGame() {
 function drawTgGame() {
   tgCtx.clearRect(0,0,tgCanvas.width,tgCanvas.height);
   
-  for (let r = 0; r < 15; r++) {
-    for (let c = 0; c < 15; c++) {
-      const val = tgMap[r][c];
-      const px = c * CELL_SIZE;
-      const py = r * CELL_SIZE;
+  // Set Colors based on Theme Mode (Day/Night)
+  const colors = tgIsNight ? {
+    bg: '#0e121a',
+    road: '#00f3ff',
+    roadGlow: 'rgba(0,243,255,0.45)',
+    wall: '#1e293b',
+    text: '#ffffff',
+    pellet: '#ffd700',
+    landmark: '#10b981',
+    landmarkGlow: 'rgba(16,185,129,0.3)'
+  } : {
+    bg: '#f4eedb',
+    road: '#8a6030',
+    roadGlow: 'rgba(138,96,48,0.25)',
+    wall: '#e8ddc0',
+    text: '#2c1a0c',
+    pellet: '#a63220',
+    landmark: '#3d6b3a',
+    landmarkGlow: 'rgba(61,107,58,0.2)'
+  };
+  
+  // Fill background
+  tgCtx.fillStyle = colors.bg;
+  tgCtx.fillRect(0,0,tgCanvas.width,tgCanvas.height);
+  
+  // Render Roads
+  TG_EDGES.forEach(edge => {
+    const u = TG_NODES[edge.u];
+    const v = TG_NODES[edge.v];
+    
+    // Outer Glow
+    tgCtx.strokeStyle = colors.roadGlow;
+    tgCtx.lineWidth = 8;
+    tgCtx.beginPath();
+    tgCtx.moveTo(u.x, u.y);
+    tgCtx.lineTo(v.x, v.y);
+    tgCtx.stroke();
+    
+    // Central Path Line
+    tgCtx.strokeStyle = colors.road;
+    tgCtx.lineWidth = 3;
+    tgCtx.stroke();
+  });
+  
+  // Draw landmarks
+  Object.keys(TG_NODES).forEach(key => {
+    const node = TG_NODES[key];
+    if (node.label) {
+      // Glow Ring
+      tgCtx.fillStyle = colors.landmarkGlow;
+      tgCtx.beginPath();
+      tgCtx.arc(node.x, node.y, 10, 0, Math.PI*2);
+      tgCtx.fill();
       
-      if (val === 1) { 
-        tgCtx.fillStyle = '#7c4a22'; 
-        tgCtx.fillRect(px, py, CELL_SIZE, CELL_SIZE);
-        tgCtx.fillStyle = '#3d6b3a'; 
-        tgCtx.fillRect(px + 2, py + 2, CELL_SIZE - 4, CELL_SIZE - 4);
-      } else if (val === 0) { 
-        tgCtx.fillStyle = '#e8b830';
-        tgCtx.beginPath();
-        tgCtx.arc(px + CELL_SIZE/2, py + CELL_SIZE/2, 2.5, 0, Math.PI*2);
-        tgCtx.fill();
-      } else if (val === 3) { 
-        tgCtx.fillStyle = '#ffe9a8';
-        tgCtx.beginPath();
-        tgCtx.arc(px + CELL_SIZE/2, py + CELL_SIZE/2, 6, 0, Math.PI*2);
-        tgCtx.fill();
-        tgCtx.fillStyle = '#7c4a22';
-        tgCtx.font = '7px sans-serif';
-        tgCtx.fillText('🍩', px + CELL_SIZE/2 - 4, py + CELL_SIZE/2 + 3);
-      }
-    }
-  }
-  
-  const trainPx = tgTrain.x * CELL_SIZE;
-  const trainPy = tgTrain.y * CELL_SIZE;
-  tgCtx.font = '15px Arial';
-  tgCtx.fillText('🚂', trainPx + 2, trainPy + CELL_SIZE - 4);
-  
-  tgEnemies.forEach(g => {
-    const gPx = g.x * CELL_SIZE;
-    const gPy = g.y * CELL_SIZE;
-    tgCtx.font = '15px Arial';
-    if (tgStunTimer > 0) {
-      tgCtx.fillText('🌀', gPx + 2, gPy + CELL_SIZE - 4);
-    } else if (tgMegaModeTimer > 0) {
-      tgCtx.fillText('😱', gPx + 2, gPy + CELL_SIZE - 4);
-    } else {
-      tgCtx.fillText(g.emoji, gPx + 2, gPy + CELL_SIZE - 4);
+      // Node core
+      tgCtx.fillStyle = colors.landmark;
+      tgCtx.beginPath();
+      tgCtx.arc(node.x, node.y, 4, 0, Math.PI*2);
+      tgCtx.fill();
+      
+      // Label text
+      tgCtx.fillStyle = colors.text;
+      tgCtx.font = 'bold 8px sans-serif';
+      tgCtx.textAlign = 'center';
+      tgCtx.fillText(node.label, node.x, node.y - 12);
     }
   });
+  
+  // Render Pellets
+  tgPellets.forEach(p => {
+    if (!p.eaten) {
+      const pos = getEdgePoint(p.edgeIndex, p.t);
+      if (p.isMoonPie) {
+        tgCtx.fillStyle = colors.pellet;
+        tgCtx.beginPath();
+        tgCtx.arc(pos.x, pos.y, 4.5, 0, Math.PI*2);
+        tgCtx.fill();
+        tgCtx.font = '7px Arial';
+        tgCtx.fillText('🍩', pos.x - 3.5, pos.y + 3);
+      } else {
+        tgCtx.fillStyle = colors.pellet;
+        tgCtx.beginPath();
+        tgCtx.arc(pos.x, pos.y, 2, 0, Math.PI*2);
+        tgCtx.fill();
+      }
+    }
+  });
+  
+  // Draw whistle ripple wave
+  if (tgStunTimer > 0 && tgWhistleRipple < 120) {
+    const tr = getEdgePoint(tgTrain.edgeIndex, tgTrain.t);
+    tgCtx.strokeStyle = 'rgba(0, 243, 255, ' + (1 - tgWhistleRipple / 120) + ')';
+    tgCtx.lineWidth = 1.5;
+    tgCtx.beginPath();
+    tgCtx.arc(tr.x, tr.y, tgWhistleRipple, 0, Math.PI*2);
+    tgCtx.stroke();
+  }
+  
+  // Draw Train Player Trail
+  if (tgTrain.trail.length > 1) {
+    tgCtx.strokeStyle = 'rgba(255, 165, 0, 0.45)';
+    tgCtx.lineWidth = 4;
+    tgCtx.beginPath();
+    tgCtx.moveTo(tgTrain.trail[0].x, tgTrain.trail[0].y);
+    for (let i = 1; i < tgTrain.trail.length; i++) {
+      tgCtx.lineTo(tgTrain.trail[i].x, tgTrain.trail[i].y);
+    }
+    tgCtx.stroke();
+  }
+  
+  // Draw Train
+  const tr = getEdgePoint(tgTrain.edgeIndex, tgTrain.t);
+  tgCtx.save();
+  if (tgGhostModeTimer > 0) tgCtx.globalAlpha = 0.5;
+  tgCtx.font = '14px Arial';
+  tgCtx.fillText('🚂', tr.x - 7, tr.y + 5);
+  tgCtx.restore();
+  
+  // Draw Enemies
+  tgEnemies.forEach(g => {
+    const gp = getEdgePoint(g.edgeIndex, g.t);
+    tgCtx.font = '14px Arial';
+    if (tgStunTimer > 0) {
+      tgCtx.fillText('🌀', gp.x - 7, gp.y + 5);
+    } else if (tgMegaModeTimer > 0) {
+      tgCtx.fillText('😱', gp.x - 7, gp.y + 5);
+    } else {
+      tgCtx.fillText(g.emoji, gp.x - 7, gp.y + 5);
+    }
+  });
+  
+  // Score multiplier combo text overlay
+  if (tgComboMultiplier > 1 && tgComboTimer > 0) {
+    tgCtx.fillStyle = '#f1c40f';
+    tgCtx.font = 'bold 9px sans-serif';
+    tgCtx.textAlign = 'left';
+    tgCtx.fillText('Combo x' + tgComboMultiplier + ' 🔥', 10, 20);
+  }
 }
 
 function endTgGame() {
@@ -8513,7 +8721,7 @@ function endTgGame() {
   } else {
     resultTitle.textContent = 'VICTORY! 🎉';
     resultTitle.style.color = '#3d6b3a';
-    resultDesc.textContent = `All festival items collected! Score: ${tgScore}`;
+    resultDesc.textContent = `All street items collected! Score: ${tgScore}`;
     playTgTone(440, 'triangle', 0.2);
     setTimeout(() => playTgTone(554.37, 'triangle', 0.2), 150);
     setTimeout(() => playTgTone(659.25, 'triangle', 0.2), 300);
@@ -8528,14 +8736,14 @@ function endTgGame() {
     <div class="arcade-header">🚂 Train Express</div>
     <div class="arcade-hud">
       <div>SCORE: <span id="tg-score">0000</span></div>
-      <div>LIVES: <span id="tg-lives">❤❤•</span></div>
+      <div>LIVES: <span id="tg-lives">❤❤❤</span></div>
     </div>
     
     <!-- Intro / Start screen -->
     <div id="tg-start-screen" style="background:#000; border:3px solid var(--tp-wood-light); border-radius:8px; padding:20px; text-align:center; height:320px; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:inherit;">
       <h3 style="color:#ffe9a8; margin:0 0 10px; font-size:14px; font-weight: bold;">You found the hidden Bell Buckle Train Game!</h3>
       <p style="font-size:11px; line-height:1.45; color:#ffe9a8; margin:0 0 16px;">
-        Control the train to collect Moon Pies (🍩) and RC Colas (🥤) through the streets of Bell Buckle. Avoid cows, tractors, festival volunteers, and the runaway goat!
+        Control the train to collect Moon Pies (🍩) and RC Colas through the actual downtown streets of Bell Buckle. Avoid cows, tractors, festival volunteers, and the runaway goat!
       </p>
       <div style="font-size:11px; margin-bottom:16px; color:#f1c40f; line-height: 1.45;">
         ⌨️ Arrow keys or WASD to turn<br>📱 Swipe on screen or use D-Pad below
@@ -8554,11 +8762,12 @@ function endTgGame() {
     </div>
 
     <!-- Power-Ups & Action Panel -->
-    <div style="margin-top:14px; display:flex; justify-content:center; gap:10px; align-items:center;">
-      <button class="arcade-btn" id="tg-whistle-btn" onclick="triggerTgWhistle()" style="position:relative;" disabled>
-        📣 WHISTLE BLAST <span id="tg-whistle-cooldown" style="font-size:9.5px; opacity:0.8;">(STUN)</span>
-      </button>
-      <button class="arcade-btn arcade-btn-red" onclick="closeTrainGame()">✕ Exit Game</button>
+    <div style="margin-top:14px; display:flex; flex-wrap:wrap; justify-content:center; gap:6px; align-items:center;">
+      <button class="arcade-btn" id="tg-whistle-btn" onclick="triggerTgWhistle()" title="Stuns enemies briefly">📣 Whistle</button>
+      <button class="arcade-btn" id="tg-coal-btn" onclick="triggerTgCoal()" title="Temporary speed increase">🚀 Coal</button>
+      <button class="arcade-btn" id="tg-ghost-btn" onclick="triggerTgGhost()" title="Become immune to enemies">👻 Ghost</button>
+      <button class="arcade-btn" onclick="toggleTgDayNight()" title="Toggle Day/Night mode">🌓 Theme</button>
+      <button class="arcade-btn arcade-btn-red" onclick="closeTrainGame()">✕ Exit</button>
     </div>
     
     <!-- Mobile D-pad -->
