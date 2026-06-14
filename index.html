@@ -8024,7 +8024,46 @@ async function seedDemoData() {
       { text: "I can run by there for you, Hank! I'm heading out around 2 PM. I'll shoot you a text.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
       { text: "Bless you, Sarah! You're a lifesaver.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
       { text: "Anyone reading the debate on the community board about the #flock camera systems? Sounds like there is going to be a big turnout at the council meeting on Tuesday.", uid, email, displayName: "Tommy", ts: firebase.firestore.FieldValue.serverTimestamp() },
-      { text: "I'll be there. We need answers on how much this #flock system costs the town and where the data is stored.", uid, email, displayName: "Sarah", ts: firebase.firestore.Fie// ==========================================
+      { text: "I'll be there. We need answers on how much this #flock system costs the town and where the data is stored.", uid, email, displayName: "Sarah", ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { text: "I think the safety aspect is worth it, but transparency is key. Let's make sure the council explains it all.", uid, email, displayName: "Hank", ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+    
+    const annMessages = [
+      { text: "Mayor's Notice: The annual street paving will begin on Monday on Maple Street. Please expect minor delays and park on adjacent streets.", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+
+    const demoEvents = [
+      { title: "Farmer's Market", date: "Saturdays 8am – 12pm", loc: "Old Bell Buckle Rd · Weather permitting", desc: "Fresh produce, local honey, handmade crafts, and the best cinnamon rolls in Bedford County.", stripeColor: "#d97706", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Town Hall Meeting", date: "2nd Tuesday Monthly", loc: "Bell Buckle Community Center", desc: "Community discussions, local government updates, and your chance to speak up about what matters in Bell Buckle.", stripeColor: "#2563eb", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Summer Music Series", date: "June – August · Fridays 6pm · Free", loc: "Bell Buckle Café Porch", desc: "Local artists, cold drinks, and warm Tennessee evenings on the historic café porch. Bring a lawn chair.", stripeColor: "var(--green)", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Tennessee Crafts Fair", date: "September 13–14, 2026", loc: "Downtown Bell Buckle", desc: "Juried craft show featuring artisans from across Tennessee — pottery, woodwork, textiles, jewelry, and more.", stripeColor: "#9333ea", featured: true, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Bell Buckle Fall Festival", date: "October 4, 2026", loc: "Downtown Bell Buckle", desc: "Hayrides, pumpkin painting, live bluegrass, and the annual chili cook-off. Family fun for all ages.", stripeColor: "#0891b2", featured: false, approved: true, img: "", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+
+    const demoListings = [
+      { title: "Vintage Rocking Chair", category: "Furniture", condition: "Antique / Rustic", dealType: "sale", price: "85", desc: "Solid oak rocking chair from the late 19th century. Hand-carved details, very sturdy. Has some normal wear and tear on the arms but adds to its rustic charm.", contact: "Call Sarah M. at 555-0129", status: "active", featured: true, flagged: false, approved: true, img: "cb-store.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Home-Canned Tomatoes", category: "Food & Pantry", condition: "Brand New", dealType: "sale", price: "5", desc: "Freshly canned heirloom Roma tomatoes from our organic community garden plot. Preserved last August, delicious for stews and pasta sauces.", contact: "Call Jim T. at 555-0144", status: "active", flagged: false, approved: true, img: "garden2.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Lawn Mowing & Edging", category: "Services", condition: "Brand New", dealType: "sale", price: "40", desc: "Offering professional lawn care services for residential properties in Bell Buckle. Includes mowing, edging, and blowing clippings. Weekly or bi-weekly slots available.", contact: "Message Tyler K. in #local-biz or call 555-0187", status: "active", flagged: false, approved: true, img: "cb-downtown.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Tennessee Wildflower Honey", category: "Food & Pantry", condition: "Brand New", dealType: "sale", price: "12", desc: "Pure, raw honey harvested directly from our hives on Bee City Road. Golden color, rich floral taste. Support local bees!", contact: "Visit Bee Happy Farm at 122 Main St or call 555-0155", status: "active", featured: true, flagged: false, approved: true, img: "garden1.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Heirloom Squash Plants", category: "Garden & Farm", condition: "Brand New", dealType: "trade", price: "Trade Only", desc: "Have 8 extra summer yellow crookneck squash starters. Looking to trade for cucumber starters or heirloom tomato starts.", contact: "Carol B. at 555-0162", status: "active", flagged: false, approved: true, img: "garden3.jpg", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() },
+      { title: "Antique Oak Writing Desk", category: "Furniture", condition: "Antique / Rustic", dealType: "trade", price: "Trade Only", desc: "Beautiful roll-top desk in good structural shape. Looking to swap for a working electric weed eater or a leaf blower.", contact: "Message Martha L. in general chat", status: "active", flagged: false, approved: true, img: "cb-mural.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+
+    for (const ann of annMessages) {
+      await db.collection('channels').doc('announcements').collection('messages').add(ann);
+    }
+    for (const ev of demoEvents) {
+      await db.collection('events').add(ev);
+    }
+    for (const dl of demoListings) {
+      await db.collection('trading_post').add(dl);
+    }
+  } catch (err) {
+    console.error("Seeder failed:", err);
+  }
+}
+
+// ==========================================
 // BELL BUCKLE TRAIN PAC-MAN GAME ENGINE
 // ==========================================
 
