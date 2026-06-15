@@ -3530,6 +3530,7 @@ body.guest .guest-veil{
             <button class="btn btn-outline" id="dir-tab-safety" onclick="switchDirTab('safety')" style="flex-shrink:0; font-weight:600; padding:8px 16px; font-size:13px; border-radius:8px; cursor:pointer;">📞 Safety & Emergency</button>
             <button class="btn btn-outline" id="dir-tab-utilities" onclick="switchDirTab('utilities')" style="flex-shrink:0; font-weight:600; padding:8px 16px; font-size:13px; border-radius:8px; cursor:pointer;">💧 Utilities & Services</button>
             <button class="btn btn-outline" id="dir-tab-community" onclick="switchDirTab('community')" style="flex-shrink:0; font-weight:600; padding:8px 16px; font-size:13px; border-radius:8px; cursor:pointer;">🤝 Community Resources</button>
+            <button class="btn btn-outline" id="dir-tab-minutes" onclick="switchDirTab('minutes')" style="flex-shrink:0; font-weight:600; padding:8px 16px; font-size:13px; border-radius:8px; cursor:pointer;">📋 Meeting Minutes &amp; Issues</button>
           </div>
 
           <!-- Section 1: Town Officials -->
@@ -3697,9 +3698,67 @@ body.guest .guest-veil{
             </div>
           </div>
 
+          <!-- Section 5: Town Hall Minutes & Involvement -->
+          <div id="dir-content-minutes" class="dir-tab-content" style="display:none;">
+            <div class="card" style="background:var(--tp-parchment); border:1.5px solid var(--tp-wood-light); border-radius:12px; padding:20px; margin-bottom:16px; box-shadow:var(--shadow-sm);">
+              <h3 style="color:var(--tp-earth); margin-top:0; font-family:'Playfair Display', serif; font-size:18px; border-bottom:1px dashed var(--tp-wood-light); padding-bottom:8px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">📋 Board of Mayor &amp; Aldermen (BOMA) Meeting Minutes</h3>
+              <p style="font-size:13px; color:var(--ink-lt); line-height:1.5; margin-bottom:16px;">
+                Access official meeting minutes and agenda drafts from recent Bell Buckle town meetings. Meetings occur on the 2nd Tuesday of each month.
+              </p>
+              
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(128,91,54,0.04); border:1px solid rgba(128,91,54,0.12); border-radius:8px; padding:12px; flex-wrap:wrap; gap:10px;">
+                  <div>
+                    <strong style="color:var(--tp-earth); font-size:14px;">BOMA Monthly Meeting Minutes — June 2026</strong>
+                    <div style="font-size:11.5px; color:var(--ink-lt); margin-top:2px;">Topics: Highway 269 safety signage, water system improvements, and summer festival planning.</div>
+                  </div>
+                  <button class="btn btn-outline" style="padding:6px 12px; font-size:12px; font-weight:600; margin-bottom:0;" onclick="alert('Downloading BOMA_Minutes_June_2026.pdf ...')">📄 View PDF</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(128,91,54,0.04); border:1px solid rgba(128,91,54,0.12); border-radius:8px; padding:12px; flex-wrap:wrap; gap:10px;">
+                  <div>
+                    <strong style="color:var(--tp-earth); font-size:14px;">BOMA Monthly Meeting Minutes — May 2026</strong>
+                    <div style="font-size:11.5px; color:var(--ink-lt); margin-top:2px;">Topics: Historic preservation guidelines, sidewalk maintenance grants, and tree board updates.</div>
+                  </div>
+                  <button class="btn btn-outline" style="padding:6px 12px; font-size:12px; font-weight:600; margin-bottom:0;" onclick="alert('Downloading BOMA_Minutes_May_2026.pdf ...')">📄 View PDF</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(128,91,54,0.04); border:1px solid rgba(128,91,54,0.12); border-radius:8px; padding:12px; flex-wrap:wrap; gap:10px;">
+                  <div>
+                    <strong style="color:var(--tp-earth); font-size:14px;">BOMA Monthly Meeting Minutes — April 2026</strong>
+                    <div style="font-size:11.5px; color:var(--ink-lt); margin-top:2px;">Topics: Budget approval FY 2026-27, street repaving schedules, and park cleanup scheduling.</div>
+                  </div>
+                  <button class="btn btn-outline" style="padding:6px 12px; font-size:12px; font-weight:600; margin-bottom:0;" onclick="alert('Downloading BOMA_Minutes_April_2026.pdf ...')">📄 View PDF</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="background:var(--tp-parchment); border:1.5px solid var(--tp-wood-light); border-radius:12px; padding:20px; box-shadow:var(--shadow-sm);">
+              <h3 style="color:var(--tp-earth); margin-top:0; font-family:'Playfair Display', serif; font-size:18px; border-bottom:1px dashed var(--tp-wood-light); padding-bottom:8px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">📣 Voice Your Opinion &amp; Get Involved</h3>
+              <p style="font-size:13px; color:var(--ink-lt); line-height:1.5; margin-bottom:16px;">
+                Have ideas on utility planning, historic zoning, parks, or safety issues? Connect directly with BOMA officials or open a discussion thread on our local community board!
+              </p>
+              
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="background:rgba(61,107,58,0.05); border:1px solid rgba(61,107,58,0.15); border-radius:8px; padding:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                  <div>
+                    <strong style="color:var(--tp-forest); font-size:14px;">Post a Public Topic for Discussion</strong>
+                    <div style="font-size:12px; color:var(--ink-lt); margin-top:2px;">Share your proposal on the community board for neighbors to discuss.</div>
+                  </div>
+                  <button class="btn btn-red" style="padding:8px 14px; font-size:12.5px; margin-bottom:0; font-weight:600;" onclick="nav('post'); document.getElementById('post-text-area').value = 'Topic for BOMA discussion:\n';">✏️ Start Topic</button>
+                </div>
+                
+                <div style="background:rgba(128,91,54,0.04); border:1px solid rgba(128,91,54,0.12); border-radius:8px; padding:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                  <div>
+                    <strong style="color:var(--tp-earth); font-size:14px;">Contact BOMA Directly</strong>
+                    <div style="font-size:12px; color:var(--ink-lt); margin-top:2px;">Send an email or message to the Mayor &amp; Aldermen directly.</div>
+                  </div>
+                  <a href="mailto:townhall@bellbuckletn.gov" class="btn btn-outline" style="padding:8px 14px; font-size:12.5px; text-decoration:none; font-weight:600; display:inline-block; margin-bottom:0; text-align:center;">✉️ Send Email</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-
       <!-- ══════ KIDS CORNER ══════ -->
       <div class="screen" id="screen-kids">
         <div class="p20 max-w">
