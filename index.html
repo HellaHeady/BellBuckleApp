@@ -182,7 +182,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
   box-shadow: 0 5px 10px rgba(0,0,0,0.35);
   text-align: center;
   position: relative;
-  margin-top: 15px;
+  margin-top: 18px;
   border-bottom: 4px solid #1f0f08;
 }
 /* Left and Right chains extending up to the ceiling */
@@ -191,12 +191,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
   position: absolute;
   top: -30px;
   width: 4px;
-  height: 32px;
+  height: 36px;
   background: repeating-linear-gradient(to bottom, #111 0px, #111 5px, transparent 5px, transparent 10px);
   border-left: 2px solid #555;
   border-right: 2px solid #222;
   border-radius: 2px;
-  z-index: -1;
+  z-index: 9;
 }
 .topbar-station-sign::before { left: 16%; }
 .topbar-station-sign::after { right: 16%; }
@@ -211,7 +211,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
   text-align: center;
   position: relative;
   margin-right: 15px;
-  margin-top: 15px;
+  margin-top: 18px;
   min-width: 140px;
   z-index: 6;
   border-bottom: 4px solid #1f0f08;
@@ -222,18 +222,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
   position: absolute;
   top: -30px;
   width: 4px;
-  height: 32px;
+  height: 36px;
   background: repeating-linear-gradient(to bottom, #111 0px, #111 5px, transparent 5px, transparent 10px);
   border-left: 2px solid #555;
   border-right: 2px solid #222;
   border-radius: 2px;
-  z-index: -1;
+  z-index: 9;
 }
 .topbar-page-sign::before { left: 18%; }
 .topbar-page-sign::after { right: 18%; }
-
-
-
 .topbar-page-sign .page-title {
   color: #ffe9a8 !important;
   font-size: 14px;
