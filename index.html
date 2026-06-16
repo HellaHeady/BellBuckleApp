@@ -1498,11 +1498,17 @@ body.guest .guest-veil{
     justify-content: space-between;
     align-items: center;
   }
+
   .topbar-page-sign {
     margin-left: 10px;
     margin-right: 10px;
     min-width: auto;
     flex: 1;
+    margin-top: 18px;
+  }
+  .topbar-page-sign::before, .topbar-page-sign::after {
+    top: -26px;
+    height: 30px;
   }
   .topbar-actions span {
     display: none !important;
