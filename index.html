@@ -35,7 +35,7 @@
   --shadow:   0 2px 12px rgba(42,31,16,.14);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height:100vh;overflow:hidden;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height:100vh;height:var(--app-h,100vh);overflow:hidden;}
 .serif{font-family:'Playfair Display',Georgia,serif;}
 
 /* ── thin scrollbar ── */
@@ -86,7 +86,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 /* ════════════════════════════════
    SHELL
 ════════════════════════════════ */
-.shell{display:flex;height:100vh;overflow:hidden;}
+.shell{display:flex;height:100vh;height:var(--app-h,100vh);overflow:hidden;}
 
 /* ── Sidebar ── */
 .sidebar{
@@ -1236,6 +1236,34 @@ body.guest .guest-veil{
 .msg-wrap.own{align-items:flex-end;}
 .msg-wrap.other{align-items:flex-start;}
 .msg-meta{font-size:10px;color:rgba(255,255,255,.35);padding:0 4px;}
+
+/* ── Chat layout (mobile-friendly) ── */
+.chat-topbar{padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.chat-channels-toggle{display:none;background:rgba(255,255,255,.08);color:#fff;border:none;border-radius:8px;width:36px;height:36px;font-size:16px;cursor:pointer;flex-shrink:0;align-items:center;justify-content:center;}
+.chat-body{flex:1;display:flex;overflow:hidden;position:relative;min-height:0;}
+.chat-channels{width:150px;border-right:1px solid rgba(255,255,255,.07);padding:10px 8px;flex-shrink:0;overflow-y:auto;}
+.chat-channels-label{color:rgba(255,255,255,.25);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:4px 6px 8px;font-weight:600;}
+.chat-channels-backdrop{display:none;}
+.chat-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+.chat-messages{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;}
+.chat-composer{padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);background:#18100c;flex-shrink:0;display:flex;gap:8px;align-items:flex-end;}
+.chat-input{flex:1;background:#2c1a0e;color:#e4d8cc;border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:11px 16px;font-size:15px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s;}
+.chat-input:focus{border-color:var(--red);}
+.chat-send{background:var(--red);color:#fff;border:none;border-radius:22px;padding:0 20px;height:44px;min-width:64px;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;transition:transform .1s;}
+.chat-send:active{transform:scale(.95);}
+#channel-list-chat button{width:100%;text-align:left;padding:7px 10px;border-radius:8px;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.45);background:transparent;transition:all .15s;font-family:'Inter',sans-serif;margin-bottom:2px;}
+#channel-list-chat button:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);}
+#channel-list-chat button.active{background:rgba(166,50,32,.25);color:#f87a6a;}
+@media (max-width:768px){
+  .chat-channels-toggle{display:flex;}
+  .chat-channels{position:absolute;top:0;bottom:0;left:0;z-index:30;width:210px;background:#1a1109;box-shadow:0 0 24px rgba(0,0,0,.6);transform:translateX(-100%);transition:transform .25s cubic-bezier(.4,0,.2,1);}
+  .chat-channels.open{transform:translateX(0);}
+  .chat-channels-backdrop{display:block;position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.45);opacity:0;visibility:hidden;transition:opacity .25s;}
+  .chat-channels-backdrop.open{opacity:1;visibility:visible;}
+  .chat-input{font-size:16px;}
+  .chat-messages{padding:12px 12px;}
+  .bubble-own,.bubble-other{max-width:78vw;}
+}
 
 /* Events */
 .event-card{background:var(--paper);border:1px solid var(--wire-lt);border-radius:10px;overflow:hidden;margin-bottom:14px;box-shadow:0 1px 5px rgba(42,31,16,.06);}
@@ -2704,26 +2732,27 @@ body.guest .guest-veil{
       <!-- ══════ CHAT ══════ -->
       <div class="screen-dark guest-lockable" id="screen-chat">
         <!-- Channel header -->
-        <div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <div class="chat-topbar">
+          <button class="chat-channels-toggle" onclick="toggleChatChannels()" aria-label="Show channels">☰</button>
           <span id="chat-ch-name" style="color:#fff;font-weight:600;font-size:14px"># general</span>
           <span style="color:rgba(255,255,255,.25)">·</span>
           <span id="chat-ch-desc" style="color:rgba(255,255,255,.4);font-size:12px">Community chat</span>
         </div>
-        <!-- Sidebar channels panel (mini) in dark panel -->
-        <div style="flex:1;display:flex;overflow:hidden">
-          <div style="width:150px;border-right:1px solid rgba(255,255,255,.07);padding:10px 8px;flex-shrink:0;overflow-y:auto">
-            <div style="color:rgba(255,255,255,.25);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:4px 6px 8px;font-weight:600">Channels</div>
+        <!-- Body: channels drawer + messages -->
+        <div class="chat-body">
+          <div class="chat-channels" id="chat-channels-panel">
+            <div class="chat-channels-label">Channels</div>
             <div id="channel-list-chat"></div>
           </div>
+          <div class="chat-channels-backdrop" id="chat-channels-backdrop" onclick="toggleChatChannels(false)"></div>
           <!-- Messages -->
-          <div style="flex:1;display:flex;flex-direction:column;min-width:0">
-            <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column"></div>
-            <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);background:#18100c;flex-shrink:0;display:flex;gap:8px">
-              <input id="chat-input" type="text" placeholder="Message #general…"
-                     style="flex:1;background:#2c1a0e;color:#e4d8cc;border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:9px 14px;font-size:13px;outline:none;font-family:'Inter',sans-serif"
-                     onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+          <div class="chat-main">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-composer">
+              <input id="chat-input" class="chat-input" type="text" placeholder="Message #general…"
+                     onfocus="setTimeout(scrollChat,300)"
                      onkeydown="if(event.key==='Enter')sendMsg()">
-              <button onclick="sendMsg()" style="background:var(--red);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
+              <button class="chat-send" onclick="sendMsg()" aria-label="Send message">Send</button>
             </div>
           </div>
         </div>
@@ -4965,6 +4994,7 @@ function switchChan(id, go = true) {
   });
   if (go) nav('chat');
   listenChat(id);
+  toggleChatChannels(false);
 }
 
 // ─── Chat Firebase ─────────────────────────────────────────────────────────────
@@ -5012,6 +5042,32 @@ function sendMsg() {
 function scrollChat() {
   const box = document.getElementById('chat-messages');
   if (box) box.scrollTop = box.scrollHeight;
+}
+
+// ─── Mobile chat: channels drawer + keyboard-safe / rotation-safe viewport ──────
+function toggleChatChannels(force) {
+  const p = document.getElementById('chat-channels-panel');
+  const b = document.getElementById('chat-channels-backdrop');
+  if (!p) return;
+  const open = (typeof force === 'boolean') ? force : !p.classList.contains('open');
+  p.classList.toggle('open', open);
+  if (b) b.classList.toggle('open', open);
+}
+
+// Bind app height to the *visual* viewport so the composer stays above the on-screen
+// keyboard, and the layout reflows correctly when the phone/tablet is rotated.
+function applyViewportHeight() {
+  const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  document.documentElement.style.setProperty('--app-h', h + 'px');
+  const chat = document.getElementById('screen-chat');
+  if (chat && chat.classList.contains('active')) scrollChat();
+}
+applyViewportHeight();
+window.addEventListener('resize', applyViewportHeight);
+window.addEventListener('orientationchange', () => setTimeout(applyViewportHeight, 200));
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', applyViewportHeight);
+  window.visualViewport.addEventListener('scroll', applyViewportHeight);
 }
 
 // ─── Community posts ──────────────────────────────────────────────────────────
