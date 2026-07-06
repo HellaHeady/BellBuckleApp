@@ -2014,6 +2014,10 @@ body.guest .guest-veil{
 @media (min-width: 769px) {
   .mobile-dpad { display: none; }
 }
+@keyframes flash-warning {
+  0% { background-color: #dc2626; }
+  100% { background-color: #7c2018; }
+}
 </style>
 </head>
 <body>
@@ -2637,6 +2641,9 @@ body.guest .guest-veil{
 
       <!-- ══════ HOME ══════ -->
       <div class="screen active" id="screen-home" style="padding: 20px 0;">
+        <div id="live-train-warning-banner" style="display: none; background: #dc2626; color: #fff; text-align: center; padding: 12px; font-weight: bold; font-size: 15px; border-bottom: 3px solid #7c2018; animation: flash-warning 1.2s infinite alternate; margin-bottom: 15px;">
+          🚨 LIVE TRAIN ALERT: CSX Locomotive crossing downtown Bell Buckle!
+        </div>
         <div class="home-layout-container">
           
           <!-- ── LEFT COLUMN: Weather Station & Train Schedule ── -->
@@ -2683,6 +2690,7 @@ body.guest .guest-veil{
               <div style="font-size: 8.5px; color: #ffca28; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 6px; text-align: center; font-family: monospace;">
                 🔔 Next Crossing: <span id="train-crossing-countdown">08m 42s</span>
               </div>
+              <button onclick="reportTrainApproaching()" style="background: repeating-linear-gradient(-45deg, #e8b830, #e8b830 8px, #1a1a1a 8px, #1a1a1a 16px); color: #ffe9a8; text-shadow: 1px 1px 2px #000, -1px -1px 2px #000; font-weight: 800; border: 2px solid #ffe9a8; padding: 8px 4px; width: 100%; border-radius: 4px; cursor: pointer; margin-top: 10px; font-family: monospace; text-transform: uppercase; font-size: 10px; display: block; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.4);">Report Train Approaching</button>
             </div>
 
             <!-- Active Neighbors Widget -->
@@ -3110,6 +3118,69 @@ body.guest .guest-veil{
                 <div class="h-tab-num">3</div>
                 ADD TO VAULT
               </button>
+              <button class="h-tab-btn" data-tab="tour" onclick="switchHistoryTab('tour')">
+                <div class="h-tab-num">4</div>
+                🔊 LANDMARK TOUR
+              </button>
+            </div>
+
+            <!-- ── Tab 4: Landmark Audio Tour ── -->
+            <div id="htab-tour" class="h-tab-content" style="padding:18px 20px;">
+              <div style="background: var(--paper); border: 2px solid var(--wire); border-radius: 12px; padding: 20px; box-shadow: var(--shadow);">
+                <h3 class="serif" style="color: var(--ink); margin-bottom: 8px; font-size: 20px; display: flex; align-items: center; gap: 8px;">
+                  🪕 Landmark Audio Tour
+                </h3>
+                <p style="color: var(--ink-lt); font-size: 13px; margin-bottom: 16px; line-height: 1.5;">
+                  Tap a historic Bell Buckle landmark below to play its custom banjo-style tune and view its historical chronicle.
+                </p>
+
+                <!-- Landmark List -->
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <!-- Webb School Library -->
+                  <div onclick="selectLandmark('library')" class="landmark-card" style="border: 1.5px solid var(--wire-lt); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; background: var(--bg);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--ink); font-size: 14px;">
+                      <span>📚 Webb School Library</span>
+                      <span style="font-size: 16px;">🪕 ▶</span>
+                    </div>
+                    <div id="landmark-desc-library" class="landmark-desc" style="display: none; font-size: 12.5px; color: var(--ink-lt); line-height: 1.6; margin-top: 8px; border-top: 1px dashed var(--wire); padding-top: 8px; font-style: italic;">
+                      Founded in 1870 by William R. "Sawney" Webb, this library housed a premier collection to foster academic excellence. Webb School's unique emphasis on character and classics shaped generations of scholars, and the historic library remains a cornerstone of Bell Buckle's educational legacy.
+                    </div>
+                  </div>
+
+                  <!-- Historic Caboose -->
+                  <div onclick="selectLandmark('caboose')" class="landmark-card" style="border: 1.5px solid var(--wire-lt); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; background: var(--bg);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--ink); font-size: 14px;">
+                      <span>🚂 Historic Caboose</span>
+                      <span style="font-size: 16px;">🪕 ▶</span>
+                    </div>
+                    <div id="landmark-desc-caboose" class="landmark-desc" style="display: none; font-size: 12.5px; color: var(--ink-lt); line-height: 1.6; margin-top: 8px; border-top: 1px dashed var(--wire); padding-top: 8px; font-style: italic;">
+                      Resting in the heart of downtown, this bright red Louisville & Nashville (L&N) caboose is a beloved town landmark. It stands as a monument to the railway age, when steam locomotives fueled the commerce and identity of Bell Buckle.
+                    </div>
+                  </div>
+
+                  <!-- The Saloon/Faxon Studio -->
+                  <div onclick="selectLandmark('saloon')" class="landmark-card" style="border: 1.5px solid var(--wire-lt); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; background: var(--bg);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--ink); font-size: 14px;">
+                      <span>🎨 The Saloon / Faxon Studio</span>
+                      <span style="font-size: 16px;">🪕 ▶</span>
+                    </div>
+                    <div id="landmark-desc-saloon" class="landmark-desc" style="display: none; font-size: 12.5px; color: var(--ink-lt); line-height: 1.6; margin-top: 8px; border-top: 1px dashed var(--wire); padding-top: 8px; font-style: italic;">
+                      Originally a late-19th-century saloon, this building was later converted into a studio by local and regional artists, including the Faxon family. It captures the post-railway artistic resurgence that filled Bell Buckle's brick storefronts with creativity and craftsmanship.
+                    </div>
+                  </div>
+
+                  <!-- Town Hall -->
+                  <div onclick="selectLandmark('townhall')" class="landmark-card" style="border: 1.5px solid var(--wire-lt); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; background: var(--bg);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--ink); font-size: 14px;">
+                      <span>🏛️ Town Hall</span>
+                      <span style="font-size: 16px;">🪕 ▶</span>
+                    </div>
+                    <div id="landmark-desc-townhall" class="landmark-desc" style="display: none; font-size: 12.5px; color: var(--ink-lt); line-height: 1.6; margin-top: 8px; border-top: 1px dashed var(--wire); padding-top: 8px; font-style: italic;">
+                      The civic anchor of Bell Buckle, Town Hall has watched over the municipal growth of this historic railroad community. Today, it hosts the local administration, town archives, and coordinates preservation efforts to protect the unique character of our historic district.
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- ── Tab 1: Chapter Spotlights ── -->
@@ -3996,6 +4067,7 @@ body.guest .guest-veil{
               <button class="season-btn" data-cpage="caboose" onclick="switchColoring('caboose')">🚃 Caboose</button>
               <button class="season-btn" data-cpage="bell" onclick="switchColoring('bell')">🔔 Bell &amp; Buckle</button>
               <button class="season-btn" data-cpage="bee" onclick="switchColoring('bee')">🐝 Busy Bee</button>
+              <button class="season-btn" data-cpage="quilt" onclick="switchColoring('quilt')">🧩 Quilt Creator</button>
             </div>
 
             <div class="crayon-box" id="crayon-box"></div>
@@ -4128,6 +4200,106 @@ body.guest .guest-veil{
                         <circle class="cregion" onclick="paintRegion(this)" cx="196" cy="138" r="25"/>
                         <circle class="cregion" onclick="paintRegion(this)" cx="188" cy="131" r="5"/>
                         <g fill="none"><path d="M184 148 q8 7 16 2"/><path d="M186 116 Q178 102 168 98"/><path d="M198 114 Q196 100 202 92"/><circle cx="166" cy="96" r="3"/><circle cx="203" cy="89" r="3"/><path d="M232 172 q-4 10 -12 14 M252 176 q0 10 -6 16 M272 174 q4 10 12 13"/></g>
+                      </g>
+                    </svg>
+                  </div>
+
+                  <!-- Page 4: Quilt Creator -->
+                  <div class="cpage-wrap" id="cpage-quilt">
+                    <div style="text-align: center; margin-bottom: 12px;">
+                      <button class="btn btn-red" onclick="postQuiltToBoard()" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; padding: 8px 16px;">
+                        💾 Post Quilt to Board
+                      </button>
+                    </div>
+                    <svg id="quilt-creator-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 100%; height: auto; max-width: 400px; margin: 0 auto; background: #fff; border: 3px solid var(--tp-wood); box-shadow: var(--shadow);">
+                      <g stroke="#2a1f10" stroke-width="2" stroke-linejoin="round" fill="#ffffff">
+                        <!-- Row 0 -->
+                        <!-- Block 0,0 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="0,0 50,50 100,0" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,0 50,50 100,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,100 50,50 0,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="0,100 50,50 0,0" />
+                        <!-- Block 0,1 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,0 150,50 200,0" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,0 150,50 200,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,100 150,50 100,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,100 150,50 100,0" />
+                        <!-- Block 0,2 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,0 250,50 300,0" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,0 250,50 300,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,100 250,50 200,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,100 250,50 200,0" />
+                        <!-- Block 0,3 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,0 350,50 400,0" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="400,0 350,50 400,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="400,100 350,50 300,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,100 350,50 300,0" />
+
+                        <!-- Row 1 -->
+                        <!-- Block 1,0 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="0,100 50,150 100,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,100 50,150 100,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,200 50,150 0,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="0,200 50,150 0,100" />
+                        <!-- Block 1,1 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,100 150,150 200,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,100 150,150 200,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,200 150,150 100,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,200 150,150 100,100" />
+                        <!-- Block 1,2 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,100 250,150 300,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,100 250,150 300,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,200 250,150 200,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,200 250,150 200,100" />
+                        <!-- Block 1,3 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,100 350,150 400,100" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="400,100 350,150 400,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="400,200 350,150 300,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,200 350,150 300,100" />
+
+                        <!-- Row 2 -->
+                        <!-- Block 2,0 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="0,200 50,250 100,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,200 50,250 100,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,300 50,250 0,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="0,300 50,250 0,200" />
+                        <!-- Block 2,1 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,200 150,250 200,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,200 150,250 200,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,300 150,250 100,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,300 150,250 100,200" />
+                        <!-- Block 2,2 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,200 250,250 300,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,200 250,250 300,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,300 250,250 200,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,300 250,250 200,200" />
+                        <!-- Block 2,3 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,200 350,250 400,200" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="400,200 350,250 400,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="400,300 350,250 300,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,300 350,250 300,200" />
+
+                        <!-- Row 3 -->
+                        <!-- Block 3,0 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="0,300 50,350 100,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,300 50,350 100,400" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,400 50,350 0,400" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="0,400 50,350 0,300" />
+                        <!-- Block 3,1 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,300 150,350 200,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,300 150,350 200,400" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,400 150,350 100,400" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="100,400 150,350 100,300" />
+                        <!-- Block 3,2 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,300 250,350 300,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,300 250,350 300,400" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,400 250,350 200,400" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="200,400 250,350 200,300" />
+                        <!-- Block 3,3 -->
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,300 350,350 400,300" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="400,300 350,350 400,400" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="400,400 350,350 300,400" />
+                        <polygon class="cregion" onclick="paintRegion(this)" points="300,400 350,350 300,300" />
                       </g>
                     </svg>
                   </div>
@@ -5289,12 +5461,13 @@ function listenCommunityPosts() {
 function postHTML(d, compact) {
   const nm = d.displayName || d.email?.split('@')[0] || 'Neighbor';
   const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+  const postBody = d.isQuilt ? (d.text || '') : linkifyTags(esc(d.text||''));
   return `<div class="post-card${compact?' mb12':''}">
     <div class="post-meta">
       <div class="post-avatar"><span>${esc(nm[0].toUpperCase())}</span></div>
       <div><div class="post-name">${esc(nm)}</div><div class="post-time">${dt}</div></div>
     </div>
-    <div class="post-text">${linkifyTags(esc(d.text||''))}</div>
+    <div class="post-text">${postBody}</div>
     ${!compact?`<div class="post-actions"><button class="post-action-btn">👍 Like</button><button class="post-action-btn">💬 Reply</button></div>`:''}
   </div>`;
 }
@@ -6677,6 +6850,7 @@ function toggleFrontCount(checked) {
   });
 }
 
+let lastPlayedReportTime = null;
 function initSiteSettingsListener() {
   db.collection('settings').doc('site').onSnapshot(doc => {
     const pill = document.getElementById('stat-registered-pill');
@@ -6692,6 +6866,40 @@ function initSiteSettingsListener() {
     }
   }, err => {
     console.warn("Error listening to site settings:", err);
+  });
+
+  db.collection('settings').doc('train_crossing').onSnapshot(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      if (data.reportedAt) {
+        const reportedDate = data.reportedAt.toDate ? data.reportedAt.toDate() : new Date();
+        const reportedTime = reportedDate.getTime();
+        const now = Date.now();
+        const diffMins = (now - reportedTime) / 60000;
+        
+        if (diffMins >= 0 && diffMins < 5) {
+          window.activeTrainAlert = true;
+          const banner = document.getElementById('live-train-warning-banner');
+          if (banner) banner.style.display = 'block';
+          trainSecs = 0;
+          
+          if (lastPlayedReportTime !== reportedTime) {
+            lastPlayedReportTime = reportedTime;
+            playConductorWhistle();
+          }
+        } else {
+          window.activeTrainAlert = false;
+          const banner = document.getElementById('live-train-warning-banner');
+          if (banner) banner.style.display = 'none';
+        }
+      }
+    } else {
+      window.activeTrainAlert = false;
+      const banner = document.getElementById('live-train-warning-banner');
+      if (banner) banner.style.display = 'none';
+    }
+  }, err => {
+    console.warn("Error listening to train crossing settings:", err);
   });
 }
 
@@ -7451,15 +7659,172 @@ let pollVotes = {
   salted_caramel: 27
 };
 
+window.activeTrainAlert = false;
+
+function reportTrainApproaching() {
+  if (!currentUser) { guestNudge(); return; }
+  const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('settings').doc('train_crossing').set({
+    reportedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    reportedBy: name
+  }).then(() => {
+    showToast("Train crossing report submitted!");
+  }).catch(err => {
+    console.error("Error reporting train crossing:", err);
+    showToast("Error reporting train.");
+  });
+}
+
+function playConductorWhistle() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  const ctx = new AudioContext();
+  const frequencies = [587.33, 659.25, 880.00]; 
+  const now = ctx.currentTime;
+  
+  frequencies.forEach(freq => {
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, now);
+    
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 6;
+    lfoGain.gain.value = freq * 0.015;
+    
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    
+    gainNode.gain.setValueAtTime(0, now);
+    gainNode.gain.linearRampToValueAtTime(0.2, now + 0.1);
+    gainNode.gain.setValueAtTime(0.2, now + 1.2);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+    
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    lfo.start(now);
+    osc.start(now);
+    
+    lfo.stop(now + 1.8);
+    osc.stop(now + 1.8);
+  });
+}
+
+function selectLandmark(key) {
+  document.querySelectorAll('.landmark-desc').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.landmark-card').forEach(el => {
+    el.style.backgroundColor = 'var(--bg)';
+    el.style.borderColor = 'var(--wire-lt)';
+  });
+  
+  const descEl = document.getElementById('landmark-desc-' + key);
+  if (descEl) {
+    descEl.style.display = 'block';
+  }
+  
+  const cardEl = event.currentTarget;
+  if (cardEl) {
+    cardEl.style.backgroundColor = 'var(--paper)';
+    cardEl.style.borderColor = 'var(--red)';
+  }
+  
+  playBanjoMelody(key);
+}
+
+function playBanjoMelody(landmark) {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  const ctx = new AudioContext();
+  const now = ctx.currentTime;
+  
+  function pluck(freq, delay) {
+    const time = now + delay;
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, time);
+    
+    gainNode.gain.setValueAtTime(0, time);
+    gainNode.gain.linearRampToValueAtTime(0.4, time + 0.005);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
+    
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    osc.start(time);
+    osc.stop(time + 0.4);
+  }
+  
+  if (landmark === 'library') {
+    pluck(392.00, 0.0);
+    pluck(440.00, 0.1);
+    pluck(493.88, 0.2);
+    pluck(587.33, 0.3);
+    pluck(783.99, 0.4);
+  } else if (landmark === 'caboose') {
+    pluck(261.63, 0.0);
+    pluck(329.63, 0.0);
+    pluck(392.00, 0.15);
+    pluck(523.25, 0.15);
+    pluck(261.63, 0.3);
+    pluck(392.00, 0.45);
+  } else if (landmark === 'saloon') {
+    pluck(392.00, 0.0);
+    pluck(466.16, 0.1);
+    pluck(493.88, 0.18);
+    pluck(587.33, 0.28);
+    pluck(659.25, 0.38);
+    pluck(783.99, 0.48);
+  } else if (landmark === 'townhall') {
+    pluck(392.00, 0.0);
+    pluck(493.88, 0.1);
+    pluck(523.25, 0.2);
+    pluck(587.33, 0.3);
+    pluck(392.00, 0.4);
+  }
+}
+
+function postQuiltToBoard() {
+  if (!currentUser) { guestNudge(); return; }
+  const svgEl = document.getElementById('quilt-creator-svg');
+  if (!svgEl) return;
+  const serializer = new XMLSerializer();
+  let svgStr = serializer.serializeToString(svgEl);
+  svgStr = svgStr.replace('style="', 'style="max-width: 260px; height: auto; display: block; margin: 8px auto; ');
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('community_posts').add({
+    text: svgStr,
+    isQuilt: true,
+    uid: currentUser.uid,
+    email: currentUser.email,
+    displayName: nm,
+    ts: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    showToast("🧩 Your quilt block has been posted to the Community Board!");
+    nav('community');
+  })
+  .catch(err => {
+    console.error("Error posting quilt:", err);
+    showToast("Error posting quilt.");
+  });
+}
+
 function tickTrainCrossing() {
-  trainSecs--;
-  if (trainSecs < 0) {
-    trainSecs = 900; // reset to 15 mins
-    const time1 = document.getElementById('train-time-1');
-    const time2 = document.getElementById('train-time-2');
-    if (time1 && time2) {
-      const val1 = parseInt(time1.textContent) || 12;
-      time1.textContent = Math.max(1, val1 - 1) + " mins";
+  if (window.activeTrainAlert) {
+    trainSecs = 0;
+  } else {
+    trainSecs--;
+    if (trainSecs < 0) {
+      trainSecs = 900; // reset to 15 mins
+      const time1 = document.getElementById('train-time-1');
+      const time2 = document.getElementById('train-time-2');
+      if (time1 && time2) {
+        const val1 = parseInt(time1.textContent) || 12;
+        time1.textContent = Math.max(1, val1 - 1) + " mins";
+      }
     }
   }
   const min = Math.floor(trainSecs / 60);
