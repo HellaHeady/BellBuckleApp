@@ -287,15 +287,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);height
 
 /* Train */
 @keyframes choo-choo{
-  0%  {transform:translateX(-380px);}
-  100%{transform:translateX(calc(100% + 380px));}
+  0%  {transform:translateX(-460px);}
+  100%{transform:translateX(calc(100vw + 60px));}
 }
-.train-ride{position:absolute;bottom:2px;left:0;pointer-events:none;z-index:5;transform:translateX(-380px);}
+.train-ride{position:absolute;bottom:2px;left:0;pointer-events:none;z-index:5;transform:translateX(-460px);}
 .train-ride.go-east{animation:choo-choo 24s linear forwards;}
 .train-ride.go-west{animation:choo-choo-rev 24s linear forwards;}
 @keyframes choo-choo-rev{
-  0%  {transform:translateX(calc(100% + 380px)) scaleX(-1);}
-  100%{transform:translateX(-380px) scaleX(-1);}
+  0%  {transform:translateX(calc(100vw + 60px)) scaleX(-1);}
+  100%{transform:translateX(-460px) scaleX(-1);}
 }
 @keyframes wheelspin{to{transform:rotate(360deg);}}
 .train-ride .tw{transform-box:fill-box;transform-origin:center;animation:wheelspin .8s linear infinite;}
@@ -2224,76 +2224,130 @@ body.guest .guest-veil{
         </svg>
       </div>
 
-      <!-- Train -->
+      <!-- Train — Bell Buckle special: 1850s steamer pulling the downtown L&N caboose -->
       <div class="train-ride">
-        <svg viewBox="0 0 344 34" height="32" style="display:block">
-          <!-- Caboose — the red one downtown, cupola and all -->
-          <rect x="22" y="2.5" width="20" height="3" rx="1.5" fill="#2a1408"/>
-          <rect x="24" y="5" width="16" height="7" fill="#a63220" stroke="#7c2018" stroke-width="1"/>
-          <rect x="26.5" y="6.5" width="4.5" height="3.5" rx=".5" fill="#ffe9a8" opacity=".85"/>
-          <rect x="33" y="6.5" width="4.5" height="3.5" rx=".5" fill="#ffe9a8" opacity=".85"/>
-          <rect x="12" y="6" width="3" height="6" fill="#1a0e06"/>
-          <rect x="2" y="11" width="60" height="3" rx="1.5" fill="#2a1408"/>
-          <rect x="4" y="13" width="56" height="12" fill="#a63220" stroke="#7c2018" stroke-width="1"/>
-          <rect x="10" y="15.5" width="6" height="5" rx=".8" fill="#ffe9a8" opacity=".85"/>
-          <rect x="48" y="15.5" width="6" height="5" rx=".8" fill="#ffe9a8" opacity=".85"/>
-          <rect x="4" y="22.4" width="56" height="1.4" fill="#e8b830" opacity=".9"/>
-          <rect x="60" y="24" width="10" height="2.2" fill="#1a0e06"/>
-          <g class="tw"><circle cx="12" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="12" y1="25.6" x2="12" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="9.1" y1="28.5" x2="14.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="22" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="22" y1="25.6" x2="22" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="19.1" y1="28.5" x2="24.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="42" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="42" y1="25.6" x2="42" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="39.1" y1="28.5" x2="44.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="52" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="52" y1="25.6" x2="52" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="49.1" y1="28.5" x2="54.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <!-- Boxcar -->
-          <rect x="70" y="10" width="72" height="2.6" rx="1.3" fill="#24401f"/>
-          <rect x="72" y="12" width="68" height="13" fill="#3d6b3a" stroke="#2e5230" stroke-width="1"/>
-          <rect x="96" y="13" width="19" height="1.2" fill="#1a0e06" opacity=".5"/>
-          <rect x="98" y="14.2" width="15" height="10.8" fill="#2e5230"/>
-          <rect x="79" y="14" width="1" height="11" fill="rgba(0,0,0,.15)"/>
-          <rect x="87" y="14" width="1" height="11" fill="rgba(0,0,0,.15)"/>
-          <rect x="122" y="14" width="1" height="11" fill="rgba(0,0,0,.15)"/>
-          <rect x="130" y="14" width="1" height="11" fill="rgba(0,0,0,.15)"/>
-          <rect x="140" y="24" width="8" height="2.2" fill="#1a0e06"/>
-          <g class="tw"><circle cx="80" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="80" y1="25.6" x2="80" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="77.1" y1="28.5" x2="82.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="90" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="90" y1="25.6" x2="90" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="87.1" y1="28.5" x2="92.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="122" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="122" y1="25.6" x2="122" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="119.1" y1="28.5" x2="124.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="132" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="132" y1="25.6" x2="132" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="129.1" y1="28.5" x2="134.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <!-- Tender -->
-          <rect x="148" y="13" width="44" height="12" rx="1" fill="#2c1a0e" stroke="#1a0e06" stroke-width="1"/>
-          <path d="M150 13 Q156 9 162 12 Q168 8.5 174 12 Q181 9 190 13 Z" fill="#1a0e06"/>
-          <rect x="148" y="22.4" width="44" height="1.2" fill="#e8b830" opacity=".55"/>
-          <rect x="192" y="24" width="8" height="2.2" fill="#1a0e06"/>
-          <g class="tw"><circle cx="157" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="157" y1="25.6" x2="157" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="154.1" y1="28.5" x2="159.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="183" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="183" y1="25.6" x2="183" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="180.1" y1="28.5" x2="185.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <!-- Locomotive -->
-          <rect x="198" y="4.5" width="40" height="3" rx="1.5" fill="#1a0e06"/>
-          <rect x="201" y="7" width="34" height="18" fill="#3a1e0e" stroke="#2a1408" stroke-width="1"/>
-          <rect x="207" y="10" width="11" height="8" rx="1" fill="#ffe9a8" opacity=".75"/>
-          <rect x="201" y="22.4" width="34" height="1.4" fill="#e8b830" opacity=".8"/>
-          <rect x="235" y="11" width="80" height="14" rx="6.5" fill="#2c1a0e" stroke="#1a0e06" stroke-width="1"/>
-          <rect x="252" y="11" width="1.6" height="14" fill="#e8b830" opacity=".45"/>
-          <rect x="272" y="11" width="1.6" height="14" fill="#e8b830" opacity=".45"/>
-          <rect x="292" y="11" width="1.6" height="14" fill="#e8b830" opacity=".45"/>
-          <path d="M262 11 q0 -5 6 -5 q6 0 6 5 Z" fill="#3a1e0e"/>
-          <path d="M283.5 6 c-1.8 .4 -2.1 2.2 -2.1 3.4 l-.9 1.1 q3 1.2 6 0 l-.9 -1.1 c0 -1.2 -.3 -3 -2.1 -3.4 Z" fill="#e8b830"/>
-          <circle cx="283.5" cy="11" r=".8" fill="#2a1f10"/>
-          <path d="M301 1.5 h11 l-2 4.5 h-7 Z" fill="#1a0e06"/>
-          <rect x="304" y="6" width="5" height="6" fill="#1a0e06"/>
-          <circle cx="306" cy="4" r="3" class="steam-puff steam-puff-1"/>
-          <circle cx="306" cy="4" r="3" class="steam-puff steam-puff-2"/>
-          <circle cx="306" cy="4" r="3" class="steam-puff steam-puff-3"/>
-          <rect x="312" y="6.5" width="8" height="6" rx="1" fill="#2a1408"/>
-          <circle cx="319" cy="9.5" r="1.8" fill="#ffe9a8"/>
-          <circle cx="316" cy="18" r="7" fill="#1a0e06" stroke="#6a4020" stroke-width="1"/>
-          <circle cx="316" cy="18" r="3" fill="#3a1e0e"/>
-          <path d="M320 24 L338 31.5 L320 31.5 Z" fill="#2a1408"/>
-          <line x1="324" y1="25.6" x2="330" y2="31.5" stroke="#6a4020" stroke-width="1"/>
-          <g class="tw"><circle cx="208" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="208" y1="25.6" x2="208" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="205.1" y1="28.5" x2="210.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="222" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="222" y1="25.6" x2="222" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="219.1" y1="28.5" x2="224.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="246" cy="26.5" r="5.8" fill="#1a0e06" stroke="#8a6030" stroke-width="1.6"/><line x1="246" y1="21.4" x2="246" y2="31.6" stroke="#8a6030" stroke-width="1.2"/><line x1="240.9" y1="26.5" x2="251.1" y2="26.5" stroke="#8a6030" stroke-width="1.2"/><circle cx="246" cy="26.5" r="1.4" fill="#8a6030"/></g>
-          <g class="tw"><circle cx="266" cy="26.5" r="5.8" fill="#1a0e06" stroke="#8a6030" stroke-width="1.6"/><line x1="266" y1="21.4" x2="266" y2="31.6" stroke="#8a6030" stroke-width="1.2"/><line x1="260.9" y1="26.5" x2="271.1" y2="26.5" stroke="#8a6030" stroke-width="1.2"/><circle cx="266" cy="26.5" r="1.4" fill="#8a6030"/></g>
-          <rect x="240" y="25.6" width="32" height="1.8" rx=".9" fill="#8a6030" opacity=".85"/>
-          <g class="tw"><circle cx="296" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="296" y1="25.6" x2="296" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="293.1" y1="28.5" x2="298.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
-          <g class="tw"><circle cx="308" cy="28.5" r="3.6" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="308" y1="25.6" x2="308" y2="31.4" stroke="#8a6030" stroke-width="1"/><line x1="305.1" y1="28.5" x2="310.9" y2="28.5" stroke="#8a6030" stroke-width="1"/></g>
+        <svg viewBox="0 0 462 46" height="40" style="display:block">
+          <!-- ══ CABOOSE — the real red one downtown, yellow L&N and all ══ -->
+          <!-- rear platform + railing -->
+          <rect x="2" y="29.5" width="8" height="2" fill="#1a0e06"/>
+          <line x1="3.5" y1="23" x2="3.5" y2="29.5" stroke="#1a0e06" stroke-width="1"/>
+          <line x1="7" y1="23" x2="7" y2="29.5" stroke="#1a0e06" stroke-width="1"/>
+          <line x1="2.5" y1="23.5" x2="10" y2="23.5" stroke="#1a0e06" stroke-width="1.2"/>
+          <circle cx="4" cy="16" r="1.3" fill="#ff5540" opacity=".9"/>
+          <!-- underframe + steps -->
+          <rect x="8" y="31" width="90" height="3" fill="#1a0e06"/>
+          <rect x="6" y="33.5" width="6" height="1.6" fill="#1a0e06"/>
+          <rect x="94" y="33.5" width="6" height="1.6" fill="#1a0e06"/>
+          <!-- body -->
+          <rect x="10" y="13" width="86" height="18" fill="#b3341f" stroke="#7c2018" stroke-width="1"/>
+          <line x1="24" y1="14" x2="24" y2="30.5" stroke="rgba(0,0,0,.12)" stroke-width="1"/>
+          <line x1="82" y1="14" x2="82" y2="30.5" stroke="rgba(0,0,0,.12)" stroke-width="1"/>
+          <!-- windows -->
+          <rect x="14" y="16.5" width="7" height="6" rx=".8" fill="#ffe9a8" stroke="#7c2018" stroke-width=".7" opacity=".92"/>
+          <rect x="85" y="16.5" width="7" height="6" rx=".8" fill="#ffe9a8" stroke="#7c2018" stroke-width=".7" opacity=".92"/>
+          <!-- the famous yellow lettering -->
+          <text x="53" y="24.5" text-anchor="middle" font-family="Georgia, 'Playfair Display', serif" font-weight="bold" font-size="10.5" fill="#f5c518" letter-spacing="1">L&amp;N</text>
+          <text x="53" y="29.5" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="3.6" fill="#f5c518" letter-spacing=".6">BELL BUCKLE · 1852</text>
+          <!-- roof -->
+          <rect x="7" y="10.8" width="92" height="3" rx="1.5" fill="#2a1408"/>
+          <!-- cupola -->
+          <rect x="38" y="3.2" width="28" height="8.5" fill="#b3341f" stroke="#7c2018" stroke-width="1"/>
+          <rect x="35.5" y="1.4" width="33" height="2.6" rx="1.2" fill="#2a1408"/>
+          <rect x="41" y="5" width="8.5" height="5" rx=".7" fill="#ffe9a8" stroke="#7c2018" stroke-width=".6" opacity=".92"/>
+          <rect x="54.5" y="5" width="8.5" height="5" rx=".7" fill="#ffe9a8" stroke="#7c2018" stroke-width=".6" opacity=".92"/>
+          <!-- smoke jack -->
+          <rect x="20" y="5.5" width="2.6" height="5.5" fill="#1a0e06"/>
+          <rect x="19" y="4.5" width="4.6" height="1.6" rx=".8" fill="#1a0e06"/>
+          <!-- trucks -->
+          <g class="tw"><circle cx="20" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="20" y1="35" x2="20" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="16.5" y1="38.5" x2="23.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="33" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="33" y1="35" x2="33" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="29.5" y1="38.5" x2="36.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="73" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="73" y1="35" x2="73" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="69.5" y1="38.5" x2="76.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="86" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="86" y1="35" x2="86" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="82.5" y1="38.5" x2="89.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <!-- coupler -->
+          <rect x="98" y="31.6" width="8" height="2.2" fill="#1a0e06"/>
+
+          <!-- ══ BOXCAR — freight for the general store ══ -->
+          <rect x="106" y="31" width="86" height="3" fill="#14240f"/>
+          <rect x="106" y="12" width="86" height="19" fill="#3d6b3a" stroke="#2e5230" stroke-width="1"/>
+          <rect x="103.5" y="10.4" width="91" height="2.6" rx="1.3" fill="#24401f"/>
+          <!-- sliding door -->
+          <rect x="134" y="13.2" width="21" height="1.4" fill="#1a0e06" opacity=".55"/>
+          <rect x="136" y="14.6" width="17" height="16.4" fill="#2e5230" stroke="#24401f" stroke-width=".8"/>
+          <line x1="144.5" y1="15" x2="144.5" y2="30.6" stroke="rgba(0,0,0,.2)" stroke-width="1"/>
+          <!-- planking -->
+          <line x1="114" y1="13" x2="114" y2="30.5" stroke="rgba(0,0,0,.13)" stroke-width="1"/>
+          <line x1="124" y1="13" x2="124" y2="30.5" stroke="rgba(0,0,0,.13)" stroke-width="1"/>
+          <line x1="166" y1="13" x2="166" y2="30.5" stroke="rgba(0,0,0,.13)" stroke-width="1"/>
+          <line x1="178" y1="13" x2="178" y2="30.5" stroke="rgba(0,0,0,.13)" stroke-width="1"/>
+          <text x="120.5" y="20" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="4.2" fill="#e8d9a0" opacity=".85" letter-spacing=".4">RC COLA</text>
+          <text x="174" y="20" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="4.2" fill="#e8d9a0" opacity=".85" letter-spacing=".4">MOONPIE</text>
+          <g class="tw"><circle cx="118" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="118" y1="35" x2="118" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="114.5" y1="38.5" x2="121.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="131" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="131" y1="35" x2="131" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="127.5" y1="38.5" x2="134.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="167" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="167" y1="35" x2="167" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="163.5" y1="38.5" x2="170.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="180" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="180" y1="35" x2="180" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="176.5" y1="38.5" x2="183.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <rect x="192" y="31.6" width="8" height="2.2" fill="#1a0e06"/>
+
+          <!-- ══ TENDER — carries the coal and the town's name ══ -->
+          <rect x="202" y="31" width="58" height="3" fill="#1a0e06"/>
+          <rect x="202" y="14" width="58" height="17" rx="1" fill="#241610" stroke="#120a05" stroke-width="1"/>
+          <path d="M204 14 Q211 9.5 218 12.5 Q226 8.5 234 12 Q243 9 250 12.5 Q255 10.5 258 14 Z" fill="#0d0805"/>
+          <rect x="204.5" y="16.5" width="53" height="12" rx="1" fill="none" stroke="#e8b830" stroke-width=".6" opacity=".55"/>
+          <text x="231" y="24.8" text-anchor="middle" font-family="Georgia, 'Playfair Display', serif" font-weight="bold" font-size="6" fill="#e8b830" letter-spacing=".9">BELL BUCKLE</text>
+          <g class="tw"><circle cx="213" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="213" y1="35" x2="213" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="209.5" y1="38.5" x2="216.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="231" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="231" y1="35" x2="231" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="227.5" y1="38.5" x2="234.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <g class="tw"><circle cx="249" cy="38.5" r="4.2" fill="#1a0e06" stroke="#8a6030" stroke-width="1.3"/><line x1="249" y1="35" x2="249" y2="42" stroke="#8a6030" stroke-width="1"/><line x1="245.5" y1="38.5" x2="252.5" y2="38.5" stroke="#8a6030" stroke-width="1"/></g>
+          <rect x="260" y="31.6" width="8" height="2.2" fill="#1a0e06"/>
+
+          <!-- ══ LOCOMOTIVE — classic 4-4-0 American, bell and all ══ -->
+          <!-- cab -->
+          <rect x="264.5" y="6" width="44" height="3.6" rx="1.6" fill="#2a1408"/>
+          <rect x="268" y="8.5" width="38" height="22.5" fill="#5a2a14" stroke="#3a1a0c" stroke-width="1"/>
+          <rect x="271" y="11" width="32" height="17.5" rx="1" fill="none" stroke="#e8b830" stroke-width=".6" opacity=".5"/>
+          <rect x="275" y="12.5" width="12" height="8.5" rx="1" fill="#ffe9a8" stroke="#3a1a0c" stroke-width=".7" opacity=".9"/>
+          <text x="290" y="27" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="5" fill="#e8b830" letter-spacing=".5">1852</text>
+          <!-- boiler -->
+          <rect x="304" y="29" width="128" height="2" fill="#1a0e06"/>
+          <rect x="304" y="13" width="112" height="16" rx="7" fill="#23150c" stroke="#120a05" stroke-width="1"/>
+          <rect x="326" y="13" width="2" height="16" fill="#e8b830" opacity=".6"/>
+          <rect x="354" y="13" width="2" height="16" fill="#e8b830" opacity=".6"/>
+          <rect x="378" y="13" width="2" height="16" fill="#e8b830" opacity=".6"/>
+          <!-- steam dome + sand dome -->
+          <path d="M334 13 q0 -7 8 -7 q8 0 8 7 Z" fill="#23150c" stroke="#120a05" stroke-width=".8"/>
+          <rect x="333" y="11.2" width="18" height="1.8" fill="#e8b830" opacity=".8"/>
+          <path d="M360 13 q0 -5.5 6.5 -5.5 q6.5 0 6.5 5.5 Z" fill="#23150c" stroke="#120a05" stroke-width=".8"/>
+          <!-- the bell (of course — it's Bell Buckle) -->
+          <line x1="386" y1="5.8" x2="394" y2="5.8" stroke="#e8b830" stroke-width="1"/>
+          <path d="M390 5.5 c-2.2 .5 -2.6 2.7 -2.6 4.2 l-1.1 1.4 q3.7 1.5 7.4 0 l-1.1 -1.4 c0 -1.5 -.4 -3.7 -2.6 -4.2 Z" fill="#e8b830"/>
+          <circle cx="390" cy="11.6" r="1" fill="#2a1f10"/>
+          <!-- smokebox + stack -->
+          <rect x="404" y="12" width="26" height="18" rx="3" fill="#3a3a3a" stroke="#1f1f1f" stroke-width="1"/>
+          <circle cx="427" cy="21" r="4.6" fill="#2c2c2c" stroke="#1a1a1a" stroke-width=".8"/>
+          <circle cx="427" cy="21" r="1" fill="#555"/>
+          <polygon points="407.5,3 423.5,3 420,12 411,12" fill="#1a0e06"/>
+          <rect x="406" y="1.2" width="19" height="2.4" rx="1.2" fill="#1a0e06"/>
+          <circle cx="415.5" cy="2" r="3" class="steam-puff steam-puff-1"/>
+          <circle cx="415.5" cy="2" r="3" class="steam-puff steam-puff-2"/>
+          <circle cx="415.5" cy="2" r="3" class="steam-puff steam-puff-3"/>
+          <!-- headlamp -->
+          <rect x="424.5" y="4.8" width="9.5" height="7.4" rx="1" fill="#2a1408" stroke="#e8b830" stroke-width=".6"/>
+          <circle cx="431.5" cy="8.5" r="2.3" fill="#ffe9a8"/>
+          <circle cx="431.5" cy="8.5" r="4" fill="#ffe9a8" opacity=".22"/>
+          <!-- cylinder + main rod -->
+          <rect x="392" y="26" width="17" height="6.5" rx="2" fill="#2a1a0e" stroke="#1a0e06" stroke-width=".8"/>
+          <line x1="394" y1="29.5" x2="352" y2="37" stroke="#8a6030" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- drive wheels -->
+          <g class="tw"><circle cx="320" cy="37" r="7.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.7"/><line x1="320" y1="30.4" x2="320" y2="43.6" stroke="#8a6030" stroke-width="1.2"/><line x1="313.4" y1="37" x2="326.6" y2="37" stroke="#8a6030" stroke-width="1.2"/><circle cx="320" cy="37" r="1.6" fill="#8a6030"/></g>
+          <g class="tw"><circle cx="352" cy="37" r="7.5" fill="#1a0e06" stroke="#8a6030" stroke-width="1.7"/><line x1="352" y1="30.4" x2="352" y2="43.6" stroke="#8a6030" stroke-width="1.2"/><line x1="345.4" y1="37" x2="358.6" y2="37" stroke="#8a6030" stroke-width="1.2"/><circle cx="352" cy="37" r="1.6" fill="#8a6030"/></g>
+          <rect x="312" y="36.1" width="48" height="1.8" rx=".9" fill="#8a6030" opacity=".85"/>
+          <!-- pilot wheels -->
+          <g class="tw"><circle cx="398" cy="40.3" r="3.8" fill="#1a0e06" stroke="#8a6030" stroke-width="1.2"/><line x1="398" y1="37.2" x2="398" y2="43.4" stroke="#8a6030" stroke-width=".9"/><line x1="394.9" y1="40.3" x2="401.1" y2="40.3" stroke="#8a6030" stroke-width=".9"/></g>
+          <g class="tw"><circle cx="412" cy="40.3" r="3.8" fill="#1a0e06" stroke="#8a6030" stroke-width="1.2"/><line x1="412" y1="37.2" x2="412" y2="43.4" stroke="#8a6030" stroke-width=".9"/><line x1="408.9" y1="40.3" x2="415.1" y2="40.3" stroke="#8a6030" stroke-width=".9"/></g>
+          <!-- cowcatcher -->
+          <rect x="428" y="28" width="6" height="4.5" fill="#1a0e06"/>
+          <path d="M433 28 L458 43.8 L433 43.8 Z" fill="#7c2018" stroke="#5a1610" stroke-width=".8"/>
+          <line x1="437.5" y1="30.8" x2="445" y2="43.8" stroke="#3a0e08" stroke-width="1"/>
+          <line x1="442.5" y1="34" x2="450.5" y2="43.8" stroke="#3a0e08" stroke-width="1"/>
+          <line x1="447.5" y1="37.2" x2="455.5" y2="43.8" stroke="#3a0e08" stroke-width="1"/>
         </svg>
       </div>
 
@@ -3992,7 +4046,7 @@ body.guest .guest-veil{
             <div class="card" style="padding: 16px; border-left: 4px solid var(--red); display: flex; align-items: center; justify-content: space-between;">
               <div>
                 <div style="font-size: 11px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; letter-spacing: 0.5px;">Community Posts</div>
-                <div id="stat-posts" style="font-size: 26px; font-weight: 700; color: var(--ink); margin-top: 4px;">...</div>
+                <div id="stat-adm-posts" style="font-size: 26px; font-weight: 700; color: var(--ink); margin-top: 4px;">...</div>
               </div>
               <span style="font-size: 28px;">📋</span>
             </div>
@@ -5200,7 +5254,7 @@ function listenLostFound() {
         const nm = d.displayName || d.email?.split('@')[0] || 'Neighbor';
         const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
         const isLost = d.type === 'lost';
-        const imgHtml = d.img ? `<img src="${d.img}" class="lf-card-img" alt="${esc(d.title||'')}" onclick="openImageLightbox('${d.img}')">` : '';
+        const imgHtml = d.img ? `<img src="${esc(d.img)}" class="lf-card-img" alt="${esc(d.title||'')}" onclick="openImageLightbox(this.src)">` : '';
         feed.innerHTML += `<div class="lf-card">
           <div class="lf-emoji">${isLost?'😢':'🎉'}</div>
           <div>
@@ -5335,9 +5389,9 @@ function renderTradingPostFeed() {
     const imgUrl = item.img || 'cb-store.png';
 
     return `
-      <div class="tp-card" onclick="openTradingPostDetail('${item.id}')">
+      <div class="tp-card" onclick="openTradingPostDetail('${esc(item.id)}')">
         <div class="tp-card-img-wrapper">
-          <img class="tp-card-img" src="${imgUrl}" alt="${esc(item.title)}">
+          <img class="tp-card-img" src="${esc(imgUrl)}" alt="${esc(item.title)}">
           ${badgeHtml}
           ${statusBadge}
           ${featBadge}
@@ -5567,7 +5621,13 @@ function saveTradingPostItem() {
   if (tpSelectedImageBase64) {
     itemData.img = tpSelectedImageBase64;
   }
-  
+
+  // Editing an existing listing: keep its current status & featured flag
+  if (id) {
+    delete itemData.status;
+    delete itemData.featured;
+  }
+
   const saveBtn = document.getElementById('btn-save-tp');
   saveBtn.disabled = true;
   saveBtn.textContent = 'Publishing...';
@@ -5742,7 +5802,7 @@ function loadMoreFromUser(uid, currentItemId) {
         
         card.innerHTML = `
           <div style="width: 100px; height: 75px; border-radius: 6px; overflow: hidden; border: 1.5px solid var(--tp-wood-light); box-shadow: var(--shadow-sm); margin-bottom: 4px;">
-            <img src="${imgUrl}" style="width: 100%; height: 100%; object-fit: cover;">
+            <img src="${esc(imgUrl)}" style="width: 100%; height: 100%; object-fit: cover;">
           </div>
           <div style="font-size: 11px; font-weight: bold; color: var(--tp-earth); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100px;">${esc(data.title)}</div>
           <div style="font-size: 10px; color: var(--tp-forest-light); font-weight: 700;">${esc(priceStr)}</div>
@@ -6037,7 +6097,11 @@ function submitHistory() {
 (function(){
   const el = document.getElementById('fest-countdown');
   if (!el) return;
-  const fest = new Date(2026, 5, 20); // RC Cola & Moon Pie Festival
+  // RC Cola & Moon Pie Festival — 3rd Saturday of June, every year
+  const yr = new Date().getFullYear();
+  const june1 = new Date(yr, 5, 1);
+  const firstSat = 1 + ((6 - june1.getDay() + 7) % 7);
+  const fest = new Date(yr, 5, firstSat + 14);
   const today = new Date(); today.setHours(0,0,0,0);
   const days = Math.round((fest - today) / 86400000);
   if (days > 1)        el.textContent = `🥧 ${days} days 'til Moon Pie magic!`;
@@ -6370,7 +6434,7 @@ function copyDiagUid() {
 
 async function loadAdminStats() {
   const collections = [
-    { id: 'stat-posts', coll: 'community_posts' },
+    { id: 'stat-adm-posts', coll: 'community_posts' },
     { id: 'stat-biz', coll: 'local_biz' },
     { id: 'stat-garden', coll: 'garden_updates' },
     { id: 'stat-lost', coll: 'lost_found' },
@@ -6963,7 +7027,7 @@ async function adminReauth() {
     nav('admin');
     const k = document.getElementById('ai-key');
     if (k && !k.value) k.value = localStorage.getItem('bb_api_key') || '';
-    renderSeason(); renderAdminFeed(); runOversight(); loadAdminStats();
+    renderSeason(); renderAdminFeed(); runOversight(); loadAdminStats(); loadAdminUsers(); loadPendingEvents();
   } catch (ex) {
     err.textContent = ex.message;
   }
@@ -7351,12 +7415,14 @@ function readStickyNote(el) {
   alert("📌 Community Notice:\n\n" + el.innerText.replace("📍", "").trim());
 }
 
+let pollVoteApplied = false;
 function loadPollState() {
   const voted = localStorage.getItem('bb_voted_poll');
   if (voted) {
     const selected = localStorage.getItem('bb_voted_choice');
-    if (selected && pollVotes[selected] !== undefined) {
+    if (!pollVoteApplied && selected && pollVotes[selected] !== undefined) {
       pollVotes[selected]++;
+      pollVoteApplied = true;
     }
     showPollResults();
   }
@@ -7368,6 +7434,7 @@ function votePoll(flavor) {
   localStorage.setItem('bb_voted_poll', 'true');
   localStorage.setItem('bb_voted_choice', flavor);
   pollVotes[flavor]++;
+  pollVoteApplied = true;
   showPollResults();
 }
 
@@ -8025,22 +8092,23 @@ function grantLiveAdmin() {
   });
 }
 
+async function deleteDocsInChunks(docs) {
+  // Firestore batches max out at 500 ops — delete in chunks of 400
+  for (let i = 0; i < docs.length; i += 400) {
+    const batch = db.batch();
+    docs.slice(i, i + 400).forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+  }
+}
+
 async function deleteCollection(collectionName) {
   const snapshot = await db.collection(collectionName).get();
-  const batch = db.batch();
-  snapshot.docs.forEach(doc => {
-    batch.delete(doc.ref);
-  });
-  await batch.commit();
+  await deleteDocsInChunks(snapshot.docs);
 }
 
 async function deleteChannelMessages(channelId) {
   const snapshot = await db.collection('channels').doc(channelId).collection('messages').get();
-  const batch = db.batch();
-  snapshot.docs.forEach(doc => {
-    batch.delete(doc.ref);
-  });
-  await batch.commit();
+  await deleteDocsInChunks(snapshot.docs);
 }
 
 async function clearLiveDatabase() {
@@ -8184,6 +8252,9 @@ async function seedDemoData() {
       { title: "Antique Oak Writing Desk", category: "Furniture", condition: "Antique / Rustic", dealType: "trade", price: "Trade Only", desc: "Beautiful roll-top desk in good structural shape. Looking to swap for a working electric weed eater or a leaf blower.", contact: "Message Martha L. in general chat", status: "active", flagged: false, approved: true, img: "cb-mural.png", uid, email, displayName, ts: firebase.firestore.FieldValue.serverTimestamp() }
     ];
 
+    for (const gm of genMessages) {
+      await db.collection('channels').doc('general').collection('messages').add(gm);
+    }
     for (const ann of annMessages) {
       await db.collection('channels').doc('announcements').collection('messages').add(ann);
     }
