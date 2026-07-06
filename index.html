@@ -1498,7 +1498,33 @@ body.guest .guest-veil{
   background: var(--sidebar2);
 }
 
+/* ── Mobile bottom navigation (phones only — shown in the 768px media query) ── */
+.bottom-nav{
+  display:none;
+  background:linear-gradient(#3a1e0e, var(--sidebar));
+  border-top:3px solid #7c4a22;
+  flex-shrink:0;
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+  box-shadow:0 -4px 14px rgba(0,0,0,.35);
+  z-index:50;
+}
+.bnav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:none;border:none;cursor:pointer;padding:7px 2px 6px;
+  color:rgba(255,233,168,.5);font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;transition:color .15s;position:relative;
+}
+.bnav-icon{font-size:19px;line-height:1;}
+.bnav-item.active{color:#ffe9a8;}
+.bnav-item.active::before{
+  content:'';position:absolute;top:-3px;left:22%;right:22%;height:3px;
+  background:var(--red);border-radius:0 0 3px 3px;
+}
+
 @media (max-width: 768px) {
+  .bottom-nav {
+    display: flex;
+  }
   .menu-toggle-btn {
     display: flex;
   }
@@ -1540,6 +1566,17 @@ body.guest .guest-veil{
     bottom: 100%;
     height: 145px;
   }
+  /* keep the hanging sign to one clean line on phones */
+  .topbar-page-sign .page-crumb {
+    display: none;
+  }
+  .topbar-page-sign .page-title {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 46vw;
+  }
   .topbar-actions span {
     display: none !important;
   }
@@ -1565,11 +1602,54 @@ body.guest .guest-veil{
   .home-main-content {
     order: -1;
   }
+  /* Home — compact phone layout */
+  #screen-home {
+    padding: 12px 0 20px !important;
+  }
+  .home-hero {
+    height: 170px;
+    margin-bottom: 12px;
+  }
+  .home-hero-title {
+    font-size: 22px;
+  }
+  .home-hero-text {
+    padding: 12px 14px;
+  }
+  .home-hero-sub {
+    font-size: 11px;
+  }
   .stats-row {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .stat-pill {
+    padding: 9px 4px;
+  }
+  .stat-num {
+    font-size: 18px;
+  }
+  .stat-lbl {
+    font-size: 9px;
   }
   .action-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .action-card {
+    padding: 12px 6px;
+    border-radius: 12px;
+  }
+  .action-emoji {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+  .action-label {
+    font-size: 10px;
+    line-height: 1.25;
   }
 
   /* Our History responsive timeline */
@@ -4277,6 +4357,15 @@ body.guest .guest-veil{
       </div>
 
     </div><!-- /canvas -->
+
+    <!-- Mobile bottom navigation (phones only) -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="bnav-item active" data-s="home" onclick="nav('home')"><span class="bnav-icon">🏠</span><span>Home</span></button>
+      <button class="bnav-item" data-s="community" onclick="nav('community')"><span class="bnav-icon">📋</span><span>Board</span></button>
+      <button class="bnav-item" data-s="chat" onclick="nav('chat')"><span class="bnav-icon">💬</span><span>Depot</span></button>
+      <button class="bnav-item" data-s="events" onclick="nav('events')"><span class="bnav-icon">🗓️</span><span>Events</span></button>
+      <button class="bnav-item" data-s="__more" onclick="toggleSidebar()"><span class="bnav-icon">☰</span><span>More</span></button>
+    </nav>
   </div><!-- /main -->
 </div><!-- /shell -->
 
@@ -5013,6 +5102,9 @@ function nav(id) {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   const btn = document.querySelector(`.nav-item[data-s="${id}"]`);
   if (btn) btn.classList.add('active');
+
+  // Sync mobile bottom nav highlight
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.toggle('active', b.dataset.s === id));
 
   if (id === 'chat') setTimeout(scrollChat, 80);
   if (id === 'kids') initCanvasPage(document.querySelector('.cpage-wrap.active'));
