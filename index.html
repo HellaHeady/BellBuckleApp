@@ -1544,41 +1544,54 @@ body.guest .guest-veil{
     display: none !important;
   }
   .topbar {
-    min-height: 64px;
+    min-height: 54px;
     padding-left: 0;
   }
   .topbar-right {
-    padding-left: 10px;
-    padding-right: 15px;
+    padding-left: 8px;
+    padding-right: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
+  /* Slim badge instead of the big hanging sign — the bottom nav already
+     shows where you are, so the topbar stays light on phones */
   .topbar-page-sign {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 0 8px;
     min-width: auto;
     flex: 1;
-    margin-top: 18px;
+    padding: 3px 10px;
+    border-width: 2px;
+    border-bottom-width: 3px;
+    border-radius: 6px;
   }
   .topbar-page-sign::before, .topbar-page-sign::after {
-    bottom: 100%;
-    height: 145px;
+    display: none; /* no hanging chains on phones */
   }
-  /* keep the hanging sign to one clean line on phones */
   .topbar-page-sign .page-crumb {
     display: none;
   }
   .topbar-page-sign .page-title {
-    font-size: 13px;
+    font-size: 12px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 46vw;
   }
+  .menu-toggle-btn {
+    height: 36px;
+    width: 38px;
+    font-size: 16px;
+    padding: 2px 8px;
+    margin-left: 10px;
+  }
   .topbar-actions span {
     display: none !important;
+  }
+  .topbar-actions .btn {
+    padding: 5px 10px;
+    font-size: 11px;
   }
   .timeline::before {
     left: 20px;
