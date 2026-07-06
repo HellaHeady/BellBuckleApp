@@ -6487,18 +6487,25 @@ function loadAdminUsers() {
       
       const statusDot = isOnline 
         ? `<span style="display: inline-block; width: 7px; height: 7px; background-color: var(--green, #4caf50); border-radius: 50%; margin-right: 6px; box-shadow: 0 0 3px var(--green, #4caf50);" title="Online"></span>`
-        : `<span style="display: inline-block; width: 7px; height: 7px; background-color: #ccc; border-radius: 50%; margin-right: 6px;" title="Offline"></span>`;
+        : `<span style="display: inline-block; width: 7px; height: 7px; background-color: #ccc; border-radius: 50%; margin-right: 6px;" title="Offline"></span>`;      // Prevent admin deleting their own user document to avoid locking themselves out
+      const isSelf = currentUser && currentUser.uid === u.uid;
+      const deleteBtn = isSelf 
+        ? `<span style="font-size: 11.5px; color: var(--ink-lt); font-style: italic; padding: 4px 8px;">(You)</span>`
+        : `<button class="adm-btn danger" style="padding: 4px 8px; font-size: 11px; margin-bottom: 0;" onclick="deleteUserDoc('${esc(u.uid)}', '${esc(u.displayName || u.email)}')">🗑 Remove</button>`;
 
       return `
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: #fff; border: 1px solid var(--wire-lt); border-radius: var(--radius-sm); gap: 10px;">
-          <div style="display: flex; flex-direction: column;">
-            <strong style="color: var(--ink); font-size: 13px; display: flex; align-items: center;">
+          <div style="display: flex; flex-direction: column; flex: 1; min-width: 0;">
+            <strong style="color: var(--ink); font-size: 13px; display: flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
               ${statusDot} ${u.displayName || 'Unnamed Neighbor'}
             </strong>
-            <span style="font-size: 11px; color: var(--ink-lt);">${u.email || 'No email'}</span>
+            <span style="font-size: 11px; color: var(--ink-lt); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${u.email || 'No email'}</span>
           </div>
-          <div style="font-size: 10px; color: var(--ink-lt); text-align: right;">
-            Login: ${dateStr}
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="font-size: 10px; color: var(--ink-lt); text-align: right; white-space: nowrap;">
+              Login: ${dateStr}
+            </div>
+            ${deleteBtn}
           </div>
         </div>
       `;
@@ -6516,6 +6523,20 @@ function loadAdminUsers() {
       if (chk) chk.checked = show;
     }
   }).catch(err => console.warn("Error reading site settings for checkbox:", err));
+}
+
+function deleteUserDoc(uid, name) {
+  if (!confirm(`Are you sure you want to remove user "${name}" from the app? This deletes their Firestore profile document.`)) return;
+  db.collection('users').doc(uid).delete().then(() => {
+    // Also remove from admin list if they are in it
+    db.collection('admins').doc(uid).delete().catch(() => {});
+    showToast(`Removed neighbor profile: ${name}`);
+    loadAdminUsers();
+    loadAdminStats();
+  }).catch(err => {
+    console.error("Error removing user document:", err);
+    alert("Failed to remove user: " + err.message);
+  });
 }
 
 function toggleFrontCount(checked) {
