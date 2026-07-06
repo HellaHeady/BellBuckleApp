@@ -555,6 +555,17 @@ body.guest .guest-veil{
 .cpage-wrap svg{display:block;width:100%;height:auto;}
 .cregion{cursor:pointer;}
 .cregion:hover{filter:brightness(.93);}
+/* Highlighted shape styles for Quilt geometry explorer */
+.cregion.highlighted {
+  stroke: #ff3b30 !important;
+  stroke-width: 4px !important;
+  stroke-dasharray: 4;
+  animation: shape-glow 1.5s infinite alternate;
+}
+@keyframes shape-glow {
+  from { filter: drop-shadow(0 0 2px rgba(255, 59, 48, 0.6)); }
+  to { filter: drop-shadow(0 0 10px rgba(255, 59, 48, 0.9)) brightness(1.1); }
+}
 .ccanvas{display:block;width:100%;height:auto;cursor:crosshair;background:#fff;min-height:120px;}
 
 /* Barn Wood Frame for Kids Corner Drawing Board */
@@ -2726,6 +2737,7 @@ body.guest .guest-veil{
               <div class="action-card" onclick="nav('garden')"><div class="action-emoji">🌱</div><div class="action-label">Community Garden</div></div>
               <div class="action-card" onclick="nav('beecity')"><div class="action-emoji">🐝</div><div class="action-label">Bee City</div></div>
               <div class="action-card" onclick="nav('kids')"><div class="action-emoji">🖍️</div><div class="action-label">Kids Corner</div></div>
+              <div class="action-card" onclick="nav('quilt')"><div class="action-emoji">🧩</div><div class="action-label">Quilt Creator</div></div>
             </div>
 
             <!-- Featured event -->
@@ -4041,9 +4053,14 @@ body.guest .guest-veil{
       <!-- ══════ KIDS CORNER ══════ -->
       <div class="screen" id="screen-kids">
         <div class="p20 max-w">
-          <div class="page-header" style="padding:0 0 14px">
-            <h2>🖍️ Kids Corner</h2>
-            <p>Bell Buckle coloring pages — pick a crayon and tap to color!</p>
+          <div class="page-header" style="padding:0 0 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h2>🖍️ Kids Corner</h2>
+              <p>Bell Buckle coloring pages — pick a crayon and tap to color!</p>
+            </div>
+            <button class="btn btn-red" onclick="nav('quilt')" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; font-family:'Inter',sans-serif;">
+              🧩 Switch to Quilt &amp; Geometry Creator
+            </button>
           </div>
 
           <div class="card" style="padding:16px 18px">
@@ -4055,7 +4072,6 @@ body.guest .guest-veil{
               <button class="season-btn" data-cpage="caboose" onclick="switchColoring('caboose')">🚃 Caboose</button>
               <button class="season-btn" data-cpage="bell" onclick="switchColoring('bell')">🔔 Bell &amp; Buckle</button>
               <button class="season-btn" data-cpage="bee" onclick="switchColoring('bee')">🐝 Busy Bee</button>
-              <button class="season-btn" data-cpage="quilt" onclick="switchColoring('quilt')">🧩 Quilt Creator</button>
             </div>
 
             <div class="crayon-box" id="crayon-box"></div>
@@ -4192,105 +4208,6 @@ body.guest .guest-veil{
                     </svg>
                   </div>
 
-                  <!-- Page 4: Quilt Creator -->
-                  <div class="cpage-wrap" id="cpage-quilt">
-                    <div style="text-align: center; margin-bottom: 12px;">
-                      <button class="btn btn-red" onclick="postQuiltToBoard()" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; padding: 8px 16px;">
-                        💾 Post Quilt to Board
-                      </button>
-                    </div>
-                    <svg id="quilt-creator-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 100%; height: auto; max-width: 400px; margin: 0 auto; background: #fff; border: 3px solid var(--tp-wood); box-shadow: var(--shadow);">
-                      <g stroke="#2a1f10" stroke-width="2" stroke-linejoin="round" fill="#ffffff">
-                        <!-- Row 0 -->
-                        <!-- Block 0,0 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="0,0 50,50 100,0" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,0 50,50 100,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,100 50,50 0,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="0,100 50,50 0,0" />
-                        <!-- Block 0,1 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,0 150,50 200,0" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,0 150,50 200,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,100 150,50 100,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,100 150,50 100,0" />
-                        <!-- Block 0,2 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,0 250,50 300,0" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,0 250,50 300,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,100 250,50 200,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,100 250,50 200,0" />
-                        <!-- Block 0,3 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,0 350,50 400,0" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="400,0 350,50 400,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="400,100 350,50 300,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,100 350,50 300,0" />
-
-                        <!-- Row 1 -->
-                        <!-- Block 1,0 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="0,100 50,150 100,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,100 50,150 100,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,200 50,150 0,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="0,200 50,150 0,100" />
-                        <!-- Block 1,1 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,100 150,150 200,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,100 150,150 200,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,200 150,150 100,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,200 150,150 100,100" />
-                        <!-- Block 1,2 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,100 250,150 300,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,100 250,150 300,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,200 250,150 200,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,200 250,150 200,100" />
-                        <!-- Block 1,3 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,100 350,150 400,100" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="400,100 350,150 400,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="400,200 350,150 300,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,200 350,150 300,100" />
-
-                        <!-- Row 2 -->
-                        <!-- Block 2,0 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="0,200 50,250 100,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,200 50,250 100,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,300 50,250 0,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="0,300 50,250 0,200" />
-                        <!-- Block 2,1 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,200 150,250 200,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,200 150,250 200,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,300 150,250 100,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,300 150,250 100,200" />
-                        <!-- Block 2,2 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,200 250,250 300,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,200 250,250 300,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,300 250,250 200,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,300 250,250 200,200" />
-                        <!-- Block 2,3 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,200 350,250 400,200" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="400,200 350,250 400,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="400,300 350,250 300,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,300 350,250 300,200" />
-
-                        <!-- Row 3 -->
-                        <!-- Block 3,0 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="0,300 50,350 100,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,300 50,350 100,400" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,400 50,350 0,400" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="0,400 50,350 0,300" />
-                        <!-- Block 3,1 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,300 150,350 200,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,300 150,350 200,400" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,400 150,350 100,400" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="100,400 150,350 100,300" />
-                        <!-- Block 3,2 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,300 250,350 300,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,300 250,350 300,400" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,400 250,350 200,400" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="200,400 250,350 200,300" />
-                        <!-- Block 3,3 -->
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,300 350,350 400,300" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="400,300 350,350 400,400" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="400,400 350,350 300,400" />
-                        <polygon class="cregion" onclick="paintRegion(this)" points="300,400 350,350 300,300" />
-                      </g>
-                    </svg>
-                  </div>
                 </div>
               </div>
             </div>
@@ -4298,6 +4215,105 @@ body.guest .guest-veil{
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px;flex-wrap:wrap">
               <span style="font-size:11px;color:var(--ink-lt)">Tap a shape to color it in — the white crayon erases. 🖍️</span>
               <button class="btn btn-outline" onclick="resetColoring()">↺ Start Over</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ QUILT & GEOMETRY CREATOR ══════ -->
+      <div class="screen" id="screen-quilt">
+        <div class="p20 max-w">
+          <div class="page-header" style="padding:0 0 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h2>🧩 Quilt &amp; Geometry Creator</h2>
+              <p>Combine beautiful geometric shapes to design traditional quilt blocks!</p>
+            </div>
+            <button class="btn btn-outline" onclick="nav('kids')">◀ Back to Kids Corner</button>
+          </div>
+
+          <!-- Wood Frame containing the whole Quilt workspace -->
+          <div class="barn-frame" style="margin-top: 10px;">
+            <div class="screw screw-tl"></div>
+            <div class="screw screw-tr"></div>
+            <div class="screw screw-bl"></div>
+            <div class="screw screw-br"></div>
+
+            <!-- Main Workspace: flex/grid layout -->
+            <div class="quilt-workspace" style="display: flex; gap: 20px; flex-wrap: wrap; background: var(--paper); padding: 18px; border-radius: 8px;">
+              
+              <!-- Left/Main Column: Canvas + Controls -->
+              <div style="flex: 1.3; min-width: 280px; display: flex; flex-direction: column; align-items: center;">
+                <!-- Active Pattern Title -->
+                <h3 id="active-pattern-title" style="margin-bottom: 12px; font-family:'Playfair Display', serif; color: var(--ink);">Pinwheel Block</h3>
+                
+                <!-- Drawing Canvas -->
+                <div style="width: 100%; max-width: 400px; background: #fff; border: 3px solid var(--wire-lt); box-shadow: var(--shadow); border-radius: 4px; padding: 10px; margin-bottom: 16px;">
+                  <svg id="quilt-canvas-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 100%; height: auto;">
+                    <!-- Shapes will be dynamically inserted here -->
+                  </svg>
+                </div>
+
+                <!-- Color Palette Crayons -->
+                <div style="width: 100%; max-width: 400px; text-align: center; margin-bottom: 14px;">
+                  <span style="font-size: 13px; font-weight: 600; color: var(--ink-lt); display: block; margin-bottom: 6px;">Paintbrush Crayons:</span>
+                  <div class="crayon-box" id="quilt-crayon-box" style="justify-content: center; margin: 0;">
+                    <!-- Crayons will be generated here by javascript -->
+                  </div>
+                  <div style="font-size: 11.5px; color: var(--ink-lt); margin-top: 8px;">
+                    Select a crayon color, then tap on the shapes inside the canvas to color them.
+                  </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; justify-content: center;">
+                  <button class="btn btn-red" onclick="postQuiltBlockToBoard()" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold;">
+                    💾 Post Block to Board
+                  </button>
+                  <button class="btn btn-outline" onclick="resetQuiltCanvas()">↺ Clear Colors</button>
+                </div>
+              </div>
+
+              <!-- Right Column: Educational Sidebar & Block Presets -->
+              <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 16px;">
+                <!-- Block Presets -->
+                <div style="background: rgba(42,31,16,0.03); border: 1px solid var(--wire-lt); border-radius: 8px; padding: 14px;">
+                  <h4 style="font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">1. Choose a Block Preset</h4>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button class="btn btn-outline quilt-preset-btn active" onclick="switchQuiltPattern('pinwheel')">🌀 Pinwheel</button>
+                    <button class="btn btn-outline quilt-preset-btn" onclick="switchQuiltPattern('ohio_star')">⭐ Ohio Star</button>
+                    <button class="btn btn-outline quilt-preset-btn" onclick="switchQuiltPattern('flying_geese')">🪿 Flying Geese</button>
+                    <button class="btn btn-outline quilt-preset-btn" onclick="switchQuiltPattern('diamond_mosaic')">💎 Diamond Mosaic</button>
+                  </div>
+                </div>
+
+                <!-- Educational Geometry Lessons -->
+                <div style="background: rgba(42,31,16,0.03); border: 1px solid var(--wire-lt); border-radius: 8px; padding: 14px; flex-grow: 1; display: flex; flex-direction: column;">
+                  <h4 style="font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">2. Geometry Explorer</h4>
+                  <p style="font-size: 11.5px; color: var(--ink-lt); margin-bottom: 12px;">Click a shape term to see it highlighted in your quilt!</p>
+                  
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button class="btn btn-outline geom-term-btn" onclick="selectGeometryTerm('triangle')" style="text-align: left; padding: 8px 12px; font-size: 12.5px;">
+                      📐 Right Isosceles Triangle
+                    </button>
+                    <button class="btn btn-outline geom-term-btn" onclick="selectGeometryTerm('square')" style="text-align: left; padding: 8px 12px; font-size: 12.5px;">
+                      ⏹️ Square
+                    </button>
+                    <button class="btn btn-outline geom-term-btn" onclick="selectGeometryTerm('rhombus')" style="text-align: left; padding: 8px 12px; font-size: 12.5px;">
+                      🔶 Rhombus
+                    </button>
+                    <button class="btn btn-outline geom-term-btn" onclick="selectGeometryTerm('parallelogram')" style="text-align: left; padding: 8px 12px; font-size: 12.5px;">
+                      ▰ Parallelogram
+                    </button>
+                  </div>
+
+                  <!-- Explanation Panel -->
+                  <div id="geometry-explanation-panel" style="margin-top: 14px; padding: 10px 12px; background: #fff; border: 1px solid var(--wire); border-radius: 6px; font-size: 12px; line-height: 1.5; color: var(--ink); min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center;">
+                    <span style="color: var(--ink-lt);">Select a term above to explore its geometric properties and find it in the quilt.</span>
+                  </div>
+                </div>
+
+              </div>
+
             </div>
           </div>
         </div>
@@ -5012,6 +5028,7 @@ const SCREEN_META = {
   admin:       { t:'🛡️ Town Hall',         c:'Bell Buckle Connect › Admin' },
   post:        { t:'✏️ New Post',           c:'Bell Buckle Connect › Post' },
   chat:        { t:'💬 The Depot',         c:'Bell Buckle Connect › Depot Chat' },
+  quilt:       { t: '🧩 Quilt & Geometry Creator', c: 'Bell Buckle Connect › Quilt Geometry' },
 };
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
@@ -5281,6 +5298,7 @@ function nav(id) {
 
   if (id === 'chat') setTimeout(scrollChat, 80);
   if (id === 'kids') initCanvasPage(document.querySelector('.cpage-wrap.active'));
+  if (id === 'quilt') initQuiltScreen();
   if (id === 'community') computeHotTopics(false);
   if (id === 'marketplace') renderTradingPostFeed();
 }
@@ -7831,6 +7849,230 @@ function postQuiltToBoard() {
     showToast("Error posting quilt.");
   });
 }
+
+// ─── Quilt Creator Screen Logic ───────────────────────────────────────────────
+function initQuiltScreen() {
+  const box = document.getElementById('quilt-crayon-box');
+  if (box) {
+    box.innerHTML = CRAYONS.map((c,i) =>
+      `<div class="crayon${c===crayon?' active':''}" style="background:${c}${c==='#ffffff'?';border-style:dashed':''}"
+            title="${c==='#ffffff'?'Eraser':'Crayon'}" onclick="pickQuiltCrayon(this,'${c}')"></div>`
+    ).join('');
+  }
+  switchQuiltPattern('pinwheel');
+}
+
+function pickQuiltCrayon(el, c) {
+  crayon = c;
+  document.querySelectorAll('#quilt-crayon-box .crayon, #crayon-box .crayon').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.crayon').forEach(b => {
+    if (b.style.backgroundColor === c || b.style.background.includes(c)) {
+      b.classList.add('active');
+    }
+  });
+}
+
+function resetQuiltCanvas() {
+  document.querySelectorAll('#quilt-canvas-svg .cregion').forEach(el => {
+    el.style.fill = '#ffffff';
+  });
+}
+
+function postQuiltBlockToBoard() {
+  if (!currentUser) { guestNudge(); return; }
+  const svgEl = document.getElementById('quilt-canvas-svg');
+  if (!svgEl) return;
+  const serializer = new XMLSerializer();
+  let svgStr = serializer.serializeToString(svgEl);
+  svgStr = svgStr.replace('style="', 'style="max-width: 260px; height: auto; display: block; margin: 8px auto; ');
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  db.collection('community_posts').add({
+    text: svgStr,
+    isQuilt: true,
+    uid: currentUser.uid,
+    email: currentUser.email,
+    displayName: nm,
+    ts: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    showToast("🧩 Your quilt block has been posted to the Community Board!");
+    nav('community');
+  })
+  .catch(err => {
+    console.error("Error posting quilt:", err);
+    showToast("Error posting quilt.");
+  });
+}
+
+function selectGeometryTerm(term) {
+  document.querySelectorAll('.geom-term-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = Array.from(document.querySelectorAll('.geom-term-btn')).find(btn => btn.getAttribute('onclick').includes(term));
+  if (activeBtn) activeBtn.classList.add('active');
+
+  highlightGeometry(term);
+
+  const explanations = {
+    triangle: "📐 A <strong>Right Isosceles Triangle</strong> has a 90-degree corner (right angle) and two equal sides! It fits perfectly in corners and creates rotating patterns like pinwheels.",
+    square: "⏹️ A <strong>Square</strong> has 4 equal sides and 4 right angles! It serves as a solid base or a beautiful center block in many quilt patterns.",
+    rhombus: "🔶 A <strong>Rhombus</strong> (or diamond) has 4 equal sides, but its corners aren't 90 degrees. It looks like a tilted square and makes stunning mosaic patterns!",
+    parallelogram: "▰ A <strong>Parallelogram</strong> has opposite sides that are parallel and equal in length. It looks like a slanted rectangle and creates a sense of movement."
+  };
+  const expPanel = document.getElementById('geometry-explanation-panel');
+  if (expPanel) {
+    expPanel.innerHTML = explanations[term] || "";
+  }
+}
+
+function highlightGeometry(term) {
+  document.querySelectorAll('#quilt-canvas-svg .cregion').forEach(el => {
+    el.classList.remove('highlighted');
+  });
+
+  document.querySelectorAll(`#quilt-canvas-svg .cregion[data-geom="${term}"]`).forEach(el => {
+    el.classList.add('highlighted');
+  });
+}
+
+function switchQuiltPattern(patternName) {
+  document.querySelectorAll('.quilt-preset-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = Array.from(document.querySelectorAll('.quilt-preset-btn')).find(btn => btn.getAttribute('onclick').includes(patternName));
+  if (activeBtn) activeBtn.classList.add('active');
+
+  const svg = document.getElementById('quilt-canvas-svg');
+  if (!svg) return;
+
+  let content = '';
+  let title = '';
+
+  if (patternName === 'pinwheel') {
+    title = '🌀 Pinwheel Block';
+    svg.setAttribute('viewBox', '0 0 300 300');
+    content = `
+      <g stroke="#2a1f10" stroke-width="2.5" stroke-linejoin="round" fill="#ffffff">
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,150 150,0 0,0" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,150 300,0 300,150" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,150 150,300 300,300" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,150 0,300 0,150" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,150 0,0 0,150" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,150 150,0 300,0" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,150 300,150 300,300" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,150 150,300 0,300" />
+      </g>
+    `;
+  } else if (patternName === 'ohio_star') {
+    title = '⭐ Ohio Star Block';
+    svg.setAttribute('viewBox', '0 0 300 300');
+    content = `
+      <g stroke="#2a1f10" stroke-width="2.5" stroke-linejoin="round" fill="#ffffff">
+        <rect class="cregion" data-geom="square" onclick="paintRegion(this)" x="0" y="0" width="100" height="100" />
+        <rect class="cregion" data-geom="square" onclick="paintRegion(this)" x="200" y="0" width="100" height="100" />
+        <rect class="cregion" data-geom="square" onclick="paintRegion(this)" x="0" y="200" width="100" height="100" />
+        <rect class="cregion" data-geom="square" onclick="paintRegion(this)" x="200" y="200" width="100" height="100" />
+        <rect class="cregion" data-geom="square" onclick="paintRegion(this)" x="100" y="100" width="100" height="100" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="100,0 200,0 150,50" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="200,0 200,100 150,50" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="100,100 200,100 150,50" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="100,0 100,100 150,50" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,100 100,100 50,150" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="100,100 100,200 50,150" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,200 100,200 50,150" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,100 0,200 50,150" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="200,100 300,100 250,150" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="300,100 300,200 250,150" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="200,200 300,200 250,150" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="200,100 200,200 250,150" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="100,200 200,200 150,250" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="200,200 200,300 150,250" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="100,300 200,300 150,250" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="100,200 100,300 150,250" />
+      </g>
+    `;
+  } else if (patternName === 'flying_geese') {
+    title = '🪿 Flying Geese Columns';
+    svg.setAttribute('viewBox', '0 0 300 300');
+    content = `
+      <g stroke="#2a1f10" stroke-width="2.5" stroke-linejoin="round" fill="#ffffff">
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,100 150,100 75,0" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,0 75,0 0,100" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,0 75,0 150,100" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,200 150,200 75,100" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,100 75,100 0,200" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,100 75,100 150,200" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,300 150,300 75,200" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="0,200 75,200 0,300" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,200 75,200 150,300" />
+
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,100 300,100 225,0" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,0 225,0 150,100" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="300,0 225,0 300,100" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,200 300,200 225,100" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,100 225,100 150,200" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="300,100 225,100 300,200" />
+        
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,300 300,300 225,200" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="150,200 225,200 150,300" />
+        <polygon class="cregion" data-geom="triangle" onclick="paintRegion(this)" points="300,200 225,200 300,300" />
+      </g>
+    `;
+  } else if (patternName === 'diamond_mosaic') {
+    title = '💎 Diamond Mosaic Block';
+    svg.setAttribute('viewBox', '0 0 300 300');
+    content = `
+      <g stroke="#2a1f10" stroke-width="2.5" stroke-linejoin="round" fill="#ffffff">
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="50,0 100,50 50,100 0,50" />
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="150,0 200,50 150,100 100,50" />
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="250,0 300,50 250,100 200,50" />
+        
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="100,50 150,100 100,150 50,100" />
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="200,50 250,100 200,150 150,100" />
+        
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="50,100 100,150 50,200 0,150" />
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="150,100 200,150 150,200 100,150" />
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="250,100 300,150 250,200 200,150" />
+        
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="100,150 150,200 100,250 50,200" />
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="200,150 250,200 200,250 150,200" />
+        
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="50,200 100,250 50,300 0,250" />
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="150,200 200,250 150,300 100,250" />
+        <polygon class="cregion" data-geom="rhombus" onclick="paintRegion(this)" points="250,200 300,250 250,300 200,250" />
+
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="0,0 50,0 100,50 50,50" />
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="100,0 150,0 200,50 150,50" />
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="200,0 250,0 300,50 250,50" />
+        
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="0,100 50,100 100,150 50,150" />
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="100,100 150,100 200,150 150,150" />
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="200,100 250,100 300,150 250,150" />
+        
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="0,200 50,200 100,250 50,250" />
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="100,200 150,200 200,250 150,250" />
+        <polygon class="cregion" data-geom="parallelogram" onclick="paintRegion(this)" points="200,200 250,200 300,250 250,250" />
+      </g>
+    `;
+  }
+
+  svg.innerHTML = content;
+  const pTitle = document.getElementById('active-pattern-title');
+  if (pTitle) pTitle.textContent = title;
+  
+  const activeTermBtn = document.querySelector('.geom-term-btn.active');
+  if (activeTermBtn) {
+    const termOnclick = activeTermBtn.getAttribute('onclick');
+    const termName = termOnclick.match(/'([^']+)'/)[1];
+    highlightGeometry(termName);
+  }
+}
+
 
 
 
