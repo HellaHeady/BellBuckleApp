@@ -1556,12 +1556,13 @@ body.guest .guest-veil{
   }
 
   /* Slim badge instead of the big hanging sign — the bottom nav already
-     shows where you are, so the topbar stays light on phones */
+     shows where you are, so the topbar stays light on phones. The badge
+     hugs its text instead of stretching across the bar. */
   .topbar-page-sign {
     margin: 0 8px;
     min-width: auto;
-    flex: 1;
-    padding: 3px 10px;
+    flex: 0 1 auto;
+    padding: 3px 12px;
     border-width: 2px;
     border-bottom-width: 3px;
     border-radius: 6px;
