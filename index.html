@@ -2673,23 +2673,10 @@ body.guest .guest-veil{
 
             <!-- Train Depot schedule -->
             <div class="side-widget train-schedule">
-              <div class="chalk-title">🚂 depot departures</div>
-              <div id="depot-schedule-list">
-                <div class="chalk-row">
-                  <span>Bedford Co. Line</span>
-                  <span class="chalk-time">Departed</span>
-                </div>
-                <div class="chalk-row">
-                  <span>Chattanooga Choo</span>
-                  <span class="chalk-time" id="train-time-1">12 mins</span>
-                </div>
-                <div class="chalk-row">
-                  <span>Tennessee Central</span>
-                  <span class="chalk-time" id="train-time-2">1h 45m</span>
-                </div>
-              </div>
-              <div style="font-size: 8.5px; color: #ffca28; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 6px; text-align: center; font-family: monospace;">
-                🔔 Next Crossing: <span id="train-crossing-countdown">08m 42s</span>
+              <div class="chalk-title">🚂 Train Spotter</div>
+              <div id="depot-schedule-list" style="text-align: center; padding: 6px 0;">
+                <div id="train-spotter-status" style="font-size: 13.5px; font-weight: bold; color: #4caf50; letter-spacing: 0.5px;">🟢 Clear Crossing</div>
+                <div id="train-spotter-meta" style="font-size: 10px; color: #b0bec5; margin-top: 4px;">No active train reports</div>
               </div>
               <button onclick="reportTrainApproaching()" style="background: repeating-linear-gradient(-45deg, #e8b830, #e8b830 8px, #1a1a1a 8px, #1a1a1a 16px); color: #ffe9a8; text-shadow: 1px 1px 2px #000, -1px -1px 2px #000; font-weight: 800; border: 2px solid #ffe9a8; padding: 8px 4px; width: 100%; border-radius: 4px; cursor: pointer; margin-top: 10px; font-family: monospace; text-transform: uppercase; font-size: 10px; display: block; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.4);">Report Train Approaching</button>
             </div>
@@ -6453,7 +6440,10 @@ function switchColoring(p) {
   document.querySelectorAll('.season-btn[data-cpage]').forEach(b => b.classList.toggle('active', b.dataset.cpage === p));
   document.querySelectorAll('.cpage-wrap').forEach(w => w.classList.toggle('active', w.id === 'cpage-' + p));
   zoomColoring(0, true); // Reset zoom to 100% on page switch
-  initCanvasPage(document.querySelector('.cpage-wrap.active'));
+  const activeWrap = document.querySelector('.cpage-wrap.active');
+  if (activeWrap && activeWrap.querySelector('canvas.ccanvas')) {
+    initCanvasPage(activeWrap);
+  }
 }
 
 function resetColoring() {
@@ -6870,6 +6860,10 @@ function initSiteSettingsListener() {
   });
 
   db.collection('settings').doc('train_crossing').onSnapshot(doc => {
+    const banner = document.getElementById('live-train-warning-banner');
+    const spotterStatus = document.getElementById('train-spotter-status');
+    const spotterMeta = document.getElementById('train-spotter-meta');
+    
     if (doc.exists) {
       const data = doc.data();
       if (data.reportedAt) {
@@ -6880,9 +6874,17 @@ function initSiteSettingsListener() {
         
         if (diffMins >= 0 && diffMins < 5) {
           window.activeTrainAlert = true;
-          const banner = document.getElementById('live-train-warning-banner');
           if (banner) banner.style.display = 'block';
-          trainSecs = 0;
+          if (spotterStatus) {
+            spotterStatus.textContent = '🚨 Active Crossing';
+            spotterStatus.style.color = '#f44336';
+            spotterStatus.classList.add('blink');
+          }
+          if (spotterMeta) {
+            const timeStr = reportedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            spotterMeta.textContent = `Spotted by ${data.reportedBy || 'Neighbor'} at ${timeStr}`;
+            spotterMeta.style.color = '#ff9800';
+          }
           
           if (lastPlayedReportTime !== reportedTime) {
             lastPlayedReportTime = reportedTime;
@@ -6890,14 +6892,31 @@ function initSiteSettingsListener() {
           }
         } else {
           window.activeTrainAlert = false;
-          const banner = document.getElementById('live-train-warning-banner');
           if (banner) banner.style.display = 'none';
+          if (spotterStatus) {
+            spotterStatus.textContent = '🟢 Clear Crossing';
+            spotterStatus.style.color = '#4caf50';
+            spotterStatus.classList.remove('blink');
+          }
+          if (spotterMeta) {
+            const minsAgo = Math.round(diffMins);
+            spotterMeta.textContent = `Last train was spotted ${minsAgo}m ago`;
+            spotterMeta.style.color = '#b0bec5';
+          }
         }
       }
     } else {
       window.activeTrainAlert = false;
-      const banner = document.getElementById('live-train-warning-banner');
       if (banner) banner.style.display = 'none';
+      if (spotterStatus) {
+        spotterStatus.textContent = '🟢 Clear Crossing';
+        spotterStatus.style.color = '#4caf50';
+        spotterStatus.classList.remove('blink');
+      }
+      if (spotterMeta) {
+        spotterMeta.textContent = 'No active train reports';
+        spotterMeta.style.color = '#b0bec5';
+      }
     }
   }, err => {
     console.warn("Error listening to train crossing settings:", err);
@@ -7813,29 +7832,7 @@ function postQuiltToBoard() {
   });
 }
 
-function tickTrainCrossing() {
-  if (window.activeTrainAlert) {
-    trainSecs = 0;
-  } else {
-    trainSecs--;
-    if (trainSecs < 0) {
-      trainSecs = 900; // reset to 15 mins
-      const time1 = document.getElementById('train-time-1');
-      const time2 = document.getElementById('train-time-2');
-      if (time1 && time2) {
-        const val1 = parseInt(time1.textContent) || 12;
-        time1.textContent = Math.max(1, val1 - 1) + " mins";
-      }
-    }
-  }
-  const min = Math.floor(trainSecs / 60);
-  const sec = trainSecs % 60;
-  const countdownEl = document.getElementById('train-crossing-countdown');
-  if (countdownEl) {
-    countdownEl.textContent = String(min).padStart(2, '0') + "m " + String(sec).padStart(2, '0') + "s";
-  }
-}
-setInterval(tickTrainCrossing, 1000);
+
 
 function initDashboardWidgets() {
   // 1. Initialize Weather Station
