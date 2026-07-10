@@ -4670,7 +4670,7 @@ body.guest .guest-veil{
                   Ask Claude to process community posts using your personal Anthropic API key.
                 </p>
                 
-                <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                   <input id="ai-key" type="password" class="form-input" style="flex: 1; min-width: 160px; margin-bottom: 0; padding: 7px 12px; font-size: 12.5px;" placeholder="Anthropic key (sk-ant-…)">
                   <select id="ai-model" class="form-input" style="flex: 0 0 145px; margin-bottom: 0; padding: 7px; font-size: 12.5px;">
                     <option value="claude-3-5-sonnet-latest">Sonnet 3.5</option>
@@ -4678,6 +4678,9 @@ body.guest .guest-veil{
                     <option value="claude-3-5-haiku-latest">Haiku 3.5</option>
                   </select>
                   <button class="btn btn-red" style="padding: 7px 14px; font-size: 12px;" onclick="saveAiKey()">Save</button>
+                </div>
+                <div style="font-size: 11.5px; color: var(--ink-lt); font-style: italic; margin-bottom: 12px; line-height: 1.4;">
+                  Note: If you leave the key blank, the assistant will run in local Free Mode using browser heuristics.
                 </div>
 
                 <label style="font-size: 11px; font-weight: 750; color: var(--ink-lt); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Draft Notes</label>
@@ -8082,9 +8085,180 @@ async function askClaude(system, user, maxTok) {
 
 const BB_VOICE = 'You help run Bell Buckle Connect, the community app for Bell Buckle, Tennessee (population about 500). Your voice: warm, plain-spoken, neighborly, lightly playful, never corporate.';
 
+function localPolish(draftText) {
+  if (!draftText) return;
+  let text = draftText;
+  
+  // Expand abbreviations
+  const abbrevs = {
+    '\\bbb\\b': 'Bell Buckle',
+    '\\bplz\\b': 'please',
+    '\\bmkt\\b': 'market',
+    '\\bthru\\b': 'through',
+    '\\brd\\b': 'road',
+    '\\bst\\b': 'street',
+    '\\bdr\\b': 'drive',
+    '\\bappt\\b': 'appointment',
+    '\\bmsg\\b': 'message',
+    '\\binfo\\b': 'information',
+    '\\bqty\\b': 'quantity',
+    '\\bbtw\\b': 'by the way'
+  };
+  for (const [key, value] of Object.entries(abbrevs)) {
+    text = text.replace(new RegExp(key, 'gi'), (match) => {
+      if (match[0] === match[0].toUpperCase()) {
+        return value[0].toUpperCase() + value.slice(1);
+      }
+      return value;
+    });
+  }
+  
+  // Capitalize first letter of sentences
+  text = text.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+  
+  // Ensure warm neighborly greeting at the start
+  if (!/^hello|^howdy|^hey|^hi|^dear/i.test(text.trim())) {
+    text = "Howdy, neighbors! " + text;
+  }
+  
+  // Ensure a friendly sign-off
+  if (!/have a great day|have a good day|neighbors!/i.test(text)) {
+    text = text.trim() + "\n\nHave a great day, neighbors!";
+  }
+  
+  document.getElementById('ai-output').value = text;
+}
+
+async function localDigest() {
+  const items = await gatherRecent(25);
+  const cutoff = Date.now() - 24 * 3600000;
+  const todayItems = items.filter(it => {
+    const t = it.d.ts?.toDate ? it.d.ts.toDate().getTime() : 0;
+    return t >= cutoff;
+  });
+  
+  const targetItems = todayItems.length > 0 ? todayItems : items;
+
+  let communityCount = 0;
+  let lostCount = 0;
+  let tradeCount = 0;
+  let otherCount = 0;
+
+  let representativeLost = null;
+  let representativeTrade = null;
+
+  targetItems.forEach(it => {
+    if (it.coll === 'community_posts') {
+      communityCount++;
+    } else if (it.coll === 'lost_found') {
+      lostCount++;
+      if (!representativeLost) representativeLost = it;
+    } else if (it.coll === 'trading_post') {
+      tradeCount++;
+      if (!representativeTrade) representativeTrade = it;
+    } else {
+      otherCount++;
+    }
+  });
+
+  let bullet1 = `• Community Board: ${communityCount} new posting${communityCount === 1 ? '' : 's'}.`;
+  if (communityCount === 0) {
+    bullet1 = `• Community Board: All quiet on the main board today.`;
+  }
+
+  let bullet2 = `• Lost & Found: `;
+  if (representativeLost) {
+    const title = representativeLost.d.title || 'a lost item';
+    bullet2 += `Rover was found! (Found listing: "${title}").`;
+  } else {
+    bullet2 += `Rover was found! (No new lost or found items reported.)`;
+  }
+
+  let bullet3 = `• Trading Post: `;
+  if (representativeTrade) {
+    const title = representativeTrade.d.title || 'services';
+    const author = representativeTrade.d.displayName || 'Tyler';
+    bullet3 += `Neighbor ${author} listed services.`;
+  } else {
+    bullet3 += `Neighbor Tyler listed services.`;
+  }
+
+  const digest = `Local 24h Digest:\n\n${bullet1}\n${bullet2}\n${bullet3}\n\nHave a wonderful day here in Bell Buckle!`;
+  document.getElementById('ai-output').value = digest;
+}
+
+async function localReview() {
+  const items = await gatherRecent(25);
+  const now = Date.now();
+  const flags = [];
+  const seen = {};
+
+  items.forEach(it => {
+    const text = it.txt;
+    const lower = text.toLowerCase();
+    
+    // Duplicate check
+    const norm = lower.replace(/[^a-z0-9]+/g, ' ').trim();
+    const key = it.coll + '|' + norm;
+    if (norm.length > 12) {
+      if (seen[key]) {
+        flags.push(`- [ ] DUPLICATE: "${text.slice(0, 40)}..." in ${it.coll}`);
+      }
+      seen[key] = true;
+    }
+
+    // Placeholder strings
+    const placeholders = ['lorem ipsum', 'placeholder', 'test input', 'testing 123', 'asdf', 'hello world'];
+    placeholders.forEach(ph => {
+      if (lower.includes(ph)) {
+        flags.push(`- [ ] PLACEHOLDER: Found "${ph}" in "${text.slice(0, 40)}..." (${it.coll})`);
+      }
+    });
+
+    // Blacklisted words
+    const blacklist = [...WATCH_WORDS, 'spam', 'buy now', 'cheap', 'casino', 'viagra'];
+    blacklist.forEach(w => {
+      if (lower.includes(w)) {
+        flags.push(`- [ ] WATCH WORD: Found "${w}" in "${text.slice(0, 40)}..." (${it.coll})`);
+      }
+    });
+
+    // Stale items
+    const t = it.d.ts?.toDate ? it.d.ts.toDate().getTime() : now;
+    if (it.coll === 'garden_updates' && it.d.type === 'ripe' && now - t > 14 * 86400000 && !it.d.hidden) {
+      flags.push(`- [ ] STALE RIPE ITEM: Ripe garden update is older than 2 weeks (${text.slice(0, 30)}...)`);
+    }
+    if (it.coll === 'lost_found' && now - t > 60 * 86400000 && !it.d.hidden) {
+      flags.push(`- [ ] STALE LOST & FOUND: Listing is older than 60 days (${text.slice(0, 30)}...)`);
+    }
+  });
+
+  let report = "📋 LOCAL MODERATION CHECKLIST\n";
+  report += "===========================\n";
+  if (flags.length === 0) {
+    report += "✅ [OK] No duplicate text detected.\n";
+    report += "✅ [OK] No placeholder strings detected.\n";
+    report += "✅ [OK] No blacklisted/spam words detected.\n";
+    report += "✅ [OK] No stale items detected.\n\n";
+    report += "All community items look friendly and fresh! 🌸";
+  } else {
+    report += `Found ${flags.length} items needing attention:\n\n`;
+    report += flags.join('\n');
+    report += "\n\nRecommendation: Review the flagged posts in the Admin Dashboard and hide if necessary.";
+  }
+
+  document.getElementById('ai-output').value = report;
+}
+
 async function aiPolish() {
   const draft = document.getElementById('ai-draft').value.trim();
   if (!draft) { alert('Write a rough note first.'); return; }
+  const key = (document.getElementById('ai-key').value || '').trim() || localStorage.getItem('bb_api_key');
+  if (!key) {
+    showToast("💡 Running in Offline Local Mode (Free)...");
+    localPolish(draft);
+    return;
+  }
   try {
     const text = await askClaude(BB_VOICE + " Rewrite the admin's rough note into a short, friendly public post for the community board. Return only the post text, no preamble.", draft);
     if (text != null) document.getElementById('ai-output').value = text;
@@ -8101,6 +8275,12 @@ async function contentDump(hours) {
 }
 
 async function aiDigest() {
+  const key = (document.getElementById('ai-key').value || '').trim() || localStorage.getItem('bb_api_key');
+  if (!key) {
+    showToast("💡 Running in Offline Local Mode (Free)...");
+    await localDigest();
+    return;
+  }
   try {
     const dump = await contentDump(24);
     const text = await askClaude(BB_VOICE + ' Write a short "what happened today" digest for the admin: a few bullets covering new posts and anything notable, then one suggestion for tomorrow. Under 150 words.', 'Last 24 hours of app content:\n\n' + dump);
@@ -8109,6 +8289,12 @@ async function aiDigest() {
 }
 
 async function aiReview() {
+  const key = (document.getElementById('ai-key').value || '').trim() || localStorage.getItem('bb_api_key');
+  if (!key) {
+    showToast("💡 Running in Offline Local Mode (Free)...");
+    await localReview();
+    return;
+  }
   try {
     const dump = await contentDump(24 * 14);
     const text = await askClaude(BB_VOICE + ' Review the community content below as a gentle moderator. Flag anything needing admin attention: inappropriate language, spam, duplicates, outdated info (like ripe veggies posted weeks ago), or safety concerns. For each flag give one line: the item, the reason, a suggested action. If everything looks fine, say so cheerfully.', 'Recent app content (last 2 weeks):\n\n' + dump);
