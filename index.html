@@ -2030,6 +2030,108 @@ body.guest .guest-veil{
   0% { background-color: #dc2626; }
   100% { background-color: #7c2018; }
 }
+
+/* Comments Section & Comments List & Comment Input styling */
+.comments-section {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(42, 31, 16, 0.02);
+  border-radius: 8px;
+  border-top: 1px solid var(--wire-lt);
+}
+.comments-list {
+  margin-bottom: 12px;
+}
+.comment-card {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--wire-lt);
+}
+.comment-card:last-child {
+  border-bottom: none;
+}
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 11px;
+  color: var(--ink-lt);
+}
+.comment-author {
+  font-weight: 600;
+  color: var(--ink);
+}
+.comment-time {
+  font-size: 10px;
+}
+.comment-text {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.4;
+  word-break: break-word;
+}
+.comment-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+  align-items: center;
+}
+.comment-action-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--ink-lt);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: color 0.15s, background 0.15s;
+}
+.comment-action-btn:hover {
+  background: rgba(42, 31, 16, 0.05);
+  color: var(--ink);
+}
+.comment-delete-btn {
+  color: #dc2626;
+}
+.comment-delete-btn:hover {
+  color: #7c2018 !important;
+}
+.comment-input-area {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.comment-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--wire);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ink);
+  background: #fff;
+  font-family: inherit;
+}
+.comment-input:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px rgba(166, 50, 32, 0.12);
+}
+.comment-submit-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+.comment-submit-btn:hover {
+  opacity: 0.9;
+}
 </style>
 </head>
 <body>
@@ -5573,13 +5675,198 @@ if (window.visualViewport) {
 }
 
 // ─── Community posts ──────────────────────────────────────────────────────────
+// Map to track active Firestore listeners for comments to prevent duplicate/leaked listeners
+const activeCommentListeners = {};
+
+function listenCommentsCount(postId) {
+  if (activeCommentListeners[postId]) return;
+  const unsub = db.collection('community_posts').doc(postId).collection('comments')
+    .onSnapshot(snap => {
+      const count = snap.size;
+      
+      const countEl = document.getElementById(`comment-count-${postId}`);
+      if (countEl) countEl.textContent = count;
+      
+      const countElHome = document.getElementById(`comment-count-home-${postId}`);
+      if (countElHome) countElHome.textContent = count;
+      
+      // If comments section drawer is open, also render/update list
+      const listEl = document.getElementById(`comments-list-${postId}`);
+      if (listEl && listEl.dataset.open === "true") {
+        renderCommentsList(postId, snap);
+      }
+    }, err => {
+      console.warn("Failed to listen to comments for post: " + postId, err);
+    });
+  activeCommentListeners[postId] = unsub;
+}
+
+function loadComments(postId) {
+  listenCommentsCount(postId);
+}
+
+function renderCommentsList(postId, snap) {
+  const commentsListEl = document.getElementById(`comments-list-${postId}`);
+  if (!commentsListEl) return;
+  
+  if (snap.empty) {
+    commentsListEl.innerHTML = '<div style="color:var(--ink-lt);font-size:12px;padding:8px 0;font-style:italic;">No comments yet. Be the first to reply!</div>';
+    return;
+  }
+  
+  let html = '';
+  snap.forEach(doc => {
+    const c = doc.data();
+    const cid = doc.id;
+    const authorName = c.displayName || 'Neighbor';
+    const commentText = linkifyTags(esc(c.text || ''));
+    const dt = c.ts?.toDate ? c.ts.toDate().toLocaleString('en-US', {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'}) : '';
+    const likesCount = c.likes ? (Array.isArray(c.likes) ? c.likes.length : 0) : 0;
+    const hasLiked = currentUser && c.likes && Array.isArray(c.likes) && c.likes.includes(currentUser.uid);
+    const likeStyle = hasLiked ? 'font-weight:bold;color:var(--red);' : '';
+    
+    const isOwner = currentUser && c.uid === currentUser.uid;
+    const isAdmin = typeof isAdminUser !== 'undefined' && isAdminUser;
+    
+    let deleteBtnHtml = '';
+    if (isOwner || isAdmin) {
+      deleteBtnHtml = `<button class="comment-action-btn comment-delete-btn" onclick="deleteComment('${postId}', '${cid}')" style="margin-left:auto;">Delete</button>`;
+    }
+    
+    html += `
+      <div class="comment-card" id="comment-${cid}">
+        <div class="comment-meta">
+          <span class="comment-author">${esc(authorName)}</span>
+          <span class="comment-time">${dt}</span>
+        </div>
+        <div class="comment-text">${commentText}</div>
+        <div class="comment-actions">
+          <button class="comment-action-btn" style="${likeStyle}" onclick="toggleLikeComment('${postId}', '${cid}')">👍 Like (${likesCount})</button>
+          ${deleteBtnHtml}
+        </div>
+      </div>
+    `;
+  });
+  
+  commentsListEl.innerHTML = html;
+}
+
+function deleteComment(postId, commentId) {
+  if (!confirm("Are you sure you want to delete this comment?")) return;
+  db.collection('community_posts').doc(postId).collection('comments').doc(commentId).delete()
+    .catch(err => {
+      console.error("Error deleting comment:", err);
+      alert("Failed to delete comment: " + err.message);
+    });
+}
+
+function submitComment(postId) {
+  const inputEl = document.getElementById(`comment-input-${postId}`);
+  if (!inputEl) return;
+  const txt = inputEl.value.trim();
+  if (!txt) return;
+  if (!currentUser) { guestNudge(); return; }
+  const nm = currentUser.displayName || currentUser.email?.split('@')[0] || 'Neighbor';
+  
+  db.collection('community_posts').doc(postId).collection('comments').add({
+    text: txt,
+    uid: currentUser.uid,
+    displayName: nm,
+    ts: firebase.firestore.FieldValue.serverTimestamp(),
+    likes: []
+  }).then(() => {
+    inputEl.value = '';
+  }).catch(err => {
+    console.error("Error adding comment: ", err);
+    alert("Failed to post comment: " + err.message);
+  });
+}
+
+function toggleCommentDrawer(postId) {
+  const sec = document.getElementById(`comments-section-${postId}`);
+  if (!sec) {
+    // Go to community page and open it
+    nav('community');
+    setTimeout(() => {
+      const commSec = document.getElementById(`comments-section-${postId}`);
+      if (commSec) {
+        commSec.style.display = 'block';
+        const listEl = document.getElementById(`comments-list-${postId}`);
+        if (listEl) {
+          listEl.dataset.open = "true";
+          loadComments(postId);
+        }
+      }
+    }, 300);
+    return;
+  }
+  const listEl = document.getElementById(`comments-list-${postId}`);
+  const isOpening = sec.style.display === 'none';
+  sec.style.display = isOpening ? 'block' : 'none';
+  if (listEl) {
+    listEl.dataset.open = isOpening ? "true" : "false";
+    if (isOpening) {
+      loadComments(postId);
+    }
+  }
+}
+
+function toggleLikePost(postId) {
+  if (!currentUser) { guestNudge(); return; }
+  const uid = currentUser.uid;
+  const postRef = db.collection('community_posts').doc(postId);
+  db.runTransaction(transaction => {
+    return transaction.get(postRef).then(doc => {
+      if (!doc.exists) return;
+      const data = doc.data();
+      let likes = data.likes || [];
+      if (!Array.isArray(likes)) {
+        likes = [];
+      }
+      if (likes.includes(uid)) {
+        likes = likes.filter(id => id !== uid);
+      } else {
+        likes.push(uid);
+      }
+      transaction.update(postRef, { likes: likes });
+    });
+  }).catch(err => {
+    console.error("Error toggling like on post:", err);
+  });
+}
+
+function toggleLikeComment(postId, commentId) {
+  if (!currentUser) { guestNudge(); return; }
+  const uid = currentUser.uid;
+  const commentRef = db.collection('community_posts').doc(postId).collection('comments').doc(commentId);
+  db.runTransaction(transaction => {
+    return transaction.get(commentRef).then(doc => {
+      if (!doc.exists) return;
+      const data = doc.data();
+      let likes = data.likes || [];
+      if (!Array.isArray(likes)) {
+        likes = [];
+      }
+      if (likes.includes(uid)) {
+        likes = likes.filter(id => id !== uid);
+      } else {
+        likes.push(uid);
+      }
+      transaction.update(commentRef, { likes: likes });
+    });
+  }).catch(err => {
+    console.error("Error toggling like on comment:", err);
+  });
+}
+
 function listenHomePosts() {
   db.collection('community_posts').orderBy('ts','desc').limit(3)
     .onSnapshot(snap => {
       const el = document.getElementById('home-posts');
       if (snap.empty) { el.innerHTML='<div style="color:var(--ink-lt);font-size:13px">No posts yet — be the first!</div>'; return; }
       el.innerHTML = '';
-      snap.forEach(doc => { if (!doc.data().hidden) el.innerHTML += postHTML(doc.data(), true); });
+      snap.forEach(doc => { if (!doc.data().hidden) el.innerHTML += postHTML(doc.data(), true, doc.id); });
+      snap.forEach(doc => { if (!doc.data().hidden) listenCommentsCount(doc.id); });
     }, () => {
       document.getElementById('home-posts').innerHTML = '<div style="color:var(--ink-lt);font-size:13px">Sign in to see what neighbors are sharing.</div>';
     });
@@ -5599,23 +5886,41 @@ function listenCommunityPosts() {
       }
       if (snap.empty) { feed.innerHTML='<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">No posts yet. Share something with your neighbors!</div>'; return; }
       feed.innerHTML = '';
-      snap.forEach(doc => { if (!doc.data().hidden) feed.innerHTML += postHTML(doc.data(), false); });
+      snap.forEach(doc => { if (!doc.data().hidden) feed.innerHTML += postHTML(doc.data(), false, doc.id); });
+      snap.forEach(doc => { if (!doc.data().hidden) listenCommentsCount(doc.id); });
     }, () => {
       document.getElementById('community-feed').innerHTML = '<div style="color:var(--ink-lt);font-size:13px;text-align:center;padding:32px">Sign in to read the community board, neighbor.</div>';
     });
 }
 
-function postHTML(d, compact) {
+function postHTML(d, compact, docId) {
   const nm = d.displayName || d.email?.split('@')[0] || 'Neighbor';
   const dt = d.ts?.toDate ? d.ts.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
   const postBody = d.isQuilt ? (d.text || '') : linkifyTags(esc(d.text||''));
+  const likesCount = d.likes ? (Array.isArray(d.likes) ? d.likes.length : 0) : 0;
+  const hasLiked = currentUser && d.likes && Array.isArray(d.likes) && d.likes.includes(currentUser.uid);
+  const likeStyle = hasLiked ? 'font-weight:bold;color:var(--red);' : '';
+  const commentsCountSpanId = compact ? `comment-count-home-${docId}` : `comment-count-${docId}`;
+
   return `<div class="post-card${compact?' mb12':''}">
     <div class="post-meta">
       <div class="post-avatar"><span>${esc(nm[0].toUpperCase())}</span></div>
       <div><div class="post-name">${esc(nm)}</div><div class="post-time">${dt}</div></div>
     </div>
     <div class="post-text">${postBody}</div>
-    ${!compact?`<div class="post-actions"><button class="post-action-btn">👍 Like</button><button class="post-action-btn">💬 Reply</button></div>`:''}
+    <div class="post-actions">
+      <button class="post-action-btn" style="${likeStyle}" onclick="toggleLikePost('${docId}')">👍 Like (<span id="like-count-${docId}">${likesCount}</span>)</button>
+      <button class="post-action-btn" onclick="toggleCommentDrawer('${docId}')">💬 Comment (<span id="${commentsCountSpanId}">0</span>)</button>
+    </div>
+    ${!compact ? `
+    <div id="comments-section-${docId}" class="comments-section" style="display: none;">
+      <div class="comments-list" id="comments-list-${docId}" data-open="false"></div>
+      <div class="comment-input-area">
+        <input type="text" id="comment-input-${docId}" placeholder="Write a comment..." class="comment-input" onkeydown="if(event.key==='Enter') submitComment('${docId}')">
+        <button class="comment-submit-btn" onclick="submitComment('${docId}')">Send</button>
+      </div>
+    </div>
+    ` : ''}
   </div>`;
 }
 
