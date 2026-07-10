@@ -2180,6 +2180,9 @@ body.guest .guest-veil{
              style="margin-bottom:14px" onkeydown="if(event.key==='Enter')doSignIn()">
       <button class="auth-btn auth-btn-primary" onclick="doSignIn()">Sign In</button>
       <button class="auth-btn auth-btn-outline" onclick="doSignUp()">Create Account</button>
+      <div style="text-align: center; margin-top: 8px; margin-bottom: 12px;">
+        <span style="color: var(--ink-lt); font-size: 12px; cursor: pointer; text-decoration: underline;" onclick="doForgotPassword()">Forgot password?</span>
+      </div>
       <button class="auth-guest" onclick="enterGuestMode()">👀 Just visiting? Take a look around →</button>
       <p style="text-align:center;color:var(--ink-lt);font-size:11px;margin-top:12px">Community members only · Bell Buckle, TN</p>
     </div>
@@ -2260,6 +2263,9 @@ body.guest .guest-veil{
     </nav>
 
     <div class="sb-footer">
+      <div style="font-size:9.5px;color:var(--ink-lt);margin-bottom:6px;border-top:1px dashed var(--wire-lt);padding-top:6px;font-style:italic;">
+        Dedicated to the memory of <strong>Maggie Vaughn</strong> (1938–2022), TN Poet Laureate &amp; beloved neighbor. ✍️📜
+      </div>
       <svg class="bb-icon anim-swing" style="width:18px;height:18px;display:block;margin:0 auto 6px;opacity:.8"><use href="#bbi-bell"/></svg>
       <p style="text-align:center">"Close to home, but a world away"<br>Bell Buckle, TN · Est. 1852<br>Mark Ethan Designs</p>
     </div>
@@ -3093,6 +3099,15 @@ body.guest .guest-veil{
             </div>
 
             <div class="htl-entry" onclick="selectEra(9)">
+              <div class="htl-dot-col"><div class="htl-dot filled" style="border-color:var(--red);background:var(--red)"></div><div class="htl-line"></div></div>
+              <div>
+                <div class="htl-era" style="color:var(--red)">2022 · In Memoriam</div>
+                <div class="htl-title">Maggie Vaughn Passes Away</div>
+                <div class="htl-desc">Tennessee's Poet Laureate and beloved resident of Bell Buckle for over 50 years passes away, leaving behind a legacy of neighborly poetry.</div>
+              </div>
+            </div>
+
+            <div class="htl-entry" onclick="selectEra(10)">
               <div class="htl-dot-col"><div class="htl-dot filled" style="border-color:var(--blue);background:var(--blue)"></div></div>
               <div>
                 <div class="htl-era" style="color:var(--blue)">Today · Digital Town Square</div>
@@ -5348,6 +5363,34 @@ function doSignIn() {
     err.style.display = 'block';
   }
 }
+function doForgotPassword() {
+  const err = document.getElementById('auth-error');
+  try {
+    const e = document.getElementById('auth-email').value.trim();
+    err.style.display = 'none';
+    
+    if (!e) {
+      err.textContent = "Please enter your email address first, then click 'Forgot password?'.";
+      err.style.display = 'block';
+      return;
+    }
+    
+    if (typeof auth === 'undefined' || !auth) {
+      throw new Error("Firebase Auth is not initialized properly. Please check your network/connection.");
+    }
+    
+    auth.sendPasswordResetEmail(e).then(() => {
+      alert("📬 A password reset email has been sent! Check your inbox to choose a new password.");
+    }).catch(ex => {
+      err.textContent = ex.message;
+      err.style.display = 'block';
+    });
+  } catch (ex) {
+    err.textContent = "Error: " + ex.message;
+    err.style.display = 'block';
+  }
+}
+
 function doSignUp() {
   const err = document.getElementById('auth-error');
   try {
@@ -6415,6 +6458,11 @@ const SEED_HISTORY = [
     year:'Every June', title:'The Festival Lives On',
     desc:'Each year on the third Saturday in June, Bell Buckle throws open its doors to the world. Cloggers dance, the RC Cola van rolls in, MoonPie games fill the streets, a king and queen are crowned, and the World\'s Largest MoonPie is cut and shared. Free dessert for all — that\'s Bell Buckle.',
     img:'https://bellbucklechamber.com/wp-content/uploads/2022/02/2019-RCMP-Cloggers-scaled.jpg', seed:true
+  },
+  {
+    year:'2022', title:'In Memoriam — Poet Laureate Maggie Vaughn',
+    desc:'Maggie Vaughn, Tennessee\'s Poet Laureate and one of Bell Buckle\'s most colorful, beloved fixtures, passes away at 84. A resident for over 50 years, she ran the local bookshop, wrote endless neighborly stanzas, and was the true literary heartbeat of Bedford County.',
+    img:'https://images.squarespace-cdn.com/content/v1/67a9f3c59516b66979f7c0b7/5eea85cf-6a15-4d77-85df-1756495f1112/MURAL+copy.jpg', seed:true
   },
   {
     year:'Today', title:'Bell Buckle Connect — Our Digital Town Square',
