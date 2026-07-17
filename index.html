@@ -4124,33 +4124,16 @@ body.guest .guest-veil{
           <!-- Section 5: Town Hall Minutes & Involvement -->
           <div id="dir-content-minutes" class="dir-tab-content" style="display:none;">
             <div class="card" style="background:var(--tp-parchment); border:1.5px solid var(--tp-wood-light); border-radius:12px; padding:20px; margin-bottom:16px; box-shadow:var(--shadow-sm);">
-              <h3 style="color:var(--tp-earth); margin-top:0; font-family:'Playfair Display', serif; font-size:18px; border-bottom:1px dashed var(--tp-wood-light); padding-bottom:8px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">📋 Board of Mayor &amp; Aldermen (BOMA) Meeting Minutes</h3>
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed var(--tp-wood-light); padding-bottom:8px; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+                <h3 style="color:var(--tp-earth); margin:0; font-family:'Playfair Display', serif; font-size:18px; display:flex; align-items:center; gap:8px;">📋 Board of Mayor &amp; Aldermen (BOMA) Meeting Minutes</h3>
+                <button id="btn-admin-add-minutes" class="btn btn-red" style="padding:6px 12px; font-size:12px; font-weight:600; margin-bottom:0; display:none;" onclick="openAddMinutesModal()">＋ Add Minutes Document</button>
+              </div>
               <p style="font-size:13px; color:var(--ink-lt); line-height:1.5; margin-bottom:16px;">
                 Access official meeting minutes and agenda drafts from recent Bell Buckle town meetings. Meetings occur on the 2nd Tuesday of each month.
               </p>
               
-              <div style="display:flex; flex-direction:column; gap:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(128,91,54,0.04); border:1px solid rgba(128,91,54,0.12); border-radius:8px; padding:12px; flex-wrap:wrap; gap:10px;">
-                  <div>
-                    <strong style="color:var(--tp-earth); font-size:14px;">BOMA Monthly Meeting Minutes — June 2026</strong>
-                    <div style="font-size:11.5px; color:var(--ink-lt); margin-top:2px;">Topics: Highway 269 safety signage, water system improvements, and summer festival planning.</div>
-                  </div>
-                  <button class="btn btn-outline" style="padding:6px 12px; font-size:12px; font-weight:600; margin-bottom:0;" onclick="alert('Downloading BOMA_Minutes_June_2026.pdf ...')">📄 View PDF</button>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(128,91,54,0.04); border:1px solid rgba(128,91,54,0.12); border-radius:8px; padding:12px; flex-wrap:wrap; gap:10px;">
-                  <div>
-                    <strong style="color:var(--tp-earth); font-size:14px;">BOMA Monthly Meeting Minutes — May 2026</strong>
-                    <div style="font-size:11.5px; color:var(--ink-lt); margin-top:2px;">Topics: Historic preservation guidelines, sidewalk maintenance grants, and tree board updates.</div>
-                  </div>
-                  <button class="btn btn-outline" style="padding:6px 12px; font-size:12px; font-weight:600; margin-bottom:0;" onclick="alert('Downloading BOMA_Minutes_May_2026.pdf ...')">📄 View PDF</button>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(128,91,54,0.04); border:1px solid rgba(128,91,54,0.12); border-radius:8px; padding:12px; flex-wrap:wrap; gap:10px;">
-                  <div>
-                    <strong style="color:var(--tp-earth); font-size:14px;">BOMA Monthly Meeting Minutes — April 2026</strong>
-                    <div style="font-size:11.5px; color:var(--ink-lt); margin-top:2px;">Topics: Budget approval FY 2026-27, street repaving schedules, and park cleanup scheduling.</div>
-                  </div>
-                  <button class="btn btn-outline" style="padding:6px 12px; font-size:12px; font-weight:600; margin-bottom:0;" onclick="alert('Downloading BOMA_Minutes_April_2026.pdf ...')">📄 View PDF</button>
-                </div>
+              <div id="boma-minutes-list" style="display:flex; flex-direction:column; gap:10px;">
+                <div style="color:var(--ink-lt); font-size:13px; text-align:center; padding:12px 0;">Loading meeting minutes...</div>
               </div>
             </div>
 
@@ -4813,6 +4796,41 @@ body.guest .guest-veil{
   </div>
 </div>
 
+<!-- BOMA Minutes Modal (Add/Edit) -->
+<div id="minutes-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(42,31,16,0.72); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div class="card" style="max-width:480px; width:100%; padding:24px; background:var(--paper); border:2px solid var(--red); box-shadow:var(--shadow); position:relative; border-radius:14px; text-align:left;">
+    <h3 class="serif" id="minutes-modal-title" style="color:var(--red); font-size:20px; margin-top:0; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+      📋 Add BOMA Meeting Minutes
+    </h3>
+    <input type="hidden" id="minutes-modal-id">
+    
+    <div style="margin-bottom:12px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">Meeting Title</label>
+      <input type="text" id="minutes-title-input" class="form-input" placeholder="e.g. BOMA Monthly Meeting Minutes — July 2026" style="margin-bottom:0; width:100%;">
+    </div>
+    
+    <div style="margin-bottom:12px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">Topics / Summary</label>
+      <textarea id="minutes-summary-input" class="form-textarea" rows="3" placeholder="Summary of main topics discussed..." style="margin-bottom:0; font-size:13px; width:100%;"></textarea>
+    </div>
+    
+    <div style="margin-bottom:14px;">
+      <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink-lt); margin-bottom:4px; letter-spacing:0.05em;">PDF or Document File</label>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input type="file" id="minutes-file-input" accept="application/pdf,.doc,.docx,.txt" style="display:none;" onchange="handleMinutesFileSelect(this)">
+        <button class="btn btn-outline" style="margin-bottom:0; padding:6px 12px; font-size:12px; border-radius: var(--radius-sm);" onclick="document.getElementById('minutes-file-input').click()">📁 Choose Document</button>
+        <span id="minutes-file-name" style="font-size:12px; color:var(--ink-lt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">No document chosen</span>
+      </div>
+      <input type="hidden" id="minutes-file-data">
+    </div>
+    
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeMinutesModal()">Cancel</button>
+      <button class="btn btn-red" id="btn-save-minutes" onclick="saveMinutesDoc()">Save Document</button>
+    </div>
+  </div>
+</div>
+
 <!-- Resident Settings Modal -->
 <div id="settings-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(42,31,16,0.72); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
   <div class="card" style="max-width:400px; width:100%; padding:28px; background:var(--paper); border:2px solid var(--red); box-shadow:var(--shadow); position:relative; border-radius:14px; text-align:left;">
@@ -5372,6 +5390,7 @@ auth.onAuthStateChanged(user => {
     listenBuzz();
     listenBiz();
     listenTradingPost();
+    listenMinutes();
     buildChannelLists();
     switchChan('general', false); // prep chat without leaving Home
     initDashboardWidgets();
@@ -5421,6 +5440,7 @@ function enterGuestMode() {
   listenBuzz();
   listenBiz();
   listenTradingPost();
+  listenMinutes();
   buildChannelLists();
   switchChan('general', false);
   initDashboardWidgets();
@@ -7208,6 +7228,10 @@ function updateAdminVisibility() {
   if (addEventBtn) {
     addEventBtn.style.display = (currentUser && !isGuest) ? 'block' : 'none';
   }
+  const addMinutesBtn = document.getElementById('btn-admin-add-minutes');
+  if (addMinutesBtn) {
+    addMinutesBtn.style.display = isAdminUser ? 'block' : 'none';
+  }
 }
 
 const ADMIN_COLLS = {
@@ -7725,6 +7749,147 @@ function listenEvents() {
     const feed = document.getElementById('events-feed');
     if (feed) feed.innerHTML = '<div style="color:var(--ink-lt); font-size:13px; text-align:center; padding:24px 0;">Couldn\'t load events right now.</div>';
   });
+}
+
+// ─── BOMA Minutes Management ───────────────────────────────────────────────────
+let minutesUnsub = null;
+let minutesFileBase64 = "";
+let minutesFileName = "";
+
+function listenMinutes() {
+  if (minutesUnsub) {
+    minutesUnsub();
+    minutesUnsub = null;
+  }
+  const listEl = document.getElementById('boma-minutes-list');
+  if (!listEl) return;
+
+  minutesUnsub = db.collection('minutes').orderBy('ts', 'desc').onSnapshot(snap => {
+    if (snap.empty) {
+      listEl.innerHTML = '<div style="color:var(--ink-lt); font-size:13px; text-align:center; padding:24px 0;">No meeting minutes documents uploaded yet. 📋</div>';
+      return;
+    }
+
+    listEl.innerHTML = snap.docs.map(doc => {
+      const d = doc.data();
+      const deleteBtn = isAdminUser 
+        ? `<button class="btn btn-outline" style="padding: 4px 10px; font-size: 11.5px; margin-bottom: 0; border-color: var(--red); color: var(--red);" onclick="deleteMinutesDoc('${doc.id}', '${esc(d.title)}')">🗑️ Delete</button>`
+        : '';
+      
+      const fileAction = d.fileData 
+        ? `onclick="downloadMinutesFile('${esc(d.fileData)}', '${esc(d.fileName || 'document.pdf')}')"`
+        : `onclick="alert('No file attachment found for this document.')"`;
+
+      return `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(128,91,54,0.04); border:1px solid rgba(128,91,54,0.12); border-radius:8px; padding:12px; flex-wrap:wrap; gap:10px;">
+          <div style="flex:1; min-width:200px;">
+            <strong style="color:var(--tp-earth); font-size:14px;">${esc(d.title || 'Meeting Minutes')}</strong>
+            <div style="font-size:11.5px; color:var(--ink-lt); margin-top:2px;">${esc(d.summary || '')}</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="btn btn-outline" style="padding:6px 12px; font-size:12px; font-weight:600; margin-bottom:0;" ${fileAction}>📄 View Document</button>
+            ${deleteBtn}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }, err => {
+    console.error("Error listening to minutes:", err);
+    listEl.innerHTML = '<div style="color:var(--red); font-size:13px; text-align:center; padding:24px 0;">Failed to load meeting minutes.</div>';
+  });
+}
+
+function openAddMinutesModal() {
+  if (!isAdminUser) return;
+  document.getElementById('minutes-modal-id').value = '';
+  document.getElementById('minutes-title-input').value = '';
+  document.getElementById('minutes-summary-input').value = '';
+  document.getElementById('minutes-file-input').value = '';
+  document.getElementById('minutes-file-name').textContent = 'No document chosen';
+  minutesFileBase64 = "";
+  minutesFileName = "";
+  
+  document.getElementById('minutes-modal').style.display = 'flex';
+}
+
+function closeMinutesModal() {
+  document.getElementById('minutes-modal').style.display = 'none';
+}
+
+function handleMinutesFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  minutesFileName = file.name;
+  document.getElementById('minutes-file-name').textContent = file.name;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    minutesFileBase64 = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveMinutesDoc() {
+  if (!isAdminUser) return;
+  const titleVal = document.getElementById('minutes-title-input').value.trim();
+  const summaryVal = document.getElementById('minutes-summary-input').value.trim();
+  
+  if (!titleVal) {
+    alert("Please enter a meeting title.");
+    return;
+  }
+
+  const btn = document.getElementById('btn-save-minutes');
+  const oldText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  const docData = {
+    title: titleVal,
+    summary: summaryVal,
+    fileName: minutesFileName,
+    fileData: minutesFileBase64,
+    uploadedBy: currentUser ? currentUser.displayName || currentUser.email : 'Admin',
+    ts: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  db.collection('minutes').add(docData).then(() => {
+    closeMinutesModal();
+    showToast("Meeting minutes document added successfully!");
+  }).catch(err => {
+    console.error("Error adding minutes document:", err);
+    alert("Failed to save minutes document: " + err.message);
+  }).finally(() => {
+    btn.disabled = false;
+    btn.textContent = oldText;
+  });
+}
+
+function deleteMinutesDoc(id, title) {
+  if (!isAdminUser) return;
+  if (!confirm(`Are you sure you want to delete meeting minutes "${title}"?`)) return;
+
+  db.collection('minutes').doc(id).delete().then(() => {
+    showToast("Meeting minutes document deleted successfully.");
+  }).catch(err => {
+    console.error("Error deleting minutes:", err);
+    alert("Failed to delete document: " + err.message);
+  });
+}
+
+function downloadMinutesFile(base64Data, filename) {
+  try {
+    const link = document.createElement('a');
+    link.href = base64Data;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (err) {
+    console.error("Error opening attachment:", err);
+    alert("Could not open this attachment document.");
+  }
 }
 
 let pendingEventsUnsub = null;
