@@ -4829,6 +4829,17 @@ body.guest .guest-veil{
         <input type="checkbox" id="settings-online-status" style="width:auto; margin-bottom:0; cursor:pointer;" checked>
         Show as Online to others
       </label>
+      
+      <!-- Change Password Section inside settings modal -->
+      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--wire-lt);">
+        <label style="display:block; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink); margin-bottom:6px; letter-spacing:0.05em;">Account Security</label>
+        <button type="button" class="btn btn-outline" style="width:100%; text-align:center; padding:9px 12px; font-size:13px;" onclick="triggerPasswordResetFromSettings()">
+          📧 Send Password Reset Email
+        </button>
+        <span style="display:block; font-size:11px; color:var(--ink-lt); margin-top:6px; line-height:1.4;">
+          We'll send a secure password reset link to your registered email address.
+        </span>
+      </div>
     </div>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button class="btn btn-outline" onclick="closeSettingsModal()">Cancel</button>
@@ -9708,6 +9719,24 @@ function saveSettings() {
     btn.disabled = false;
     btn.textContent = oldText;
   });
+}
+
+function triggerPasswordResetFromSettings() {
+  if (!currentUser || isGuest) return;
+  const email = currentUser.email;
+  if (!email) {
+    alert("Could not retrieve email address associated with this account.");
+    return;
+  }
+  
+  if (confirm(`Would you like to send a secure password reset link to your registered email address (${email})?`)) {
+    auth.sendPasswordResetEmail(email).then(() => {
+      alert("📬 A password reset email has been sent! Check your inbox to choose a new password.");
+      closeSettingsModal();
+    }).catch(ex => {
+      alert("Failed to send reset email: " + ex.message);
+    });
+  }
 }
 
 function grantLiveAdmin() {
